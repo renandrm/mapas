@@ -1,0 +1,17 @@
+# backups e lixo — não vão para o app
+_to_delete/
+_mapa_padroes/
+*_backup_*.html
+*_bkp_*.html
+*backup*.html
+
+# arquivos pesados que não fazem parte do app
+*.pdf
+*.docx
+*.xlsx
+*.zip
+
+# sistema
+Thumbs.db
+desktop.ini
+.DS_Store

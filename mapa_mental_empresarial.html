@@ -1,0 +1,2445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Direito Empresarial — Mapa Mental</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #0f1117;
+    color: #e0e0e0;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 18px 10px 10px;
+    background: linear-gradient(135deg, #1a1d2e 0%, #0f1117 100%);
+    border-bottom: 1px solid #2a2d3e;
+  }
+  header h1 { font-size: 1.4rem; color: #7ec8e3; letter-spacing: 1px; }
+  header p  { font-size: 0.78rem; color: #666; margin-top: 4px; }
+
+  /* ── TAB BAR ── */
+  #tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 10px;
+    background: #13151f;
+    border-bottom: 1px solid #2a2d3e;
+  }
+  .tab-btn {
+    padding: 7px 16px;
+    border: 1.5px solid #2a2d3e;
+    border-radius: 20px;
+    background: #1a1d2e;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all .2s;
+  }
+  .tab-btn:hover  { border-color: #7ec8e3; color: #7ec8e3; }
+  .tab-btn.active { background: #7ec8e3; color: #0f1117; border-color: #7ec8e3; }
+
+  /* ── MAIN AREA ── */
+  #main { padding: 20px 10px 40px; max-width: 1600px; margin: 0 auto; }
+
+  /* ── SECTION PANEL ── */
+  .section-panel { display: none; }
+  .section-panel.active { display: block; }
+
+  /* ── SECTION TITLE ── */
+  .section-title { text-align: center; margin-bottom: 22px; }
+  .section-title .badge {
+    display: inline-block;
+    padding: 6px 22px;
+    border-radius: 30px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .section-title h2 { font-size: 1.25rem; color: #fff; }
+  .section-title p  { font-size: 0.8rem; color: #888; margin-top: 4px; }
+
+  /* ── GRID ── */
+  .mm-grid { display: grid; gap: 16px; }
+  .mm-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .mm-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  @media(max-width: 700px) {
+    .mm-grid.cols-2, .mm-grid.cols-3 { grid-template-columns: 1fr; }
+  }
+
+  /* ── LEVEL-1 CARD ── */
+  .l1-card {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1.5px solid transparent;
+    background: #1a1d2e;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .l1-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.5); }
+  .l1-header {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+  }
+  .l1-header .toggle { margin-left: auto; font-size: 0.75rem; opacity: .7; transition: transform .3s; }
+  .l1-card.open .toggle { transform: rotate(90deg); }
+
+  /* ── LEVEL-2 ── */
+  .l2-list { display: none; padding: 0 12px 12px 12px; }
+  .l1-card.open .l2-list { display: block; }
+  .l2-item { margin-top: 10px; border-left: 3px solid; padding-left: 10px; }
+  .l2-item .l2-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+  .l2-item .l2-toggle { font-size: 0.7rem; opacity: .6; transition: transform .3s; }
+  .l2-item.open .l2-toggle { transform: rotate(90deg); }
+
+  /* ── LEVEL-3 PILLS ── */
+  .l3-pills { display: none; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+  .l2-item.open .l3-pills { display: flex; }
+  .pill {
+    font-size: 0.72rem;
+    padding: 3px 9px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+    line-height: 1.4;
+  }
+  /* Pill color variants */
+  .pill.warn   { border-color: #f0a500; color: #f0a500; background: rgba(240,165,0,.08); }
+  .pill.danger { border-color: #e05252; color: #e05252; background: rgba(224,82,82,.08); }
+  .pill.ok     { border-color: #52c97a; color: #52c97a; background: rgba(82,201,122,.08); }
+  .pill.lei    { border-color: #facc15; color: #facc15; background: rgba(250,204,21,.08); font-style: italic; }
+
+  /* ── EXPAND BTN ── */
+  .expand-wrap { text-align: right; margin-bottom: 10px; }
+  .expand-btn {
+    font-size: 0.75rem;
+    padding: 5px 14px;
+    border-radius: 14px;
+    border: 1px solid #2a2d3e;
+    background: #1a1d2e;
+    color: #aaa;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .expand-btn:hover { border-color: #7ec8e3; color: #7ec8e3; }
+
+  /*
+   * ── COLOR SCHEMES ──
+   * Use class c0–c9 on the section-panel to apply a color theme.
+   * Each class sets --ac (accent color) and styles .l1-card, .l1-header, .l2-item, .l2-title.
+   *
+   * Available palette:
+   *   c0  #7ec8e3  azul-ciano     (padrão / aula 0)
+   *   c1  #a78bfa  violeta        (aula 1)
+   *   c2  #34d399  verde-esmeralda(aula 2)
+   *   c3  #fb923c  laranja        (aula 3)
+   *   c4  #f472b6  rosa           (aula 4)
+   *   c5  #facc15  amarelo-ouro   (aula 5)
+   *   c6  #38bdf8  azul-celeste   (aula 6)
+   *   c7  #4ade80  verde-limão    (aula 7)
+   *   c8  #f87171  vermelho-coral (aula 8)
+   *   c9  #c084fc  lavanda        (aula 9)
+   */
+  .c0{--ac:#7ec8e3} .c0 .l1-card{border-color:#7ec8e321} .c0 .l1-header{background:linear-gradient(90deg,#1a3a4a,#1a1d2e);color:#7ec8e3} .c0 .l2-item{border-color:#7ec8e3} .c0 .l2-title{color:#7ec8e3}
+  .c1{--ac:#a78bfa} .c1 .l1-card{border-color:#a78bfa21} .c1 .l1-header{background:linear-gradient(90deg,#2a1a4a,#1a1d2e);color:#a78bfa} .c1 .l2-item{border-color:#a78bfa} .c1 .l2-title{color:#a78bfa}
+  .c2{--ac:#34d399} .c2 .l1-card{border-color:#34d39921} .c2 .l1-header{background:linear-gradient(90deg,#1a3a2a,#1a1d2e);color:#34d399} .c2 .l2-item{border-color:#34d399} .c2 .l2-title{color:#34d399}
+  .c3{--ac:#fb923c} .c3 .l1-card{border-color:#fb923c21} .c3 .l1-header{background:linear-gradient(90deg,#3a2a1a,#1a1d2e);color:#fb923c} .c3 .l2-item{border-color:#fb923c} .c3 .l2-title{color:#fb923c}
+  .c4{--ac:#f472b6} .c4 .l1-card{border-color:#f472b621} .c4 .l1-header{background:linear-gradient(90deg,#3a1a2a,#1a1d2e);color:#f472b6} .c4 .l2-item{border-color:#f472b6} .c4 .l2-title{color:#f472b6}
+  .c5{--ac:#facc15} .c5 .l1-card{border-color:#facc1521} .c5 .l1-header{background:linear-gradient(90deg,#3a3a1a,#1a1d2e);color:#facc15} .c5 .l2-item{border-color:#facc15} .c5 .l2-title{color:#facc15}
+  .c6{--ac:#38bdf8} .c6 .l1-card{border-color:#38bdf821} .c6 .l1-header{background:linear-gradient(90deg,#1a2a3a,#1a1d2e);color:#38bdf8} .c6 .l2-item{border-color:#38bdf8} .c6 .l2-title{color:#38bdf8}
+  .c7{--ac:#4ade80} .c7 .l1-card{border-color:#4ade8021} .c7 .l1-header{background:linear-gradient(90deg,#1a3a1a,#1a1d2e);color:#4ade80} .c7 .l2-item{border-color:#4ade80} .c7 .l2-title{color:#4ade80}
+  .c8{--ac:#f87171} .c8 .l1-card{border-color:#f8717121} .c8 .l1-header{background:linear-gradient(90deg,#3a1a1a,#1a1d2e);color:#f87171} .c8 .l2-item{border-color:#f87171} .c8 .l2-title{color:#f87171}
+  .c9{--ac:#c084fc} .c9 .l1-card{border-color:#c084fc21} .c9 .l1-header{background:linear-gradient(90deg,#2a1a3a,#1a1d2e);color:#c084fc} .c9 .l2-item{border-color:#c084fc} .c9 .l2-title{color:#c084fc}
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+    margin-top: 30px; font-size: 0.73rem; color: #777;
+    border-top: 1px solid #2a2d3e; padding-top: 16px;
+  }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  .dot { width:10px; height:10px; border-radius:50%; }
+
+  /* ── SVG CLICK-TO-ZOOM ── */
+  .svg-zoom-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.88); z-index: 9999;
+    align-items: center; justify-content: center;
+    padding: 24px; box-sizing: border-box; cursor: zoom-out;
+  }
+  .svg-zoom-overlay.active { display: flex; }
+  .svg-zoom-box {
+    background: #1a1d2e; border-radius: 12px;
+    border: 1px solid #334155; padding: 20px 20px 16px;
+    width: 92vw; max-width: 1200px; max-height: 92vh;
+    overflow: auto; position: relative; cursor: default;
+    box-shadow: 0 8px 60px rgba(0,0,0,.8);
+    animation: zoomIn .18s ease; box-sizing: border-box;
+  }
+  @keyframes zoomIn {
+    from { transform: scale(.88); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+  #svgZoomContent { width: 100%; }
+  #svgZoomContent svg {
+    width: 100% !important; height: auto !important;
+    max-width: none !important; max-height: none !important;
+    display: block !important; margin: 0 !important;
+  }
+  .svg-zoom-close {
+    position: absolute; top: 8px; right: 10px;
+    background: #334155; border: none; color: #e2e8f0;
+    border-radius: 50%; width: 30px; height: 30px;
+    font-size: 16px; line-height: 30px; text-align: center;
+    cursor: pointer; z-index: 10001; padding: 0;
+  }
+  .svg-zoom-close:hover { background: #475569; }
+  /* SVGs dentro de pills mostram cursor zoom-in */
+  .l3-pills svg {
+    cursor: zoom-in;
+    transition: box-shadow .15s, opacity .15s;
+    border-radius: 8px;
+  }
+  .l3-pills svg:hover { box-shadow: 0 0 0 2px #7ec8e3; opacity: .92; }
+
+  /* ─── FULL-WIDTH OVERRIDES (cards em coluna única, largura total) ─── */
+  .mm-grid.cols-2, .mm-grid.cols-3 { grid-template-columns: 1fr !important; gap: 20px !important; }
+  .l1-card { width: 100%; }
+</style>
+</head>
+<body>
+
+
+<header>
+  <h1>Direito Empresarial</h1>
+</header>
+
+<!-- TAB BAR: one button per section -->
+<div id="tabs">
+  <!-- Example:
+  <button class="tab-btn active" onclick="showSection(0,this)">Seção 1</button>
+  <button class="tab-btn" onclick="showSection(1,this)">Seção 2</button>
+  -->
+    <button class="tab-btn active" onclick="showSection(0,this)">📚 Fundamentos</button>
+    <button class="tab-btn" onclick="showSection(1,this)">🏛️ Registro</button>
+    <button class="tab-btn" onclick="showSection(2,this)">👥 Sociedades</button>
+    <button class="tab-btn" onclick="showSection(3,this)">🫥 Não Personificadas</button>
+    <button class="tab-btn" onclick="showSection(4,this)">⚔️ Tipos Especiais</button>
+    <button class="tab-btn" onclick="showSection(5,this)">🏢 Soc. Ltda</button>
+    <button class="tab-btn" onclick="showSection(6,this)">📈 Soc. Anônima</button>
+    <button class="tab-btn" onclick="showSection(7,this)">🔀 Op. Societárias</button>
+    <button class="tab-btn" onclick="showSection(8,this)">⚖️ Falência</button>
+    <button class="tab-btn" onclick="showSection(9,this)">🔄 Recuperação</button>
+    <button class="tab-btn" onclick="showSection(10,this)">🏷️ ME e EPP</button>
+</div>
+
+<div id="main">
+
+  <!--
+    SECTION PANELS
+    Each panel has:
+    - id="panel-N"
+    - class="section-panel cN" (cN = color theme 0-9)
+    - class "active" on the first panel
+
+    Inside each panel:
+    - .section-title > .badge + h2 + p
+    - .expand-wrap > .expand-btn
+    - .mm-grid.cols-2 (or cols-3)
+      - .l1-card (onclick="toggleCard(this)")
+        - .l1-header: icon + title + .toggle
+        - .l2-list:
+          - .l2-item (repeated)
+            - .l2-title + .l2-toggle
+            - .l3-pills: .pill (.ok / .warn / .danger / .lei)
+    - .legend (optional, only on last panel or once)
+  -->
+
+  <div class="section-panel c0 active" id="panel-0">
+ <div class="section-title">
+  <div class="badge" style="background:#7ec8e322;color:#7ec8e3;">FUNDAMENTOS</div>
+  </div>
+ <div class="expand-wrap"><button class="expand-btn" onclick="toggleAll('panel-0')">⊞ Expandir tudo</button></div>
+ <div class="mm-grid cols-3">
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">📜</span>Teoria da Empresa — Art. 966 CC<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Definição de Empresário<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill lei">Art. 966 — quem exerce profissionalmente atividade econômica organizada para produção ou circulação de bens/serviços</span>
+      <span class="pill warn">PEGADINHA: empresário ≠ empresário individual. A S.A. também é "empresária" (sociedade empresária)</span>
+      <span class="pill ok">Mnemônico P-A-O-P: Profissional · Atividade econômica · Organização · Produção/circulação</span>
+      <span class="pill danger">A inscrição no RCPJ é requisito de REGULARIDADE — não de caracterização. Sem inscrição → empresário irregular, mas continua empresário</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Não Empresários (Exceções Art. 966, PU)<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill">Profissional liberal (médico, advogado, arquiteto)</span>
+      <span class="pill">Artista ou intelectual</span>
+      <span class="pill warn">Exceção à exceção: se organizar empresa (com empregados, estrutura etc.) → volta a ser empresário</span>
+      <span class="pill">Atividade rural → pode se registrar na Junta Comercial para ser equiparado (facultativo)</span>
+      <span class="pill danger">Sociedades simples puras (advogados, médicos) → registro no Cartório de PJ, não na Junta</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Clube de Futebol — Caso Especial<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="130" rx="10" fill="#0f172a"/>
+       <!-- Título -->
+       <text x="480" y="22" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#7ec8e3">CLUBE DE FUTEBOL — Equiparação Facultativa ao Empresário</text>
+       <!-- Box esquerda: condição -->
+       <rect x="20" y="35" width="430" height="60" rx="8" fill="#0f2a3a"/>
+       <rect x="20" y="35" width="430" height="4" rx="2" fill="#38bdf8"/>
+       <text x="235" y="56" text-anchor="middle" font-family="monospace" font-size="10" fill="#64748b">CONDIÇÃO</text>
+       <text x="235" y="74" text-anchor="middle" font-family="monospace" font-size="10" fill="#e2e8f0">Atividade futebolística em caráter</text>
+       <text x="235" y="88" text-anchor="middle" font-family="monospace" font-size="10" font-weight="bold" fill="#38bdf8">HABITUAL e PROFISSIONAL</text>
+       <!-- Seta -->
+       <text x="480" y="72" text-anchor="middle" font-family="monospace" font-size="20" fill="#475569">→</text>
+       <!-- Box direita: consequência -->
+       <rect x="510" y="35" width="430" height="60" rx="8" fill="#0f2a1a"/>
+       <rect x="510" y="35" width="430" height="4" rx="2" fill="#4ade80"/>
+       <text x="725" y="56" text-anchor="middle" font-family="monospace" font-size="10" fill="#64748b">PODE REQUERER INSCRIÇÃO NO RPEM</text>
+       <text x="725" y="74" text-anchor="middle" font-family="monospace" font-size="10" fill="#e2e8f0">Com a inscrição → será considerado</text>
+       <text x="725" y="88" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#4ade80">EMPRESÁRIO para todos os efeitos</text>
+       <text x="480" y="120" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill warn">Inscrição é FACULTATIVA — o clube não é obrigado a se registrar como empresário</span>
+      <span class="pill ok">Após a inscrição, equipara-se ao empresário individual para todos os fins jurídicos e fiscais</span>
+      <span class="pill lei">Art. 982, PU c/c Lei 9.615/98 (Lei Pelé) — associação que explora futebol profissional</span>
+      <span class="pill danger">PEGADINHA: clube de futebol é, por natureza, ASSOCIAÇÃO (não empresário) — só vira empresário se requerer inscrição voluntária no RPEM</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Evolução Histórica — 3 Fases<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="140" rx="10" fill="#0f172a"/>
+       <text x="480" y="20" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#7ec8e3">EVOLUÇÃO DO DIREITO COMERCIAL</text>
+       <line x1="60" y1="70" x2="900" y2="70" stroke="#334155" stroke-width="2"/>
+       <circle cx="200" cy="70" r="12" fill="#38bdf8"/>
+       <text x="200" y="50" text-anchor="middle" font-family="monospace" font-size="10" font-weight="bold" fill="#38bdf8">FASE 1</text>
+       <text x="200" y="92" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Teoria dos Atos</text>
+       <text x="200" y="105" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">de Comércio</text>
+       <circle cx="480" cy="70" r="12" fill="#4ade80"/>
+       <text x="480" y="50" text-anchor="middle" font-family="monospace" font-size="10" font-weight="bold" fill="#4ade80">FASE 2</text>
+       <text x="480" y="92" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Teoria da Empresa</text>
+       <text x="480" y="105" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">CC/2002 — Art. 966</text>
+       <circle cx="760" cy="70" r="12" fill="#f59e0b"/>
+       <text x="760" y="50" text-anchor="middle" font-family="monospace" font-size="10" font-weight="bold" fill="#f59e0b">ATUAL</text>
+       <text x="760" y="92" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Unificação Civil/</text>
+       <text x="760" y="105" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Comercial</text>
+       <text x="480" y="128" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🚫</span>Impedimentos para Exercer Empresa<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Quem não pode ser empresário<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="260" rx="10" fill="#0f172a"/>
+       <text x="480" y="20" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#f87171">IMPEDIDOS DE SER EMPRESÁRIO</text>
+       <rect x="10" y="30" width="220" height="38" rx="6" fill="#1e293b"/><text x="120" y="44" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Servidores públicos civis</text><text x="120" y="57" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">Lei 8.112/90, art. 117, X</text>
+       <rect x="240" y="30" width="220" height="38" rx="6" fill="#1e293b"/><text x="350" y="44" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Falidos não reabilitados</text><text x="350" y="57" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">Lei 11.101/05</text>
+       <rect x="470" y="30" width="220" height="38" rx="6" fill="#1e293b"/><text x="580" y="44" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Militares da ativa</text><text x="580" y="57" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">FA e PM</text>
+       <rect x="700" y="30" width="250" height="38" rx="6" fill="#1e293b"/><text x="825" y="44" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Penalmente proibidos</text><text x="825" y="57" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">Condenados</text>
+       <rect x="10" y="78" width="220" height="38" rx="6" fill="#1e293b"/><text x="120" y="92" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Magistrados</text><text x="120" y="105" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">LOMAN</text>
+       <rect x="240" y="78" width="220" height="38" rx="6" fill="#1e293b"/><text x="350" y="92" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Médicos (ramo farmacêutico)</text><text x="350" y="105" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">Conflito de interesses</text>
+       <rect x="470" y="78" width="220" height="38" rx="6" fill="#1e293b"/><text x="580" y="92" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Leiloeiros</text><text x="580" y="105" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">Vedação legal</text>
+       <rect x="700" y="78" width="250" height="38" rx="6" fill="#1e293b"/><text x="825" y="92" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Devedores do INSS</text><text x="825" y="105" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">Restrição administrativa</text>
+       <rect x="10" y="126" width="220" height="38" rx="6" fill="#1e293b"/><text x="120" y="140" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">Incapazes</text><text x="120" y="153" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">exceto: autorização judicial</text>
+       <rect x="240" y="126" width="220" height="38" rx="6" fill="#1e293b"/><text x="350" y="140" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">Cônjuges (entre si)</text><text x="350" y="153" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">sep. obrigatória/universal</text>
+       <rect x="470" y="126" width="220" height="38" rx="6" fill="#1e293b"/><text x="580" y="140" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">Estrangeiros não residentes</text><text x="580" y="153" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">Sem domicílio no BR</text>
+       <rect x="10" y="174" width="940" height="32" rx="6" fill="#1e3a5f"/>
+       <text x="480" y="185" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">⚠ ATENÇÃO: Embora cônjuges em sep. obrigatória não possam constituir sociedade ENTRE SI, nada impede que</text>
+       <text x="480" y="198" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">cada um constitua sociedade com TERCEIROS.</text>
+       <text x="480" y="248" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Incapaz e Continuidade da Empresa — Art. 974<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 370" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="370" rx="10" fill="#0f172a"/>
+       <text x="480" y="20" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#fbbf24">INCAPAZ — CONTINUIDADE DA EMPRESA (Art. 974)</text>
+
+       <!-- REGRA PRINCIPAL -->
+       <rect x="60" y="30" width="260" height="48" rx="8" fill="#7f1d1d44"/>
+       <rect x="60" y="30" width="260" height="3" rx="2" fill="#f87171"/>
+       <text x="190" y="51" text-anchor="middle" font-family="monospace" font-size="10" fill="#f87171" font-weight="bold">Empresa por INCAPAZ</text>
+       <text x="190" y="67" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">NÃO pode INICIAR, mas...</text>
+
+       <!-- Seta para CONTINUAR -->
+       <line x1="320" y1="54" x2="370" y2="54" stroke="#475569" stroke-width="2"/>
+       <polygon points="370,50 380,54 370,58" fill="#475569"/>
+
+       <!-- PODE CONTINUAR -->
+       <rect x="380" y="30" width="200" height="48" rx="8" fill="#1e3a5f"/>
+       <rect x="380" y="30" width="200" height="3" rx="2" fill="#7ec8e3"/>
+       <text x="480" y="51" text-anchor="middle" font-family="monospace" font-size="10" fill="#7ec8e3" font-weight="bold">Pode CONTINUAR</text>
+       <text x="480" y="67" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">empresa antes exercida...</text>
+
+       <!-- Três origens (direita do CONTINUAR) -->
+       <line x1="580" y1="45" x2="630" y2="28" stroke="#38bdf8" stroke-width="1.5"/>
+       <line x1="580" y1="54" x2="630" y2="54" stroke="#38bdf8" stroke-width="1.5"/>
+       <line x1="580" y1="63" x2="630" y2="80" stroke="#38bdf8" stroke-width="1.5"/>
+       <rect x="630" y="16" width="300" height="24" rx="5" fill="#1e293b"/>
+       <text x="780" y="32" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">por ele enquanto capaz</text>
+       <rect x="630" y="42" width="300" height="24" rx="5" fill="#1e293b"/>
+       <text x="780" y="58" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">pelos seus pais</text>
+       <rect x="630" y="68" width="300" height="24" rx="5" fill="#1e293b"/>
+       <text x="780" y="84" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">pelo autor da herança</text>
+
+       <!-- Seta descendo de CONTINUAR para as duas formas -->
+       <line x1="480" y1="78" x2="480" y2="108" stroke="#475569" stroke-width="1.5"/>
+       <line x1="290" y1="108" x2="670" y2="108" stroke="#475569" stroke-width="1.5"/>
+       <line x1="290" y1="108" x2="290" y2="128" stroke="#475569" stroke-width="1.5"/>
+       <line x1="670" y1="108" x2="670" y2="128" stroke="#475569" stroke-width="1.5"/>
+
+       <!-- REPRESENTADO -->
+       <rect x="150" y="128" width="280" height="48" rx="8" fill="#0891b225"/>
+       <rect x="150" y="128" width="280" height="3" rx="2" fill="#38bdf8"/>
+       <text x="290" y="149" text-anchor="middle" font-family="monospace" font-size="10" fill="#38bdf8" font-weight="bold">Representado</text>
+       <text x="290" y="165" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">(absolutamente incapaz)</text>
+
+       <!-- ASSISTIDO -->
+       <rect x="530" y="128" width="280" height="48" rx="8" fill="#4ade8018"/>
+       <rect x="530" y="128" width="280" height="3" rx="2" fill="#4ade80"/>
+       <text x="670" y="149" text-anchor="middle" font-family="monospace" font-size="10" fill="#4ade80" font-weight="bold">Assistido</text>
+       <text x="670" y="165" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">(relativamente incapaz)</text>
+
+       <!-- Seta descendo para GERENTE -->
+       <line x1="290" y1="176" x2="290" y2="196" stroke="#475569" stroke-width="1.5"/>
+       <line x1="670" y1="176" x2="670" y2="196" stroke="#475569" stroke-width="1.5"/>
+       <line x1="290" y1="196" x2="670" y2="196" stroke="#475569" stroke-width="1.5"/>
+       <line x1="480" y1="196" x2="480" y2="216" stroke="#475569" stroke-width="1.5"/>
+
+       <!-- NOMEIA GERENTE -->
+       <rect x="250" y="216" width="460" height="36" rx="8" fill="#1e293b"/>
+       <rect x="250" y="216" width="460" height="3" rx="2" fill="#fbbf24"/>
+       <text x="480" y="234" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Se for impedido de exercer a atividade →</text>
+       <text x="480" y="247" text-anchor="middle" font-family="monospace" font-size="10" fill="#fbbf24" font-weight="bold">nomeia GERENTE</text>
+
+       <!-- Separador -->
+       <line x1="20" y1="268" x2="940" y2="268" stroke="#334155" stroke-width="1"/>
+       <text x="480" y="283" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b" font-weight="bold">PRESSUPOSTOS — ART. 974, §3º (sócio incapaz)</text>
+
+       <!-- Três pressupostos em linha -->
+       <rect x="20" y="290" width="280" height="38" rx="6" fill="#1e293b"/>
+       <rect x="20" y="290" width="280" height="3" rx="2" fill="#f87171"/>
+       <text x="160" y="306" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#f87171">I — sócio incapaz NÃO pode</text>
+       <text x="160" y="320" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#f87171">exercer a administração</text>
+
+       <rect x="340" y="290" width="280" height="38" rx="6" fill="#1e293b"/>
+       <rect x="340" y="290" width="280" height="3" rx="2" fill="#fbbf24"/>
+       <text x="480" y="306" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#fbbf24">II — capital social deve ser</text>
+       <text x="480" y="320" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#fbbf24">totalmente integralizado</text>
+
+       <rect x="660" y="290" width="280" height="38" rx="6" fill="#1e293b"/>
+       <rect x="660" y="290" width="280" height="3" rx="2" fill="#4ade80"/>
+       <text x="800" y="306" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">III — relat. incapaz: assistido</text>
+       <text x="800" y="320" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">absol. incapaz: representado</text>
+
+       <text x="480" y="358" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill lei">Art. 974 — continuar empresa individual antes exercida pelo próprio incapaz quando capaz, ou por seus pais/autor de herança</span>
+      <span class="pill danger">CESPE entende que Art. 974 aplica-se ao empresário individual E ao sócio de sociedade (maioria doutrinária)</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Empresário Casado — Regras Especiais<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill danger">PEGADINHA: Inscrição do empresário é REQUISITO DE REGULARIDADE — não de caracterização. O empresário JÁ É empresário antes de se inscrever; a inscrição apenas o regulariza.</span>
+      <svg viewBox="0 0 960 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="280" rx="10" fill="#0f172a"/>
+       <text x="480" y="22" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#f472b6">EMPRESÁRIO CASADO — Regras do CC/02</text>
+
+       <!-- BLOCO 1: Contratar sociedade -->
+       <rect x="10" y="35" width="940" height="68" rx="8" fill="#3a1a2a33"/>
+       <rect x="10" y="35" width="940" height="3" rx="2" fill="#f472b6"/>
+       <text x="480" y="52" text-anchor="middle" font-family="monospace" font-size="10" font-weight="bold" fill="#f472b6">① CÔNJUGES podem contratar sociedade...</text>
+       <!-- Entre si -->
+       <rect x="30" y="60" width="200" height="32" rx="6" fill="#1e293b"/>
+       <text x="130" y="80" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">Entre si</text>
+       <!-- Com terceiros -->
+       <rect x="250" y="60" width="200" height="32" rx="6" fill="#1e293b"/>
+       <text x="350" y="80" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">Com terceiros</text>
+       <!-- Seta para EXCETO -->
+       <text x="490" y="80" text-anchor="middle" font-family="monospace" font-size="13" fill="#475569">→</text>
+       <!-- EXCETO box -->
+       <rect x="510" y="55" width="180" height="42" rx="6" fill="#7c3aed44"/>
+       <rect x="510" y="55" width="180" height="3" rx="2" fill="#a78bfa"/>
+       <text x="600" y="72" text-anchor="middle" font-family="monospace" font-size="10" fill="#a78bfa" font-weight="bold">EXCETO casados</text>
+       <text x="600" y="87" text-anchor="middle" font-family="monospace" font-size="9" fill="#c084fc">no regime...</text>
+       <!-- Regimes proibidos -->
+       <rect x="705" y="55" width="240" height="18" rx="4" fill="#7f1d1d44"/>
+       <text x="825" y="68" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Comunhão Universal de bens</text>
+       <rect x="705" y="78" width="240" height="18" rx="4" fill="#7f1d1d44"/>
+       <text x="825" y="91" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Separação obrigatória de bens</text>
+
+       <!-- BLOCO 2: Imóvel da empresa -->
+       <rect x="10" y="115" width="940" height="70" rx="8" fill="#1a2a3a33"/>
+       <rect x="10" y="115" width="940" height="3" rx="2" fill="#38bdf8"/>
+       <text x="480" y="133" text-anchor="middle" font-family="monospace" font-size="10" font-weight="bold" fill="#38bdf8">② IMÓVEL da empresa — pode Alienar ou Gravar de Ônus Reais...</text>
+       <rect x="30" y="142" width="340" height="32" rx="6" fill="#1e293b"/>
+       <text x="200" y="162" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">SEM necessidade de outorga conjugal</text>
+       <text x="390" y="162" text-anchor="middle" font-family="monospace" font-size="12" fill="#475569">→</text>
+       <rect x="410" y="142" width="200" height="32" rx="6" fill="#14532d33"/>
+       <text x="510" y="157" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">Qualquer regime</text>
+       <text x="510" y="170" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">de bens</text>
+       <rect x="630" y="142" width="310" height="32" rx="6" fill="#1e293b"/>
+       <text x="785" y="157" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">Doutrina: prévia averbação</text>
+       <text x="785" y="170" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">no cartório de registro de imóveis</text>
+
+       <!-- BLOCO 3: Averbar -->
+       <rect x="10" y="197" width="940" height="72" rx="8" fill="#1a3a1a33"/>
+       <rect x="10" y="197" width="940" height="3" rx="2" fill="#4ade80"/>
+       <text x="480" y="215" text-anchor="middle" font-family="monospace" font-size="10" font-weight="bold" fill="#4ade80">③ Deve AVERBAR no Registro Civil e no RPEM:</text>
+       <rect x="30" y="224" width="280" height="34" rx="6" fill="#1e293b"/>
+       <text x="170" y="239" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Pactos e declarações</text>
+       <text x="170" y="252" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">antenupciais</text>
+       <rect x="330" y="224" width="280" height="34" rx="6" fill="#1e293b"/>
+       <text x="470" y="239" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Título de doação,</text>
+       <text x="470" y="252" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">herança ou legado</text>
+       <rect x="630" y="224" width="300" height="34" rx="6" fill="#1e293b"/>
+       <text x="780" y="239" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Bens clausulados de</text>
+       <text x="780" y="252" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">incomunicabilidade ou inalienabilidade</text>
+
+       <text x="480" y="272" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill warn">Regime de comunhão parcial de bens: cônjuges PODEM contratar sociedade entre si</span>
+      <span class="pill ok">A alienação do imóvel empresarial independe de outorga conjugal em qualquer regime — a empresa tem patrimônio autônomo</span>
+      <span class="pill lei">Arts. 977, 978 e 979 CC — sociedade entre cônjuges, alienação de imóvel empresarial e averbação de atos</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🏪</span>Estabelecimento Empresarial<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Conceito e Trespasse<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill">Complexo de bens organizado para exercício da empresa (Art. 1.142)</span>
+      <span class="pill warn">Não se confunde com o local físico — pode ser virtual (MP 1.085/2021)</span>
+      <span class="pill ok">Trespasse = alienação do estabelecimento por ato entre vivos (como um TODO)</span>
+      <span class="pill lei">Art. 1.147 — sem autorização expressa, alienante NÃO pode fazer concorrência nos 5 anos seguintes à transferência</span>
+      <svg viewBox="0 0 960 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="210" rx="10" fill="#0f172a"/>
+       <text x="480" y="22" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#7ec8e3">TRESPASSE — Eficácia Perante Terceiros</text>
+       <!-- Requisitos cumulativos -->
+       <rect x="20" y="35" width="920" height="50" rx="8" fill="#1e293b"/>
+       <rect x="20" y="35" width="920" height="3" rx="2" fill="#a78bfa"/>
+       <text x="480" y="53" text-anchor="middle" font-family="monospace" font-size="10" fill="#a78bfa" font-weight="bold">PRODUZ EFEITOS PERANTE TERCEIROS somente após (ambos cumulativamente):</text>
+       <rect x="60" y="62" width="380" height="16" rx="4" fill="#7c3aed22"/>
+       <text x="250" y="74" text-anchor="middle" font-family="monospace" font-size="10" fill="#c084fc">① Averbação à margem da inscrição do empresário/soc. empresária no RPEM</text>
+       <rect x="520" y="62" width="380" height="16" rx="4" fill="#7c3aed22"/>
+       <text x="710" y="74" text-anchor="middle" font-family="monospace" font-size="10" fill="#c084fc">② Publicação na imprensa oficial</text>
+       <!-- Eficácia quando alienante sem bens -->
+       <rect x="20" y="98" width="920" height="100" rx="8" fill="#3a1a1a33"/>
+       <rect x="20" y="98" width="920" height="3" rx="2" fill="#f87171"/>
+       <text x="480" y="116" text-anchor="middle" font-family="monospace" font-size="10" fill="#f87171" font-weight="bold">Se alienante NÃO tem bens suficientes para solver o passivo:</text>
+       <text x="480" y="133" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">A eficácia da alienação depende de:</text>
+       <!-- Opção A -->
+       <rect x="40" y="142" width="400" height="44" rx="6" fill="#14532d33"/>
+       <rect x="40" y="142" width="400" height="3" rx="2" fill="#4ade80"/>
+       <text x="240" y="158" text-anchor="middle" font-family="monospace" font-size="10" fill="#4ade80" font-weight="bold">OPÇÃO A</text>
+       <text x="240" y="174" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">Pagamento de TODOS os credores</text>
+       <!-- OU -->
+       <text x="480" y="167" text-anchor="middle" font-family="monospace" font-size="14" fill="#facc15" font-weight="bold">OU</text>
+       <!-- Opção B -->
+       <rect x="520" y="142" width="400" height="44" rx="6" fill="#0891b233"/>
+       <rect x="520" y="142" width="400" height="3" rx="2" fill="#38bdf8"/>
+       <text x="720" y="158" text-anchor="middle" font-family="monospace" font-size="10" fill="#38bdf8" font-weight="bold">OPÇÃO B — Consentimento dos credores</text>
+       <text x="620" y="174" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Expresso</text>
+       <text x="780" y="174" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">Tácito (silêncio em 30 dias após notificação)</text>
+       <text x="480" y="200" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill danger">PEGADINHA: a eficácia do trespasse não depende apenas do registro — exige TAMBÉM a publicação na imprensa oficial</span>
+      <span class="pill warn">Consentimento TÁCITO dos credores: silêncio por 30 dias após notificação equivale a concordância</span>
+      <span class="pill lei">Art. 1.145 CC — requisitos de eficácia perante terceiros quando alienante fica insolvente</span>
+      <span class="pill warn">EXCEÇÃO ME/EPP (LC 123): dispensados da publicação na imprensa oficial — basta arquivar/averbar no RPEM</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Prazos do Trespasse — Quadro Completo<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="220" rx="10" fill="#0f172a"/>
+       <text x="480" y="20" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#7ec8e3">PRAZOS IMPORTANTES — TRESPASSE (CC/02)</text>
+       <!-- Header -->
+       <rect x="10" y="30" width="220" height="22" rx="4" fill="#1e293b"/>
+       <text x="120" y="45" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">SITUAÇÃO</text>
+       <rect x="240" y="30" width="120" height="22" rx="4" fill="#1e293b"/>
+       <text x="300" y="45" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">PRAZO</text>
+       <rect x="370" y="30" width="580" height="22" rx="4" fill="#1e293b"/>
+       <text x="660" y="45" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">OBSERVAÇÃO</text>
+       <!-- Row 1 -->
+       <rect x="10" y="56" width="220" height="26" rx="3" fill="#0f172a"/>
+       <text x="120" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Consentimento tácito credores</text>
+       <rect x="240" y="56" width="120" height="26" rx="3" fill="#fbbf2422"/>
+       <text x="300" y="73" text-anchor="middle" font-family="monospace" font-size="10" fill="#fbbf24" font-weight="bold">30 dias</text>
+       <rect x="370" y="56" width="580" height="26" rx="3" fill="#0f172a"/>
+       <text x="660" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">após notificação — silêncio = concordância tácita (Art. 1.145)</text>
+       <!-- Row 2 -->
+       <rect x="10" y="86" width="220" height="26" rx="3" fill="#0f172a"/>
+       <text x="120" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Responsabilidade solidária</text>
+       <rect x="240" y="86" width="120" height="26" rx="3" fill="#f4722b22"/>
+       <text x="300" y="103" text-anchor="middle" font-family="monospace" font-size="10" fill="#fb923c" font-weight="bold">1 ano</text>
+       <rect x="370" y="86" width="580" height="26" rx="3" fill="#0f172a"/>
+       <text x="660" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Alienante responde solidariamente pelos débitos anteriores regularmente contabilizados</text>
+       <!-- Row 2b: sub-regras -->
+       <rect x="10" y="116" width="220" height="26" rx="3" fill="#0f172a"/>
+       <text x="120" y="133" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">↳ créditos vencidos / vincendos</text>
+       <rect x="240" y="116" width="120" height="26" rx="3" fill="#0f172a"/>
+       <text x="300" y="133" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">—</text>
+       <rect x="370" y="116" width="580" height="26" rx="3" fill="#0f172a"/>
+       <text x="660" y="133" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">Vencidos: prazo a partir da publicação | Vincendos: prazo a partir do vencimento</text>
+       <!-- Row 3 -->
+       <rect x="10" y="146" width="220" height="26" rx="3" fill="#0f172a"/>
+       <text x="120" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Não concorrência (alienação)</text>
+       <rect x="240" y="146" width="120" height="26" rx="3" fill="#4ade8022"/>
+       <text x="300" y="163" text-anchor="middle" font-family="monospace" font-size="10" fill="#4ade80" font-weight="bold">5 anos</text>
+       <rect x="370" y="146" width="580" height="26" rx="3" fill="#0f172a"/>
+       <text x="660" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">da transferência — alienante NÃO pode fazer concorrência ao adquirente (Art. 1.147)</text>
+       <!-- Row 4 -->
+       <rect x="10" y="176" width="220" height="26" rx="3" fill="#0f172a"/>
+       <text x="120" y="193" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Sub-rogação / rescisão contratos</text>
+       <rect x="240" y="176" width="120" height="26" rx="3" fill="#38bdf822"/>
+       <text x="300" y="193" text-anchor="middle" font-family="monospace" font-size="10" fill="#38bdf8" font-weight="bold">90 dias</text>
+       <rect x="370" y="176" width="580" height="26" rx="3" fill="#0f172a"/>
+       <text x="660" y="193" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Terceiros podem rescindir contratos (por justa causa) após publicação da transferência (Art. 1.148)</text>
+       <text x="480" y="212" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill danger">Responsabilidade solidária do alienante NÃO se aplica a débitos tributários e trabalhistas — esses seguem regras próprias (CTN e CLT)</span>
+      <span class="pill warn">Não concorrência em arrendamento/usufruto → prazo do contrato (pode ser superior a 5 anos)</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Responsabilidade pelos Débitos e Contratos Anteriores<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="200" rx="10" fill="#0f172a"/>
+       <text x="480" y="20" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#fb923c">RESPONSABILIDADE PELOS DÉBITOS ANTERIORES</text>
+       <!-- ADQUIRENTE -->
+       <rect x="10" y="32" width="460" height="80" rx="8" fill="#0891b218"/>
+       <rect x="10" y="32" width="460" height="4" rx="2" fill="#38bdf8"/>
+       <text x="240" y="50" text-anchor="middle" font-family="monospace" font-size="11" fill="#38bdf8" font-weight="bold">ADQUIRENTE</text>
+       <text x="240" y="66" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Responde pelos débitos anteriores</text>
+       <text x="240" y="80" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">regularmente contabilizados</text>
+       <text x="240" y="96" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">(sub-rogação automática — salvo disposição contrária)</text>
+       <!-- ALIENANTE -->
+       <rect x="490" y="32" width="460" height="80" rx="8" fill="#f8717118"/>
+       <rect x="490" y="32" width="460" height="4" rx="2" fill="#f87171"/>
+       <text x="720" y="50" text-anchor="middle" font-family="monospace" font-size="11" fill="#f87171" font-weight="bold">ALIENANTE</text>
+       <text x="720" y="66" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Responsabilidade SOLIDÁRIA</text>
+       <text x="720" y="80" text-anchor="middle" font-family="monospace" font-size="9" fill="#fb923c" font-weight="bold">pelo prazo de 1 ANO</text>
+       <text x="720" y="96" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">CTN: responsabilidade SUBSIDIÁRIA se continuar a exploração</text>
+       <!-- Contratos anteriores -->
+       <rect x="10" y="122" width="940" height="66" rx="8" fill="#1a3a1a33"/>
+       <rect x="10" y="122" width="940" height="3" rx="2" fill="#4ade80"/>
+       <text x="480" y="139" text-anchor="middle" font-family="monospace" font-size="10" fill="#4ade80" font-weight="bold">CONTRATOS ANTERIORES (Art. 1.148) — salvo disposição contrária</text>
+       <text x="480" y="156" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Transferência importa sub-rogação do adquirente nos contratos de exploração do estabelecimento</text>
+       <text x="480" y="170" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">(desde que não tenham caráter pessoal — intuitu personae)</text>
+       <text x="480" y="183" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Terceiros: podem rescindir em 90 dias da publicação por JUSTA CAUSA → responsabilidade do alienante ressalvada</text>
+       <text x="480" y="194" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill danger">PEGADINHA: débitos NÃO contabilizados regularmente → adquirente NÃO responde</span>
+      <span class="pill ok">Contratos de caráter pessoal (intuitu personae) NÃO se transferem ao adquirente automaticamente</span>
+      <span class="pill lei">Arts. 1.146, 1.148 CC — responsabilidade do adquirente e sub-rogação em contratos</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Preposto e Preponente<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill">Conceito: pessoas que agem em nome de uma empresa ou organização (Art. 1.169–1.178 CC)</span>
+      <svg viewBox="0 0 960 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="310" rx="10" fill="#0f172a"/>
+       <!-- TÍTULO -->
+       <text x="480" y="22" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#7ec8e3">PREPOSTO × PREPONENTE — Responsabilidade (Art. 1.178)</text>
+       <!-- PREPOSTO -->
+       <rect x="20" y="35" width="450" height="155" rx="8" fill="#0891b218"/>
+       <rect x="20" y="35" width="450" height="4" rx="2" fill="#38bdf8"/>
+       <text x="245" y="54" text-anchor="middle" font-family="monospace" font-size="11" fill="#38bdf8" font-weight="bold">PREPOSTO</text>
+       <text x="245" y="72" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Responde PESSOALMENTE quando se faz substituir</text>
+       <text x="245" y="86" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">SEM autorização escrita (Art. 1.169)</text>
+       <line x1="40" y1="96" x2="450" y2="96" stroke="#1e293b" stroke-width="1"/>
+       <text x="245" y="112" text-anchor="middle" font-family="monospace" font-size="10" fill="#fbbf24" font-weight="bold">Perante TERCEIROS (Teoria da Aparência):</text>
+       <rect x="40" y="120" width="190" height="32" rx="5" fill="#1e293b"/>
+       <text x="135" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">CULPA</text>
+       <text x="135" y="147" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">→ responde JUNTO ao preponente</text>
+       <rect x="245" y="120" width="210" height="32" rx="5" fill="#1e293b"/>
+       <text x="350" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">DOLO</text>
+       <text x="350" y="147" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">→ responde SOLIDARIAMENTE</text>
+       <line x1="40" y1="162" x2="450" y2="162" stroke="#1e293b" stroke-width="1"/>
+       <text x="245" y="178" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">SALVO autorização EXPRESSA: NÃO pode negociar por conta</text>
+       <text x="245" y="191" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">própria ou de terceiros, nem participar de operação do</text>
+       <!-- PREPONENTE -->
+       <rect x="490" y="35" width="450" height="155" rx="8" fill="#14532d33"/>
+       <rect x="490" y="35" width="450" height="4" rx="2" fill="#4ade80"/>
+       <text x="715" y="54" text-anchor="middle" font-family="monospace" font-size="11" fill="#4ade80" font-weight="bold">PREPONENTE</text>
+       <text x="715" y="70" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Responde pelos atos do preposto relativos à atividade:</text>
+       <rect x="510" y="78" width="410" height="42" rx="5" fill="#1e293b"/>
+       <text x="715" y="94" text-anchor="middle" font-family="monospace" font-size="10" fill="#4ade80" font-weight="bold">DENTRO do estabelecimento</text>
+       <text x="715" y="111" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">→ mesmo que NÃO autorizado por escrito</text>
+       <rect x="510" y="128" width="410" height="42" rx="5" fill="#1e293b"/>
+       <text x="715" y="144" text-anchor="middle" font-family="monospace" font-size="10" fill="#fbbf24" font-weight="bold">FORA do estabelecimento</text>
+       <text x="715" y="161" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">→ somente no LIMITE da autorização ESCRITA</text>
+       <!-- ARTIGOS -->
+       <rect x="20" y="202" width="920" height="96" rx="8" fill="#1e293b"/>
+       <text x="480" y="218" text-anchor="middle" font-family="monospace" font-size="9" font-weight="bold" fill="#a78bfa">ARTIGOS IMPORTANTES</text>
+       <text x="30" y="234" font-family="monospace" font-size="9" fill="#38bdf8">Art. 1.169</text>
+       <text x="110" y="234" font-family="monospace" font-size="9" fill="#94a3b8">Preposto NÃO pode se fazer substituir SEM autorização escrita → responde pessoalmente pelos atos do substituto</text>
+       <text x="30" y="252" font-family="monospace" font-size="9" fill="#38bdf8">Art. 1.170</text>
+       <text x="110" y="252" font-family="monospace" font-size="9" fill="#94a3b8">SALVO autorização EXPRESSA: NÃO pode negociar por conta própria/terceiros nem atuar no mesmo gênero (veda concorrência)</text>
+       <text x="30" y="270" font-family="monospace" font-size="9" fill="#38bdf8">Art. 1.171</text>
+       <text x="110" y="270" font-family="monospace" font-size="9" fill="#94a3b8">Entrega de papéis/bens/valores ao preposto = PERFEITA se recebeu sem protesto — SALVO se há prazo para reclamação</text>
+       <text x="30" y="288" font-family="monospace" font-size="9" fill="#38bdf8">Art. 1.178</text>
+       <text x="110" y="288" font-family="monospace" font-size="9" fill="#94a3b8">Preponentes RESPONSÁVEIS pelos atos dos prepostos DENTRO do estabelecimento, AINDA QUE não autorizados</text>
+       <text x="480" y="302" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill danger">PEGADINHA: DENTRO do estabelecimento o preponente responde MESMO que o preposto não estava autorizado — fora só responde nos limites escritos</span>
+      <span class="pill warn">Art. 1.170 — veda concorrência: preposto não pode atuar em operação do MESMO GÊNERO que lhe foi cometida, salvo autorização expressa</span>
+      <span class="pill ok">Teoria da aparência: os atos do preposto relativos à atividade da empresa vinculam o preponente perante terceiros de boa-fé</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+ </div>
+</div>
+<div class="section-panel c1" id="panel-1">
+ <div class="section-title">
+  <div class="badge" style="background:#a78bfa22;color:#a78bfa;">REGISTRO</div>
+  </div>
+ <div class="expand-wrap"><button class="expand-btn" onclick="toggleAll('panel-1')">⊞ Expandir tudo</button></div>
+ <div class="mm-grid cols-2">
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🏛️</span>Órgãos e Natureza do Registro<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Sistema Nacional e Órgãos<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">DREI — Dept. de Registro Empresarial e Integração (normas gerais)</span>
+      <span class="pill ok">Juntas Comerciais — execução e administração do registro</span>
+      <span class="pill">Cartório de RTD/PJ — sociedade simples, associações, fundações</span>
+      <span class="pill danger">Junta Comercial é orgão ESTADUAL mas vinculada TECNICAMENTE ao DREI (federal) e ADMINISTRATIVAMENTE ao Estado</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Registro Normal vs Rural — Natureza Jurídica<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="120" rx="10" fill="#0f172a"/>
+       <text x="480" y="20" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#a78bfa">NATUREZA DO REGISTRO DE EMPRESÁRIO</text>
+       <rect x="30" y="30" width="420" height="60" rx="8" fill="#0891b218"/>
+       <rect x="30" y="30" width="420" height="4" rx="2" fill="#38bdf8"/>
+       <text x="240" y="52" text-anchor="middle" font-family="monospace" font-size="12" fill="#38bdf8" font-weight="bold">REGISTRO NORMAL</text>
+       <text x="240" y="72" text-anchor="middle" font-family="monospace" font-size="11" fill="#94a3b8">→ DECLARA a condição de empresário</text>
+       <text x="240" y="86" text-anchor="middle" font-family="monospace" font-size="10" fill="#64748b">(natureza declaratória)</text>
+       <rect x="510" y="30" width="420" height="60" rx="8" fill="#14532d33"/>
+       <rect x="510" y="30" width="420" height="4" rx="2" fill="#4ade80"/>
+       <text x="720" y="52" text-anchor="middle" font-family="monospace" font-size="12" fill="#4ade80" font-weight="bold">REGISTRO RURAL</text>
+       <text x="720" y="72" text-anchor="middle" font-family="monospace" font-size="11" fill="#94a3b8">→ CONSTITUI a condição de empresário</text>
+       <text x="720" y="86" text-anchor="middle" font-family="monospace" font-size="10" fill="#64748b">(natureza constitutiva — facultativo)</text>
+       <text x="480" y="110" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Livros Empresariais<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="150" rx="10" fill="#0f172a"/>
+       <text x="480" y="20" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#a78bfa">LIVROS EMPRESARIAIS — Mnemônico</text>
+       <rect x="30" y="30" width="420" height="90" rx="8" fill="#0891b218"/>
+       <rect x="30" y="30" width="420" height="4" rx="2" fill="#38bdf8"/>
+       <text x="240" y="52" text-anchor="middle" font-family="monospace" font-size="14" fill="#38bdf8" font-weight="bold">DIÁRIO → COP</text>
+       <text x="240" y="74" text-anchor="middle" font-family="monospace" font-size="11" fill="#4ade80">C = Cronológico</text>
+       <text x="240" y="91" text-anchor="middle" font-family="monospace" font-size="11" fill="#4ade80">O = Obrigatório</text>
+       <text x="240" y="108" text-anchor="middle" font-family="monospace" font-size="11" fill="#4ade80">P = Principal</text>
+       <rect x="510" y="30" width="420" height="90" rx="8" fill="#7c3aed18"/>
+       <rect x="510" y="30" width="420" height="4" rx="2" fill="#c084fc"/>
+       <text x="720" y="52" text-anchor="middle" font-family="monospace" font-size="14" fill="#c084fc" font-weight="bold">RAZÃO → FPS</text>
+       <text x="720" y="74" text-anchor="middle" font-family="monospace" font-size="11" fill="#fbbf24">F = Facultativo</text>
+       <text x="720" y="91" text-anchor="middle" font-family="monospace" font-size="11" fill="#fbbf24">P = Principal</text>
+       <text x="720" y="108" text-anchor="middle" font-family="monospace" font-size="11" fill="#fbbf24">S = Sistemático</text>
+       <text x="480" y="140" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill lei">Art. 1.181 — livros obrigatórios devem ser autenticados no Registro Público de Empresas Mercantis antes do uso</span>
+      <span class="pill">Escrituração: idioma e moeda nacional, ordem cronológica, sem rasuras, borrões ou entrelinhas</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🏷️</span>Nome Empresarial<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Firma vs Denominação — Mnemônicos<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="310" rx="10" fill="#0f172a"/>
+       <text x="480" y="20" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#a78bfa">NOME EMPRESARIAL — FIRMA × DENOMINAÇÃO</text>
+       <!-- FIRMA -->
+       <rect x="10" y="32" width="460" height="120" rx="8" fill="#0891b218"/>
+       <rect x="10" y="32" width="460" height="4" rx="2" fill="#38bdf8"/>
+       <text x="240" y="52" text-anchor="middle" font-family="monospace" font-size="12" fill="#38bdf8" font-weight="bold">FIRMA</text>
+       <text x="240" y="68" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">Contém nome civil dos sócios — serve de ASSINATURA</text>
+       <text x="240" y="84" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">TODAS as sociedades adotam FIRMA,</text>
+       <text x="240" y="98" text-anchor="middle" font-family="monospace" font-size="10" fill="#fbbf24">MENOS: </text>
+       <rect x="60" y="105" width="340" height="36" rx="6" fill="#f8717122"/>
+       <text x="240" y="118" text-anchor="middle" font-family="monospace" font-size="14" fill="#f87171" font-weight="bold">S A C O O</text>
+       <text x="240" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Sociedade Anônima · Cooperativa</text>
+       <!-- Individual -->
+       <rect x="30" y="145" width="200" height="26" rx="5" fill="#0891b233"/>
+       <text x="130" y="162" text-anchor="middle" font-family="monospace" font-size="9" fill="#38bdf8">Individual (empresário)</text>
+       <rect x="245" y="145" width="210" height="26" rx="5" fill="#0891b233"/>
+       <text x="350" y="162" text-anchor="middle" font-family="monospace" font-size="9" fill="#38bdf8">Social (firma c/ nomes dos sócios)</text>
+       <!-- DENOMINAÇÃO -->
+       <rect x="490" y="32" width="460" height="120" rx="8" fill="#7c3aed18"/>
+       <rect x="490" y="32" width="460" height="4" rx="2" fill="#a78bfa"/>
+       <text x="720" y="52" text-anchor="middle" font-family="monospace" font-size="12" fill="#a78bfa" font-weight="bold">DENOMINAÇÃO</text>
+       <text x="720" y="68" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">Expressão de fantasia + objeto social</text>
+       <text x="720" y="84" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">TODAS as sociedades adotam DENOMINAÇÃO,</text>
+       <text x="720" y="98" text-anchor="middle" font-family="monospace" font-size="10" fill="#fbbf24">MENOS:</text>
+       <rect x="530" y="105" width="380" height="36" rx="6" fill="#f4722b22"/>
+       <text x="720" y="118" text-anchor="middle" font-family="monospace" font-size="13" fill="#fb923c" font-weight="bold">NO  COCOS IN</text>
+       <text x="720" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Nome Coletivo · Comandita Simples · Individual</text>
+       <!-- Quadro comparativo -->
+       <rect x="10" y="185" width="940" height="112" rx="8" fill="#1e293b"/>
+       <text x="480" y="202" text-anchor="middle" font-family="monospace" font-size="10" font-weight="bold" fill="#64748b">QUADRO COMPARATIVO</text>
+       <!-- headers -->
+       <rect x="20" y="208" width="180" height="20" rx="3" fill="#0f172a"/>
+       <text x="110" y="222" text-anchor="middle" font-family="monospace" font-size="8" fill="#475569">ESPÉCIE</text>
+       <rect x="210" y="208" width="360" height="20" rx="3" fill="#0891b222"/>
+       <text x="390" y="222" text-anchor="middle" font-family="monospace" font-size="8" fill="#38bdf8">FIRMA</text>
+       <rect x="580" y="208" width="360" height="20" rx="3" fill="#7c3aed22"/>
+       <text x="760" y="222" text-anchor="middle" font-family="monospace" font-size="8" fill="#a78bfa">DENOMINAÇÃO</text>
+       <!-- rows -->
+       <text x="110" y="242" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">Individual</text>
+       <text x="390" y="242" text-anchor="middle" font-family="monospace" font-size="8" fill="#4ade80">✔ Nome civil + especificação</text>
+       <text x="760" y="242" text-anchor="middle" font-family="monospace" font-size="8" fill="#f87171">✘</text>
+       <text x="110" y="258" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">S.A.</text>
+       <text x="390" y="258" text-anchor="middle" font-family="monospace" font-size="8" fill="#f87171">✘</text>
+       <text x="760" y="258" text-anchor="middle" font-family="monospace" font-size="8" fill="#4ade80">✔ Obrigatória + "S.A." ou "Cia." (Art. 1.160)</text>
+       <text x="110" y="274" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">Ltda</text>
+       <text x="390" y="274" text-anchor="middle" font-family="monospace" font-size="8" fill="#4ade80">✔ ou</text>
+       <text x="760" y="274" text-anchor="middle" font-family="monospace" font-size="8" fill="#4ade80">✔ (ambas admitidas)</text>
+       <text x="110" y="290" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">Cmd. por Ações</text>
+       <text x="390" y="290" text-anchor="middle" font-family="monospace" font-size="8" fill="#4ade80">✔ (predomina) ou</text>
+       <text x="760" y="290" text-anchor="middle" font-family="monospace" font-size="8" fill="#4ade80">✔ + "Cmd. por Ações" (Art. 1.161)</text>
+       <text x="480" y="302" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill warn">Mnemônico FIRMA: SACOO = Sociedade Anônima + Cooperativa NÃO usam firma</span>
+      <span class="pill warn">Mnemônico DENOMINAÇÃO: NO COCOSIN = Nome Coletivo + Comandita Simples + Individual NÃO usam denominação</span>
+      <span class="pill">Firma individual: nome civil do empresário, completo ou abreviado — pode ter especificação da pessoa ou atividade</span>
+      <span class="pill">Firma social: nome de algum, alguns ou todos os sócios — se não todos → acrescenta "e Companhia" ou "& Cia"</span>
+      <span class="pill">Denominação: expressão de fantasia + objeto social (obrigatório); nome de sócio é facultativo — a título de homenagem</span>
+      <span class="pill danger">Nome empresarial NÃO pode ser objeto de alienação — é intransmissível (Art. 1.164)</span>
+      <span class="pill ok">Exceção: adquirente pode usar nome do alienante precedido do seu próprio, com aditivo "sucessor de"</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Princípios do Nome Empresarial<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 195" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="195" rx="10" fill="#0f172a"/>
+       <text x="480" y="20" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#a78bfa">PRINCÍPIOS DO NOME EMPRESARIAL</text>
+       <!-- VERACIDADE -->
+       <rect x="10" y="32" width="460" height="80" rx="8" fill="#f8717118"/>
+       <rect x="10" y="32" width="460" height="4" rx="2" fill="#f87171"/>
+       <text x="240" y="52" text-anchor="middle" font-family="monospace" font-size="11" fill="#f87171" font-weight="bold">VERACIDADE</text>
+       <text x="240" y="68" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Nome de sócio que FALECEU, foi EXCLUÍDO ou se RETIROU</text>
+       <text x="240" y="84" text-anchor="middle" font-family="monospace" font-size="10" fill="#f87171" font-weight="bold">NÃO pode ser conservado na firma social</text>
+       <text x="240" y="100" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">(o nome deve refletir a realidade dos sócios responsáveis)</text>
+       <!-- NOVIDADE -->
+       <rect x="490" y="32" width="460" height="150" rx="8" fill="#4ade8018"/>
+       <rect x="490" y="32" width="460" height="4" rx="2" fill="#4ade80"/>
+       <text x="720" y="52" text-anchor="middle" font-family="monospace" font-size="11" fill="#4ade80" font-weight="bold">NOVIDADE</text>
+       <text x="720" y="68" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Deve DISTINGUIR-SE de qualquer outro já inscrito no mesmo registro</text>
+       <rect x="510" y="76" width="420" height="24" rx="4" fill="#1e293b"/>
+       <text x="720" y="92" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">Se nome idêntico → acrescentar designação que o distinga</text>
+       <rect x="510" y="106" width="420" height="38" rx="4" fill="#1e293b"/>
+       <text x="720" y="120" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">Inscrição/averbação no registro próprio assegura</text>
+       <text x="720" y="134" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">uso EXCLUSIVO nos limites do ESTADO</text>
+       <text x="720" y="152" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">→ território nacional se registrado na forma da lei especial (Art. 1.166, PU)</text>
+
+       <text x="480" y="192" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill lei">Art. 1.166 — inscrição assegura uso exclusivo do nome nos limites do Estado; estende-se ao território nacional se registrado na forma da lei especial</span>
+
+      <span class="pill danger">PEGADINHA: o uso exclusivo do nome é limitado ao ESTADO — para ter proteção nacional precisa de registro especial</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">📂</span>Atos Registráveis — Matrícula, Arquivamento e Autenticação<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Visão Geral — 3 Espécies de Atos<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="200" rx="10" fill="#0f172a"/>
+       <text x="480" y="22" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#a78bfa">ATOS REGISTRÁVEIS NA JUNTA COMERCIAL (RPEM)</text>
+       <!-- Coluna headers -->
+       <rect x="10" y="32" width="300" height="28" rx="6" fill="#7c3aed33"/>
+       <rect x="10" y="32" width="300" height="3" rx="2" fill="#a78bfa"/>
+       <text x="160" y="51" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#a78bfa">📋 MATRÍCULA</text>
+       <rect x="330" y="32" width="300" height="28" rx="6" fill="#0891b233"/>
+       <rect x="330" y="32" width="300" height="3" rx="2" fill="#38bdf8"/>
+       <text x="480" y="51" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#38bdf8">📁 ARQUIVAMENTO</text>
+       <rect x="650" y="32" width="300" height="28" rx="6" fill="#14532d33"/>
+       <rect x="650" y="32" width="300" height="3" rx="2" fill="#4ade80"/>
+       <text x="800" y="51" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#4ade80">🔏 AUTENTICAÇÃO</text>
+       <!-- Matrícula rows -->
+       <text x="160" y="78" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Leiloeiros</text>
+       <text x="160" y="94" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Tradutores públicos</text>
+       <text x="160" y="110" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Intérpretes comerciais</text>
+       <text x="160" y="126" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Trapicheiros</text>
+       <text x="160" y="142" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Adm. de armazéns-gerais</text>
+       <!-- Arquivamento rows -->
+       <text x="480" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Atos constitutivos, alteração,</text>
+       <text x="480" y="86" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">dissolução e extinção de:</text>
+       <text x="480" y="102" text-anchor="middle" font-family="monospace" font-size="9" fill="#38bdf8">→ Soc. mercantis / Firmas indiv. / Cooperativas</text>
+       <text x="480" y="118" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Atos de consórcio e grupo (Lei 6.404/76)</text>
+       <text x="480" y="134" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Empresas estrangeiras autorizadas no BR</text>
+       <text x="480" y="150" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Declarações de microempresa</text>
+       <text x="480" y="166" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">Atos atribuídos por lei ao RPEM</text>
+       <!-- Autenticação rows -->
+       <text x="800" y="78" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Instrumentos de escrituração de:</text>
+       <text x="800" y="98" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">→ Empresas mercantis registradas</text>
+       <text x="800" y="118" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">→ Agentes auxiliares do comércio</text>
+       <text x="480" y="190" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Matrícula — Agentes Auxiliares<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill">Sujeitos à matrícula na Junta: <strong>Leiloeiros · Tradutores públicos · Intérpretes comerciais · Trapicheiros · Administradores de armazéns-gerais</strong></span>
+      <span class="pill warn">Mnemônico: <strong>L-T-I-T-A</strong> (Leiloeiro, Tradutor, Intérprete, Trapicheiro, Administrador)</span>
+      <span class="pill">Matrícula é o ato de habilitação dos agentes auxiliares para o exercício da atividade</span>
+      <span class="pill danger">PEGADINHA: corretores de imóveis e despachantes NÃO se matriculam na Junta Comercial</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Arquivamento — O que é arquivável<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Documentos de constituição, alteração, dissolução e extinção de: sociedades mercantis, firmas mercantis individuais e cooperativas</span>
+      <span class="pill ok">Atos relativos a consórcio e grupo de sociedades (Lei 6.404/76)</span>
+      <span class="pill ok">Atos de empresas mercantis estrangeiras autorizadas a funcionar no Brasil</span>
+      <span class="pill ok">Declarações de microempresa e empresa de pequeno porte</span>
+      <span class="pill">Atos ou documentos que, por lei, sejam atribuídos ao RPEM ou possam interessar ao empresário e às empresas mercantis</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Autenticação — Livros e Escrituração<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill">Autenticação dos instrumentos de escrituração das empresas mercantis registradas</span>
+      <span class="pill">Autenticação dos instrumentos de escrituração dos agentes auxiliares do comércio</span>
+      <span class="pill warn">A autenticação não é obrigatória para todos os livros — apenas os exigidos por lei para determinadas atividades</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+ </div>
+</div>
+<div class="section-panel c2" id="panel-2">
+ <div class="section-title">
+  <div class="badge" style="background:#34d39922;color:#34d399;">SOC. GERAL</div>
+  </div>
+ <div class="expand-wrap"><button class="expand-btn" onclick="toggleAll('panel-2')">⊞ Expandir tudo</button></div>
+ <div class="mm-grid cols-3">
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">📋</span>Conceito, Classificação e Desconsideração<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Classificação das Sociedades<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Empresária: atividade típica de empresa (Art. 966) → registro na Junta Comercial</span>
+      <span class="pill">Simples: atividade intelectual/científica → registro no Cartório de PJ</span>
+      <span class="pill ok">Personificada: adquire personalidade com registro</span>
+      <span class="pill">Não personificada: em comum / em conta de participação</span>
+      <span class="pill warn">S.A. e Comandita por Ações: SEMPRE empresárias, independente do objeto</span>
+      <span class="pill warn">Cooperativas: SEMPRE simples, independente do objeto</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Desconsideração — Teorias<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Teoria Maior (CC): exige desvio de finalidade OU confusão patrimonial</span>
+      <span class="pill danger">Teoria Menor (CDC/Lei Ambiental): basta o prejuízo ao credor — dispensa fraude</span>
+      <span class="pill">Teoria Inversa: atinge a PJ para alcançar bens do sócio que desviou patrimônio pessoal para a sociedade</span>
+      <span class="pill danger">Desconsideração NÃO dissolve a sociedade — é episódica e pontual</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+
+ </div>
+</div>
+<div class="section-panel c3" id="panel-3">
+ <div class="section-title">
+  <div class="badge" style="background:#c084fc22;color:#c084fc;">NÃO PERSON.</div>
+  </div>
+ <div class="expand-wrap"><button class="expand-btn" onclick="toggleAll('panel-3')">⊞ Expandir tudo</button></div>
+ <div class="mm-grid cols-2">
+
+  <!-- CARD 1: Sociedade em Comum -->
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🚧</span>Sociedade em Comum — Arts. 986–990<span class="toggle">▶</span></div>
+   <div class="l2-list">
+
+    <div class="l2-item">
+     <div class="l2-title">O que é e por que existe<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill danger">É a sociedade que ainda NÃO foi registrada — existe de fato, não de direito</span>
+      <span class="pill">Também chamada de sociedade irregular ou de fato</span>
+      <span class="pill warn">Não tem personalidade jurídica → não pode ser titular de bens, contratar em nome próprio nem ir a juízo</span>
+      <span class="pill ok">Pode provar sua existência por QUALQUER meio de prova (escrita, oral, testemunhal)</span>
+      <span class="pill danger">Sócios NÃO podem alegar a existência da sociedade em comum contra terceiros de boa-fé</span>
+     </div>
+    </div>
+
+    <div class="l2-item">
+     <div class="l2-title">Responsabilidade dos Sócios — Art. 990<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="230" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#c084fc">SOCIEDADE EM COMUM — ORDEM DE EXECUÇÃO (Art. 990)</text>
+
+       <!-- Sócio que contratou -->
+       <rect x="30" y="28" width="400" height="52" rx="8" fill="#7f1d1d44"/>
+       <rect x="30" y="28" width="400" height="3" rx="2" fill="#f87171"/>
+       <text x="230" y="47" text-anchor="middle" font-family="monospace" font-size="10" fill="#f87171" font-weight="bold">SÓCIO QUE CONTRATOU COM TERCEIROS</text>
+       <text x="230" y="63" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Responde PRIMEIRO com seu patrimônio pessoal</text>
+       <text x="230" y="76" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#64748b">Sem benefício de ordem — não pode recusar</text>
+
+       <!-- Seta 1 -->
+       <line x1="480" y1="54" x2="530" y2="54" stroke="#475569" stroke-width="1.5"/>
+       <polygon points="530,50 538,54 530,58" fill="#475569"/>
+
+       <!-- Patrimônio da sociedade -->
+       <rect x="540" y="28" width="390" height="52" rx="8" fill="#fbbf2418"/>
+       <rect x="540" y="28" width="390" height="3" rx="2" fill="#fbbf24"/>
+       <text x="735" y="47" text-anchor="middle" font-family="monospace" font-size="10" fill="#fbbf24" font-weight="bold">PATRIMÔNIO DA SOCIEDADE</text>
+       <text x="735" y="63" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Executado se patrimônio do sócio for insuficiente</text>
+       <text x="735" y="76" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#64748b">Art. 1.024 CC (aplicado subsidiariamente)</text>
+
+       <!-- Seta 2 descendo -->
+       <line x1="480" y1="80" x2="480" y2="105" stroke="#475569" stroke-width="1.5"/>
+
+       <!-- Demais sócios -->
+       <rect x="200" y="105" width="560" height="52" rx="8" fill="#0891b218"/>
+       <rect x="200" y="105" width="560" height="3" rx="2" fill="#38bdf8"/>
+       <text x="480" y="124" text-anchor="middle" font-family="monospace" font-size="10" fill="#38bdf8" font-weight="bold">DEMAIS SÓCIOS (solidária e ilimitadamente)</text>
+       <text x="480" y="140" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Se insuficientes 1º e 2º → respondem solidária e ilimitadamente</text>
+       <text x="480" y="153" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#4ade80">Estes SIM têm benefício de ordem (escolhem a sequência)</text>
+
+       <!-- Destaque diferença -->
+       <rect x="30" y="168" width="900" height="44" rx="6" fill="#1e3a5f"/>
+       <text x="480" y="185" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24" font-weight="bold">⚠ DIFERENÇA CRUCIAL:</text>
+       <text x="480" y="199" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Sócio que contratou → patrimônio executado PRIMEIRO, sem opção de escolha</text>
+       <text x="480" y="212" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Demais sócios → têm benefício de ordem, patrimônio executado por último</text>
+
+       <text x="480" y="224" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+
+    <div class="l2-item">
+     <div class="l2-title">Patrimônio e Prova da Sociedade<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill lei">Art. 988 — os bens sociais respondem pelos atos de gestão praticados por qualquer dos sócios</span>
+      <span class="pill ok">Bens sociais são aqueles trazidos pelos sócios ao empreendimento (ainda que sem registro formal)</span>
+      <span class="pill warn">Terceiro de boa-fé que contratou com a sociedade pode demandar diretamente o patrimônio dos sócios</span>
+      <span class="pill danger">Prova documental do contrato social: só pode ser usada PELOS SÓCIOS entre si — não contra terceiros</span>
+     </div>
+    </div>
+
+    <div class="l2-item">
+     <div class="l2-title">Quadro Resumo — Características<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="180" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#c084fc">SOCIEDADE EM COMUM — CARACTERÍSTICAS</text>
+       <rect x="10" y="26" width="460" height="26" rx="4" fill="#1e293b"/>
+       <text x="30" y="43" font-family="monospace" font-size="9" fill="#64748b">Personalidade jurídica</text>
+       <text x="460" y="43" text-anchor="end" font-family="monospace" font-size="9" fill="#f87171">❌ Não possui</text>
+       <rect x="490" y="26" width="460" height="26" rx="4" fill="#1e293b"/>
+       <text x="510" y="43" font-family="monospace" font-size="9" fill="#64748b">Registro</text>
+       <text x="940" y="43" text-anchor="end" font-family="monospace" font-size="9" fill="#f87171">❌ Não registrada</text>
+       <rect x="10" y="56" width="460" height="26" rx="4" fill="#0f172a"/>
+       <text x="30" y="73" font-family="monospace" font-size="9" fill="#64748b">Nome empresarial</text>
+       <text x="460" y="73" text-anchor="end" font-family="monospace" font-size="9" fill="#f87171">❌ Não possui</text>
+       <rect x="490" y="56" width="460" height="26" rx="4" fill="#0f172a"/>
+       <text x="510" y="73" font-family="monospace" font-size="9" fill="#64748b">Prova de existência</text>
+       <text x="940" y="73" text-anchor="end" font-family="monospace" font-size="9" fill="#4ade80">✓ Qualquer meio admitido</text>
+       <rect x="10" y="86" width="460" height="26" rx="4" fill="#1e293b"/>
+       <text x="30" y="103" font-family="monospace" font-size="9" fill="#64748b">Resp. do sócio contratante</text>
+       <text x="460" y="103" text-anchor="end" font-family="monospace" font-size="9" fill="#f87171">Ilimitada e PRIMEIRO</text>
+       <rect x="490" y="86" width="460" height="26" rx="4" fill="#1e293b"/>
+       <text x="510" y="103" font-family="monospace" font-size="9" fill="#64748b">Resp. demais sócios</text>
+       <text x="940" y="103" text-anchor="end" font-family="monospace" font-size="9" fill="#fbbf24">Solidária e ilimitada (c/ benef. de ordem)</text>
+       <rect x="10" y="116" width="460" height="26" rx="4" fill="#0f172a"/>
+       <text x="30" y="133" font-family="monospace" font-size="9" fill="#64748b">Pode ir a juízo?</text>
+       <text x="460" y="133" text-anchor="end" font-family="monospace" font-size="9" fill="#f87171">❌ Não como sociedade</text>
+       <rect x="490" y="116" width="460" height="26" rx="4" fill="#0f172a"/>
+       <text x="510" y="133" font-family="monospace" font-size="9" fill="#64748b">Falência</text>
+       <text x="940" y="133" text-anchor="end" font-family="monospace" font-size="9" fill="#fbbf24">Pode ser decretada</text>
+       <rect x="10" y="146" width="460" height="26" rx="4" fill="#1e293b"/>
+       <text x="30" y="163" font-family="monospace" font-size="9" fill="#64748b">Recuperação judicial</text>
+       <text x="460" y="163" text-anchor="end" font-family="monospace" font-size="9" fill="#f87171">❌ Não pode pedir</text>
+       <rect x="490" y="146" width="460" height="26" rx="4" fill="#1e293b"/>
+       <text x="510" y="163" font-family="monospace" font-size="9" fill="#64748b">Regulada por</text>
+       <text x="940" y="163" text-anchor="end" font-family="monospace" font-size="9" fill="#94a3b8">CC arts. 986–990</text>
+       <text x="480" y="172" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+
+   </div>
+  </div>
+
+  <!-- CARD 2: Sociedade em Conta de Participação -->
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🫥</span>Soc. em Conta de Participação — Arts. 991–996<span class="toggle">▶</span></div>
+   <div class="l2-list">
+
+    <div class="l2-item">
+     <div class="l2-title">Conceito e Natureza Jurídica<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill danger">NÃO personificada — não tem CNPJ, nome empresarial nem registro de ato constitutivo</span>
+      <span class="pill lei">Art. 991 — o sócio ostensivo obriga-se perante terceiros; o sócio participante obriga-se apenas para com o ostensivo</span>
+      <span class="pill ok">Pode ter contrato escrito ou verbal — a falta de registro não a descaracteriza</span>
+      <span class="pill warn">Terceiros de boa-fé sequer sabem da existência do sócio participante — relação é sigilosa</span>
+      <span class="pill danger">Prova documental do contrato: só pode ser oposta entre os sócios — NÃO contra terceiros</span>
+     </div>
+    </div>
+
+    <div class="l2-item">
+     <div class="l2-title">Ostensivo × Participante (Oculto)<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="240" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#c084fc">SÓCIO OSTENSIVO × SÓCIO PARTICIPANTE</text>
+       <!-- Cabeçalhos -->
+       <rect x="10" y="26" width="200" height="26" rx="5" fill="#1e293b"/>
+       <text x="110" y="43" text-anchor="middle" font-family="monospace" font-size="10" fill="#64748b">CRITÉRIO</text>
+       <rect x="218" y="26" width="350" height="26" rx="5" fill="#0891b218"/>
+       <rect x="218" y="26" width="350" height="3" fill="#38bdf8"/>
+       <text x="393" y="43" text-anchor="middle" font-family="monospace" font-size="11" fill="#38bdf8" font-weight="bold">OSTENSIVO</text>
+       <rect x="576" y="26" width="374" height="26" rx="5" fill="#7c3aed18"/>
+       <rect x="576" y="26" width="374" height="3" fill="#c084fc"/>
+       <text x="763" y="43" text-anchor="middle" font-family="monospace" font-size="11" fill="#c084fc" font-weight="bold">PARTICIPANTE (Oculto)</text>
+       <!-- Linhas -->
+       <rect x="10" y="56" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Visibilidade</text>
+       <rect x="218" y="56" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Aparece perante terceiros</text>
+       <rect x="576" y="56" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Permanece oculto / sigiloso</text>
+       <rect x="10" y="86" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Obrigações externas</text>
+       <rect x="218" y="86" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Ilimitada perante terceiros</text>
+       <rect x="576" y="86" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">Apenas internamente (com ostensivo)</text>
+       <rect x="10" y="116" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Administração</text>
+       <rect x="218" y="116" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">Administra e age em nome próprio</text>
+       <rect x="576" y="116" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">NÃO administra (salvo autorização)</text>
+       <rect x="10" y="146" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Tipo de pessoa</text>
+       <rect x="218" y="146" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">PF ou PJ</text>
+       <rect x="576" y="146" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">PF ou PJ</text>
+       <rect x="10" y="176" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="193" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Falência</text>
+       <rect x="218" y="176" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="193" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Falência afeta o ostensivo</text>
+       <rect x="576" y="176" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="193" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">Crédito habilitado na massa do ostensivo</text>
+       <text x="480" y="230" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+
+    <div class="l2-item">
+     <div class="l2-title">Fluxo da SCP — Como funciona<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="180" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#c084fc">FUNCIONAMENTO DA SCP</text>
+       <!-- Participante -->
+       <rect x="20" y="30" width="190" height="50" rx="8" fill="#7c3aed18"/>
+       <rect x="20" y="30" width="190" height="3" rx="2" fill="#c084fc"/>
+       <text x="115" y="52" text-anchor="middle" font-family="monospace" font-size="10" fill="#c084fc" font-weight="bold">PARTICIPANTE</text>
+       <text x="115" y="68" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">Aporta capital / recursos</text>
+       <!-- Seta para ostensivo -->
+       <line x1="210" y1="55" x2="260" y2="55" stroke="#475569" stroke-width="1.5"/>
+       <polygon points="260,51 268,55 260,59" fill="#475569"/>
+       <!-- Ostensivo -->
+       <rect x="268" y="30" width="200" height="50" rx="8" fill="#0891b225"/>
+       <rect x="268" y="30" width="200" height="3" rx="2" fill="#38bdf8"/>
+       <text x="368" y="52" text-anchor="middle" font-family="monospace" font-size="10" fill="#38bdf8" font-weight="bold">OSTENSIVO</text>
+       <text x="368" y="68" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">Gere o negócio, age em nome próprio</text>
+       <!-- Seta para terceiros -->
+       <line x1="468" y1="55" x2="518" y2="55" stroke="#475569" stroke-width="1.5"/>
+       <polygon points="518,51 526,55 518,59" fill="#475569"/>
+       <!-- Terceiros -->
+       <rect x="526" y="30" width="180" height="50" rx="8" fill="#1e293b"/>
+       <text x="616" y="52" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8" font-weight="bold">TERCEIROS</text>
+       <text x="616" y="68" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#64748b">Só conhecem o ostensivo</text>
+       <!-- Seta de resultado -->
+       <line x1="368" y1="80" x2="368" y2="105" stroke="#4ade80" stroke-width="1.5"/>
+       <polygon points="364,105 368,113 372,105" fill="#4ade80"/>
+       <rect x="218" y="113" width="300" height="35" rx="6" fill="#14532d44"/>
+       <rect x="218" y="113" width="300" height="3" rx="2" fill="#4ade80"/>
+       <text x="368" y="130" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80" font-weight="bold">Lucros divididos conforme contrato</text>
+       <text x="368" y="143" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">Participante recebe sua parte internamente</text>
+       <!-- Nota -->
+       <rect x="720" y="105" width="220" height="55" rx="6" fill="#1e3a5f"/>
+       <text x="830" y="123" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#fbbf24" font-weight="bold">⚠ Participante que age</text>
+       <text x="830" y="137" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#fbbf24">externamente passa a</text>
+       <text x="830" y="151" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#f87171">responder como ostensivo</text>
+       <text x="480" y="172" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+
+    <div class="l2-item">
+     <div class="l2-title">Regras Especiais e Pegadinhas<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill lei">Art. 994 — o patrimônio especial da SCP (bens do negócio) responde exclusivamente pelas obrigações da sociedade</span>
+      <span class="pill ok">Falência do ostensivo: o crédito do participante é habilitado como quirografário na massa falida</span>
+      <span class="pill danger">Falência do participante: o contrato pode ser denunciado; o ostensivo pode liquidar a conta e cobrar saldo</span>
+      <span class="pill warn">SCP tem contabilidade separada para fins fiscais (IRPJ/CSLL) — mas não tem CNPJ próprio</span>
+      <span class="pill danger">PEGADINHA: sócio participante NÃO possui firma, NÃO aparece nos contratos e NÃO tem responsabilidade perante terceiros — mas responde internamente de forma ILIMITADA com o ostensivo</span>
+     </div>
+    </div>
+
+   </div>
+  </div>
+
+ </div>
+</div>
+<div class="section-panel c4" id="panel-4">
+ <div class="section-title">
+  <div class="badge" style="background:#fb923c22;color:#fb923c;">TIPOS ESPEC.</div>
+  </div>
+ <div class="expand-wrap"><button class="expand-btn" onclick="toggleAll('panel-4')">⊞ Expandir tudo</button></div>
+ <div class="mm-grid cols-2">
+
+  <!-- CARD 1: Nome Coletivo -->
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">👥</span>Sociedade em Nome Coletivo — Arts. 1.039–1.044<span class="toggle">▶</span></div>
+   <div class="l2-list">
+
+    <div class="l2-item">
+     <div class="l2-title">Características Fundamentais<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="180" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#fb923c">SOCIEDADE EM NOME COLETIVO — MAPA</text>
+       <rect x="10" y="26" width="460" height="26" rx="4" fill="#1e293b"/>
+       <text x="30" y="43" font-family="monospace" font-size="9" fill="#64748b">Sócios</text>
+       <text x="460" y="43" text-anchor="end" font-family="monospace" font-size="9" fill="#f87171" font-weight="bold">SOMENTE pessoas físicas (Art. 1.039)</text>
+       <rect x="490" y="26" width="460" height="26" rx="4" fill="#1e293b"/>
+       <text x="510" y="43" font-family="monospace" font-size="9" fill="#64748b">Responsabilidade perante 3ºs</text>
+       <text x="940" y="43" text-anchor="end" font-family="monospace" font-size="9" fill="#f87171" font-weight="bold">Solidária e ILIMITADA</text>
+       <rect x="10" y="56" width="460" height="26" rx="4" fill="#0f172a"/>
+       <text x="30" y="73" font-family="monospace" font-size="9" fill="#64748b">Resp. entre os próprios sócios</text>
+       <text x="460" y="73" text-anchor="end" font-family="monospace" font-size="9" fill="#4ade80">Podem limitar (ato constitutivo ou unanimidade)</text>
+       <rect x="490" y="56" width="460" height="26" rx="4" fill="#0f172a"/>
+       <text x="510" y="73" font-family="monospace" font-size="9" fill="#64748b">Administração</text>
+       <text x="940" y="73" text-anchor="end" font-family="monospace" font-size="9" fill="#fbbf24">Exclusiva dos sócios (Art. 1.042)</text>
+       <rect x="10" y="86" width="460" height="26" rx="4" fill="#1e293b"/>
+       <text x="30" y="103" font-family="monospace" font-size="9" fill="#64748b">Uso da firma</text>
+       <text x="460" y="103" text-anchor="end" font-family="monospace" font-size="9" fill="#fbbf24">Privativo de quem tem poderes no contrato</text>
+       <rect x="490" y="86" width="460" height="26" rx="4" fill="#1e293b"/>
+       <text x="510" y="103" font-family="monospace" font-size="9" fill="#64748b">Nome empresarial</text>
+       <text x="940" y="103" text-anchor="end" font-family="monospace" font-size="9" fill="#38bdf8">Firma social (nomes dos sócios)</text>
+       <rect x="10" y="116" width="460" height="26" rx="4" fill="#0f172a"/>
+       <text x="30" y="133" font-family="monospace" font-size="9" fill="#64748b">Regência supletiva</text>
+       <text x="460" y="133" text-anchor="end" font-family="monospace" font-size="9" fill="#94a3b8">Sociedade Simples (Arts. 997–1.038)</text>
+       <rect x="490" y="116" width="460" height="26" rx="4" fill="#0f172a"/>
+       <text x="510" y="133" font-family="monospace" font-size="9" fill="#64748b">Tipo societário</text>
+       <text x="940" y="133" text-anchor="end" font-family="monospace" font-size="9" fill="#94a3b8">Empresária ou Simples (conforme objeto)</text>
+       <rect x="10" y="146" width="940" height="24" rx="4" fill="#1e3a5f"/>
+       <text x="480" y="162" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">⚠ Limitação de resp. entre sócios exige UNANIMIDADE — não prejudica terceiros</text>
+       <text x="480" y="173" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+
+    <div class="l2-item">
+     <div class="l2-title">Dissolução — Parcial e Total<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="150" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#fb923c">DISSOLUÇÃO — NOME COLETIVO</text>
+       <rect x="20" y="26" width="430" height="85" rx="8" fill="#0891b218"/>
+       <rect x="20" y="26" width="430" height="3" rx="2" fill="#38bdf8"/>
+       <text x="235" y="45" text-anchor="middle" font-family="monospace" font-size="10" fill="#38bdf8" font-weight="bold">DISSOLUÇÃO PARCIAL (Art. 1.043)</text>
+       <text x="235" y="62" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Credor particular do sócio NÃO pode pedir</text>
+       <text x="235" y="76" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">liquidação da quota antes da dissolução</text>
+       <text x="235" y="92" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">PODE se: prorrogada tacitamente OU</text>
+       <text x="235" y="106" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">oposição acolhida em 90d da prorrogação contratual</text>
+       <rect x="510" y="26" width="430" height="85" rx="8" fill="#f8717118"/>
+       <rect x="510" y="26" width="430" height="3" rx="2" fill="#f87171"/>
+       <text x="725" y="45" text-anchor="middle" font-family="monospace" font-size="10" fill="#f87171" font-weight="bold">DISSOLUÇÃO TOTAL (Art. 1.044)</text>
+       <text x="725" y="62" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Causas do Art. 1.033 (gerais)</text>
+       <text x="725" y="76" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">+ Se empresária: declaração de FALÊNCIA</text>
+       <text x="480" y="142" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+
+   </div>
+  </div>
+
+  <!-- CARD 2: Comandita Simples -->
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">⚔️</span>Sociedade em Comandita Simples — Arts. 1.045–1.051<span class="toggle">▶</span></div>
+   <div class="l2-list">
+
+    <div class="l2-item">
+     <div class="l2-title">Comanditado × Comanditário — Comparativo Completo<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="230" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#fb923c">COMANDITA SIMPLES — DOIS TIPOS DE SÓCIOS</text>
+       <rect x="10" y="26" width="200" height="26" rx="5" fill="#1e293b"/>
+       <text x="110" y="43" text-anchor="middle" font-family="monospace" font-size="10" fill="#64748b">CRITÉRIO</text>
+       <rect x="218" y="26" width="350" height="26" rx="5" fill="#f8717118"/>
+       <rect x="218" y="26" width="350" height="3" fill="#f87171"/>
+       <text x="393" y="43" text-anchor="middle" font-family="monospace" font-size="11" fill="#f87171" font-weight="bold">COMANDITADO (C/D)</text>
+       <rect x="576" y="26" width="374" height="26" rx="5" fill="#4ade8018"/>
+       <rect x="576" y="26" width="374" height="3" fill="#4ade80"/>
+       <text x="763" y="43" text-anchor="middle" font-family="monospace" font-size="11" fill="#4ade80" font-weight="bold">COMANDITÁRIO (C/R)</text>
+       <rect x="10" y="56" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Tipo de pessoa</text>
+       <rect x="218" y="56" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Somente PESSOA FÍSICA</text>
+       <rect x="576" y="56" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">Pessoa física OU jurídica</text>
+       <rect x="10" y="86" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Responsabilidade</text>
+       <rect x="218" y="86" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Solidária e ILIMITADA</text>
+       <rect x="576" y="86" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">Limitada ao valor da quota</text>
+       <rect x="10" y="116" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Gestão / Administração</text>
+       <rect x="218" y="116" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">✓ Pode administrar</text>
+       <rect x="576" y="116" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">✗ NÃO pode praticar ato de gestão</text>
+       <rect x="10" y="146" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Nome na firma</text>
+       <rect x="218" y="146" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Pode ter nome na firma</text>
+       <rect x="576" y="146" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">✗ NÃO pode — pena: resp. ilimitada</text>
+       <rect x="10" y="176" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="193" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Pode fiscalizar?</text>
+       <rect x="218" y="176" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="193" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">—</text>
+       <rect x="576" y="176" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="193" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">✓ Pode deliberar e fiscalizar</text>
+       <text x="480" y="222" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill lei">Art. 1.045 PU — contrato DEVE discriminar expressamente os comanditados e os comanditários</span>
+      <span class="pill ok">Comanditário pode ser constituído PROCURADOR para negócio determinado com poderes especiais — sem se tornar responsável como comanditado</span>
+      <span class="pill lei">Art. 1.049 — comanditário NÃO é obrigado a repor lucros recebidos de boa-fé e conforme o balanço</span>
+     </div>
+    </div>
+
+    <div class="l2-item">
+     <div class="l2-title">Dissolução e Regra dos 180 dias<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="130" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#fb923c">DISSOLUÇÃO TOTAL — Art. 1.051</text>
+       <rect x="20" y="26" width="430" height="70" rx="8" fill="#f8717118"/>
+       <rect x="20" y="26" width="430" height="3" rx="2" fill="#f87171"/>
+       <text x="235" y="46" text-anchor="middle" font-family="monospace" font-size="10" fill="#f87171" font-weight="bold">Causas gerais (Art. 1.044)</text>
+       <text x="235" y="63" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Mesmas causas da Soc. em Nome Coletivo</text>
+       <text x="235" y="78" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">(art. 1.033 + falência se empresária)</text>
+       <rect x="510" y="26" width="430" height="70" rx="8" fill="#fbbf2418"/>
+       <rect x="510" y="26" width="430" height="3" rx="2" fill="#fbbf24"/>
+       <text x="725" y="46" text-anchor="middle" font-family="monospace" font-size="10" fill="#fbbf24" font-weight="bold">Falta de uma das categorias por</text>
+       <text x="725" y="63" text-anchor="middle" font-family="monospace" font-size="14" fill="#fbbf24" font-weight="bold">+ 180 dias</text>
+       <text x="725" y="83" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Sem comanditado OU sem comanditário por 180d</text>
+       <rect x="20" y="100" width="920" height="22" rx="4" fill="#1e3a5f"/>
+       <text x="480" y="115" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">⚠ Na falta de sócio comanditado: comanditários nomeiam administrador provisório (sem ser sócio)</text>
+       <text x="480" y="124" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill warn">Morte do sócio comanditário → sociedade CONTINUA com seus sucessores (salvo disposição contrária)</span>
+      <span class="pill">Regência supletiva: normas da Soc. em Nome Coletivo (que por sua vez usa Soc. Simples)</span>
+     </div>
+    </div>
+
+   </div>
+  </div>
+
+  <!-- CARD 3: Comandita por Ações -->
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">📈</span>Sociedade em Comandita por Ações — Arts. 1.090–1.092<span class="toggle">▶</span></div>
+   <div class="l2-list">
+
+    <div class="l2-item">
+     <div class="l2-title">Estrutura e Comparativo com S.A.<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="200" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#fb923c">COMANDITA POR AÇÕES — REGRAS S.A. EXCETO...</text>
+       <rect x="10" y="26" width="200" height="26" rx="5" fill="#1e293b"/>
+       <text x="110" y="43" text-anchor="middle" font-family="monospace" font-size="10" fill="#64748b">TEMA</text>
+       <rect x="218" y="26" width="350" height="26" rx="5" fill="#4ade8018"/>
+       <rect x="218" y="26" width="350" height="3" fill="#4ade80"/>
+       <text x="393" y="43" text-anchor="middle" font-family="monospace" font-size="11" fill="#4ade80" font-weight="bold">IGUAL À S.A.</text>
+       <rect x="576" y="26" width="374" height="26" rx="5" fill="#f8717118"/>
+       <rect x="576" y="26" width="374" height="3" fill="#f87171"/>
+       <text x="763" y="43" text-anchor="middle" font-family="monospace" font-size="11" fill="#f87171" font-weight="bold">DIFERENTE / EXCLUÍDO</text>
+       <rect x="10" y="56" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Natureza</text>
+       <rect x="218" y="56" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">Sempre EMPRESÁRIA</text>
+       <rect x="576" y="56" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">—</text>
+       <rect x="10" y="86" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Capital</text>
+       <rect x="218" y="86" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">Dividido em AÇÕES</text>
+       <rect x="576" y="86" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">—</text>
+       <rect x="10" y="116" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Nome empresarial</text>
+       <rect x="218" y="116" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">Firma OU Denominação + "C/A"</text>
+       <rect x="576" y="116" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">—</text>
+       <rect x="10" y="146" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Não se aplica (Art. 284)</text>
+       <rect x="218" y="146" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">—</text>
+       <rect x="576" y="146" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Conselho de Adm. · Autorizaç. aumento capital · Bônus subscrição</text>
+       <text x="480" y="193" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+
+    <div class="l2-item">
+     <div class="l2-title">Administração — Regras Especiais<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="150" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#fb923c">ADMINISTRAÇÃO — COMANDITA POR AÇÕES</text>
+       <rect x="20" y="26" width="280" height="95" rx="8" fill="#0891b218"/>
+       <rect x="20" y="26" width="280" height="3" rx="2" fill="#38bdf8"/>
+       <text x="160" y="46" text-anchor="middle" font-family="monospace" font-size="10" fill="#38bdf8" font-weight="bold">QUEM ADMINISTRA</text>
+       <text x="160" y="63" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">Somente ACIONISTA (sócio)</text>
+       <text x="160" y="78" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Diretor ou Gerente</text>
+       <text x="160" y="93" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">Resp.: subsidiária e ILIMITADA</text>
+       <text x="160" y="108" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Se mais de 1 diretor → solidários</text>
+       <rect x="320" y="26" width="280" height="95" rx="8" fill="#f8717118"/>
+       <rect x="320" y="26" width="280" height="3" rx="2" fill="#f87171"/>
+       <text x="460" y="46" text-anchor="middle" font-family="monospace" font-size="10" fill="#f87171" font-weight="bold">DESTITUIÇÃO</text>
+       <text x="460" y="63" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">Mínimo 2/3 do capital social</text>
+       <text x="460" y="78" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Nomeado no ESTATUTO</text>
+       <text x="460" y="93" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Sem limitação de tempo</text>
+       <rect x="620" y="26" width="320" height="95" rx="8" fill="#4ade8018"/>
+       <rect x="620" y="26" width="320" height="3" rx="2" fill="#4ade80"/>
+       <text x="780" y="46" text-anchor="middle" font-family="monospace" font-size="10" fill="#4ade80" font-weight="bold">APÓS SAÍDA</text>
+       <text x="780" y="63" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">Continua responsável por</text>
+       <text x="780" y="78" text-anchor="middle" font-family="monospace" font-size="14" fill="#fbbf24" font-weight="bold">2 ANOS</text>
+       <text x="780" y="98" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">pelas obrigações contraídas</text>
+       <rect x="20" y="128" width="920" height="14" rx="4" fill="#1e3a5f"/>
+       <text x="480" y="139" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#fbbf24">⚠ Mnemônico: simPLes → Nome coLetivo · por Ações → SociedAde Anônima</text>
+       <text x="480" y="143" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+
+   </div>
+  </div>
+
+  <!-- CARD 4: Cooperativa -->
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🤝</span>Sociedade Cooperativa — Arts. 1.093–1.096 e Lei 5.764/71<span class="toggle">▶</span></div>
+   <div class="l2-list">
+
+    <div class="l2-item">
+     <div class="l2-title">Perfil e Natureza Jurídica<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="120" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#34d399">COOPERATIVA — PERFIL JURÍDICO</text>
+       <rect x="10" y="26" width="220" height="72" rx="6" fill="#14532d33"/>
+       <rect x="10" y="26" width="220" height="3" rx="2" fill="#34d399"/>
+       <text x="120" y="44" text-anchor="middle" font-family="monospace" font-size="9" fill="#34d399" font-weight="bold">SEMPRE SIMPLES</text>
+       <text x="120" y="59" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">Independe do objeto</text>
+       <text x="120" y="73" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">Art. 982 PU CC</text>
+       <text x="120" y="87" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#64748b">Registro: Junta Comercial</text>
+       <rect x="240" y="26" width="220" height="72" rx="6" fill="#0891b218"/>
+       <rect x="240" y="26" width="220" height="3" rx="2" fill="#38bdf8"/>
+       <text x="350" y="44" text-anchor="middle" font-family="monospace" font-size="9" fill="#38bdf8" font-weight="bold">SOCIEDADE DE PESSOAS</text>
+       <text x="350" y="59" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">Não de capital</text>
+       <text x="350" y="73" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">Natureza civil</text>
+       <text x="350" y="87" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#4ade80">NÃO sujeita à falência</text>
+       <rect x="470" y="26" width="220" height="72" rx="6" fill="#7c3aed18"/>
+       <rect x="470" y="26" width="220" height="3" rx="2" fill="#c084fc"/>
+       <text x="580" y="44" text-anchor="middle" font-family="monospace" font-size="9" fill="#c084fc" font-weight="bold">FINALIDADE</text>
+       <text x="580" y="59" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">Atividade econômica</text>
+       <text x="580" y="73" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">Proveito comum</text>
+       <text x="580" y="87" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">Natureza mutualística</text>
+       <rect x="700" y="26" width="250" height="72" rx="6" fill="#fbbf2418"/>
+       <rect x="700" y="26" width="250" height="3" rx="2" fill="#fbbf24"/>
+       <text x="825" y="44" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24" font-weight="bold">RESPONSABILIDADE</text>
+       <text x="825" y="59" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">Pode ser LIMITADA</text>
+       <text x="825" y="73" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#94a3b8">ou ILIMITADA</text>
+       <text x="825" y="87" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#64748b">Art. 1.095 CC</text>
+       <text x="480" y="113" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+
+    <div class="l2-item">
+     <div class="l2-title">8 Características — Art. 1.094 CC<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="250" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#34d399">8 CARACTERÍSTICAS DA COOPERATIVA (Art. 1.094)</text>
+       <!-- I -->
+       <rect x="10" y="26" width="455" height="30" rx="5" fill="#1e293b"/>
+       <text x="26" y="46" font-family="monospace" font-size="9" fill="#34d399" font-weight="bold">I</text>
+       <text x="45" y="46" font-family="monospace" font-size="9" fill="#94a3b8">Variabilidade ou DISPENSA do capital social</text>
+       <!-- II -->
+       <rect x="495" y="26" width="455" height="30" rx="5" fill="#1e293b"/>
+       <text x="511" y="46" font-family="monospace" font-size="9" fill="#34d399" font-weight="bold">II</text>
+       <text x="530" y="46" font-family="monospace" font-size="9" fill="#94a3b8">Sócios: nº mínimo necessário, SEM limitação máxima</text>
+       <!-- III -->
+       <rect x="10" y="60" width="455" height="30" rx="5" fill="#0f172a"/>
+       <text x="26" y="80" font-family="monospace" font-size="9" fill="#34d399" font-weight="bold">III</text>
+       <text x="45" y="80" font-family="monospace" font-size="9" fill="#94a3b8">Limitação do valor das quotas por sócio</text>
+       <!-- IV -->
+       <rect x="495" y="60" width="455" height="30" rx="5" fill="#0f172a"/>
+       <text x="511" y="80" font-family="monospace" font-size="9" fill="#f87171" font-weight="bold">IV</text>
+       <text x="530" y="80" font-family="monospace" font-size="9" fill="#f87171">Intransferibilidade das quotas a terceiros (até por herança)</text>
+       <!-- V -->
+       <rect x="10" y="94" width="455" height="30" rx="5" fill="#1e293b"/>
+       <text x="26" y="114" font-family="monospace" font-size="9" fill="#fbbf24" font-weight="bold">V</text>
+       <text x="45" y="114" font-family="monospace" font-size="9" fill="#fbbf24">Quórum AG: nº de SÓCIOS presentes (não pelo capital)</text>
+       <!-- VI -->
+       <rect x="495" y="94" width="455" height="30" rx="5" fill="#1e293b"/>
+       <text x="511" y="114" font-family="monospace" font-size="9" fill="#fbbf24" font-weight="bold">VI</text>
+       <text x="530" y="114" font-family="monospace" font-size="9" fill="#fbbf24">1 sócio = 1 voto (independe do capital ou valor da quota)</text>
+       <!-- VII -->
+       <rect x="10" y="128" width="455" height="30" rx="5" fill="#0f172a"/>
+       <text x="26" y="148" font-family="monospace" font-size="9" fill="#34d399" font-weight="bold">VII</text>
+       <text x="45" y="148" font-family="monospace" font-size="9" fill="#94a3b8">Distribuição dos resultados proporcional às OPERAÇÕES do sócio</text>
+       <!-- VIII -->
+       <rect x="495" y="128" width="455" height="30" rx="5" fill="#0f172a"/>
+       <text x="511" y="148" font-family="monospace" font-size="9" fill="#f87171" font-weight="bold">VIII</text>
+       <text x="530" y="148" font-family="monospace" font-size="9" fill="#f87171">Fundo de reserva INDIVISÍVEL (nem na dissolução)</text>
+       <!-- Destaque -->
+       <rect x="10" y="164" width="940" height="70" rx="6" fill="#14532d33"/>
+       <rect x="10" y="164" width="940" height="3" rx="2" fill="#34d399"/>
+       <text x="480" y="183" text-anchor="middle" font-family="monospace" font-size="9" fill="#34d399" font-weight="bold">MNEMÔNICO: V-S-L-I · Q-V · D-F</text>
+       <text x="480" y="198" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Variabilidade · Sócios ilimitados · Limitação de quotas · Intransferibilidade</text>
+       <text x="480" y="212" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Quórum por cabeça · Voto único · Distribuição por operações · Fundo indivisível</text>
+       <rect x="10" y="218" width="940" height="24" rx="4" fill="#1e3a5f"/>
+       <text x="480" y="230" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">⚠ CF Art. 5º, XVIII: criação de cooperativa independe de autorização, vedada interferência estatal</text>
+       <text x="480" y="243" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill lei">Art. 1.096 — no que a lei for omissa, aplicam-se as disposições da Sociedade Simples</span>
+      <span class="pill danger">Cooperativa NÃO está sujeita à falência (Lei 5.764/71, Art. 4º)</span>
+      <span class="pill ok">CF Art. 174, §2º — lei apoiará e estimulará o cooperativismo</span>
+     </div>
+    </div>
+
+   </div>
+  </div>
+
+ </div>
+</div>
+<div class="section-panel c5" id="panel-5">
+ <div class="section-title">
+  <div class="badge" style="background:#fb923c22;color:#fb923c;">SOC. LTDA</div>
+  </div>
+ <div class="expand-wrap"><button class="expand-btn" onclick="toggleAll('panel-5')">⊞ Expandir tudo</button></div>
+ <div class="mm-grid cols-3">
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">💰</span>Responsabilidade e Quotas<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Responsabilidade dos Sócios<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Regra: sócio responde apenas pelo valor de suas quotas</span>
+      <span class="pill danger">Exceção: TODOS respondem solidariamente pela integralização do capital social</span>
+      <span class="pill warn">Capital não integralizado → qualquer sócio pode ser acionado pela parte faltante total</span>
+      <span class="pill">Após integralização total: cada sócio só responde até o valor de suas quotas</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Quotas — Regras Fundamentais<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill lei">Art. 1.056 — quota é indivisível em relação à sociedade, salvo para efeito de transferência</span>
+      <span class="pill ok">Cessão de quotas a terceiro estranho: se contrato silente, sócio pode ceder, mas os demais têm direito de preferência por 30 dias</span>
+      <span class="pill danger">PEGADINHA: Cessão de quotas decai em 2 ANOS (dois Ss — Sessão de quotas na Sociedade Simples e Ltda)</span>
+      <span class="pill lei">Art. 1.057 — na omissão do contrato, cessão a terceiro depende de não impugnação de titulares de mais de 1/4 do capital</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">⚙️</span>Administração e Deliberações<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Deliberações — Quóruns<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Unanimidade: modificação do objeto social, transferência de sede para outro Estado ou país, fusão, cisão, incorporação, dissolução</span>
+      <span class="pill">3/4: modificação do contrato social, destituição de administrador sócio nomeado no contrato</span>
+      <span class="pill">Maioria absoluta: eleição de administradores (se contrato omisso)</span>
+      <span class="pill warn">Mnemônico M FuDIL: Modificação, Fusão, Dissolução, Incorporação, Liquidação — quórum qualificado</span>
+      <span class="pill danger">Concordância com remuneração dos administradores: quórum de maioria dos presentes ou maioria do capital</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Exclusão de Sócio e Dissolução Parcial<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill">Exclusão extrajudicial: sócios representando mais de 1/2 do capital podem excluir sócio que perturba o funcionamento</span>
+      <span class="pill ok">Dissolução parcial: retirada voluntária / exclusão / morte do sócio</span>
+      <span class="pill warn">Direito de recesso: sócio dissidente de alteração essencial pode se retirar (prazo: 30 dias após reunião)</span>
+      <span class="pill lei">Direito de anular aprovação de balanço: decai em 2 anos, sem reserva</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">📊</span>Regência Supletiva e Nome<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Regência Supletiva — Ordem<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="110" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#fb923c">REGÊNCIA SUPLETIVA DA LTDA — Ordem de Aplicação</text>
+       <rect x="30" y="28" width="180" height="55" rx="8" fill="#fb923c18"/>
+       <rect x="30" y="28" width="180" height="4" rx="2" fill="#fb923c"/>
+       <text x="120" y="50" text-anchor="middle" font-family="monospace" font-size="11" fill="#fb923c" font-weight="bold">1º LTDA</text>
+       <text x="120" y="68" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Contrato social</text>
+       <text x="120" y="80" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">+ Cap. IV CC</text>
+       <line x1="210" y1="55" x2="250" y2="55" stroke="#475569" stroke-width="1.5"/>
+       <polygon points="250,51 258,55 250,59" fill="#475569"/>
+       <rect x="258" y="28" width="200" height="55" rx="8" fill="#38bdf818"/>
+       <rect x="258" y="28" width="200" height="4" rx="2" fill="#38bdf8"/>
+       <text x="358" y="50" text-anchor="middle" font-family="monospace" font-size="11" fill="#38bdf8" font-weight="bold">2º S. SIMPLES</text>
+       <text x="358" y="68" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Omissão no contrato</text>
+       <text x="358" y="80" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">CC arts. 997–1038</text>
+       <line x1="458" y1="55" x2="498" y2="55" stroke="#475569" stroke-width="1.5"/>
+       <polygon points="498,51 506,55 498,59" fill="#475569"/>
+       <rect x="506" y="28" width="200" height="55" rx="8" fill="#a78bfa18"/>
+       <rect x="506" y="28" width="200" height="4" rx="2" fill="#a78bfa"/>
+       <text x="606" y="50" text-anchor="middle" font-family="monospace" font-size="11" fill="#a78bfa" font-weight="bold">3º S. ANÔNIMA</text>
+       <text x="606" y="68" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Se previsto no contrato</text>
+       <text x="606" y="80" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Lei 6.404/76</text>
+       <text x="480" y="100" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Nome Empresarial da LTDA<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Pode usar firma (nomes dos sócios) OU denominação (objeto social)</span>
+      <span class="pill lei">Deve incluir a expressão "Limitada" ou "LTDA" no final</span>
+      <span class="pill danger">Supressão de "LTDA" no nome → sócios respondem ilimitadamente perante terceiros de boa-fé</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+ </div>
+</div>
+<div class="section-panel c6" id="panel-6">
+ <div class="section-title">
+  <div class="badge" style="background:#f472b622;color:#f472b6;">SOC. ANÔNIMA</div>
+  </div>
+ <div class="expand-wrap"><button class="expand-btn" onclick="toggleAll('panel-6')">⊞ Expandir tudo</button></div>
+ <div class="mm-grid cols-3">
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">📜</span>Características e Constituição<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Tipos e Características Gerais<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Capital dividido em ações — sócios = acionistas</span>
+      <span class="pill ok">Sempre empresária (independe do objeto)</span>
+      <span class="pill">Aberta: negocia valores mobiliários no mercado (CVM)</span>
+      <span class="pill">Fechada: não negocia no mercado organizado</span>
+      <span class="pill lei">Art. 1.160 CC — denominação + "S.A." ou "Cia." (Cia. não pode ser ao final)</span>
+      <span class="pill danger">Nas companhias abertas: OBRIGATÓRIA participação de conselheiros independentes (CVM define)</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Constituição — Modalidades<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Subscrição pública: com oferta ao público → envolve CVM e instituição financeira</span>
+      <span class="pill">Subscrição particular: entre fundadores sem oferta ao público</span>
+      <span class="pill warn">Mínimo: 2 acionistas (ou 1 se S.A. unipessoal autorizada por lei)</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">📊</span>Ações — ON, PN e Voto Plural<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Ordinárias × Preferenciais<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="250" rx="10" fill="#0f172a"/>
+       <text x="480" y="20" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#f472b6">AÇÕES ORDINÁRIAS (ON) × PREFERENCIAIS (PN)</text>
+       <rect x="10" y="28" width="200" height="26" rx="5" fill="#1e293b"/>
+       <text x="110" y="45" text-anchor="middle" font-family="monospace" font-size="10" fill="#64748b">CRITÉRIO</text>
+       <rect x="218" y="28" width="350" height="26" rx="5" fill="#0891b218"/>
+       <rect x="218" y="28" width="350" height="3" fill="#38bdf8"/>
+       <text x="393" y="45" text-anchor="middle" font-family="monospace" font-size="11" fill="#38bdf8" font-weight="bold">ORDINÁRIAS (ON)</text>
+       <rect x="576" y="28" width="374" height="26" rx="5" fill="#f472b618"/>
+       <rect x="576" y="28" width="374" height="3" fill="#f472b6"/>
+       <text x="763" y="45" text-anchor="middle" font-family="monospace" font-size="11" fill="#f472b6" font-weight="bold">PREFERENCIAIS (PN)</text>
+       <rect x="10" y="58" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="75" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Direito de voto</text>
+       <rect x="218" y="58" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="75" text-anchor="middle" font-family="monospace" font-size="10" fill="#4ade80">1 ação = 1 voto (regra)</text>
+       <rect x="576" y="58" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="75" text-anchor="middle" font-family="monospace" font-size="10" fill="#fbbf24">Sem voto ou restrito (em geral)</text>
+       <rect x="10" y="88" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="105" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Vantagem patrimonial</text>
+       <rect x="218" y="88" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="105" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">Sem preferência</text>
+       <rect x="576" y="88" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="105" text-anchor="middle" font-family="monospace" font-size="10" fill="#f472b6">Div. mínimo/fixo ou 10% a mais que ON</text>
+       <rect x="10" y="118" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="135" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Limite de emissão</text>
+       <rect x="218" y="118" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="135" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">Sem limite específico</text>
+       <rect x="576" y="118" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="135" text-anchor="middle" font-family="monospace" font-size="10" fill="#f87171">Máx. 50% do total de ações emitidas</text>
+       <rect x="10" y="148" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="165" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Classes (fechada)</text>
+       <rect x="218" y="148" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="165" text-anchor="middle" font-family="monospace" font-size="10" fill="#4ade80">Várias classes (até voto plural)</text>
+       <rect x="576" y="148" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="165" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">Várias classes</text>
+       <rect x="10" y="178" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="195" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Classes (aberta)</text>
+       <rect x="218" y="178" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="195" text-anchor="middle" font-family="monospace" font-size="10" fill="#fbbf24">Apenas 1 classe (Art. 16-A)</text>
+       <rect x="576" y="178" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="195" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">Várias classes</text>
+       <text x="480" y="238" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Voto Plural — Art. 110-A<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill lei">Máximo de 10 votos por ação ordinária com voto plural</span>
+      <span class="pill ok">Permitido em companhia fechada e em aberta ANTES de negociar qualquer ação no mercado</span>
+      <span class="pill danger">Criação exige: ≥1/2 votos das ações com direito a voto + ≥1/2 das PN sem voto (em assembleia especial)</span>
+      <span class="pill warn">Art. 16 — ON fechada pode ter múltiplas classes: conversibilidade em PN, exigência de nacionalidade brasileira, voto separado para cargos, voto plural</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Vantagens das Preferenciais — Art. 17<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill lei">I — prioridade na distribuição de dividendo fixo ou mínimo</span>
+      <span class="pill lei">II — prioridade no reembolso do capital (com ou sem prêmio)</span>
+      <span class="pill lei">III — acumulação de I e II</span>
+      <span class="pill ok">PN sem voto DEVE ter: div. ≥25% lucro líquido OU div. 10% maior que ON OU tag along (art. 254-A)</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🏛️</span>Órgãos e Liquidação<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">4 Órgãos da S.A.<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">1. Assembleia Geral — órgão soberano; decide matérias fundamentais</span>
+      <span class="pill ok">2. Conselho de Administração — deliberativo, necessário nas abertas e autorizadas; mín. 3 membros</span>
+      <span class="pill">3. Diretoria — órgão executivo obrigatório; representa externamente a companhia</span>
+      <span class="pill">4. Conselho Fiscal — órgão de fiscalização; funciona permanente ou a pedido</span>
+      <span class="pill danger">Nas companhias abertas: OBRIGATÓRIO Conselho de Administração e conselheiros independentes</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Liquidação — Deveres do Liquidante<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill">Levantar balanço patrimonial imediatamente (prazo fixado pela AG ou juiz)</span>
+      <span class="pill">Exigir integralização das ações quando o ativo não bastar para solver o passivo</span>
+      <span class="pill lei">Art. 213 — convoca AG a cada 6 MESES para prestação de contas</span>
+      <span class="pill danger">Sem autorização expressa da AG: liquidante NÃO pode gravar bens nem contrair empréstimos (salvo obrigações inadiáveis)</span>
+      <span class="pill ok">Conselho Fiscal será eleito — AG nomeia membros do CF na liquidação</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+ </div>
+</div>
+<div class="section-panel c7" id="panel-7">
+ <div class="section-title">
+  <div class="badge" style="background:#facc1522;color:#facc15;">OP. SOCI.</div>
+  </div>
+ <div class="expand-wrap"><button class="expand-btn" onclick="toggleAll('panel-7')">⊞ Expandir tudo</button></div>
+ <div class="mm-grid cols-3">
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🔀</span>Transformação, Fusão, Incorporação e Cisão<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Mapa das 4 Operações — TFIC<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="180" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#facc15">OPERAÇÕES SOCIETÁRIAS — TFIC</text>
+       <rect x="10" y="25" width="225" height="70" rx="8" fill="#0891b218"/>
+       <rect x="10" y="25" width="225" height="4" rx="2" fill="#38bdf8"/>
+       <text x="122" y="46" text-anchor="middle" font-family="monospace" font-size="11" fill="#38bdf8" font-weight="bold">TRANSFORMAÇÃO</text>
+       <text x="122" y="62" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Muda tipo societário</text>
+       <text x="122" y="76" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">NÃO extingue a sociedade</text>
+       <text x="122" y="89" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Ltda → S.A. (por ex.)</text>
+       <rect x="245" y="25" width="225" height="70" rx="8" fill="#4ade8018"/>
+       <rect x="245" y="25" width="225" height="4" rx="2" fill="#4ade80"/>
+       <text x="357" y="46" text-anchor="middle" font-family="monospace" font-size="11" fill="#4ade80" font-weight="bold">FUSÃO</text>
+       <text x="357" y="62" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">A + B → C (nova)</text>
+       <text x="357" y="76" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">EXTINGUE A e B</text>
+       <text x="357" y="89" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Surge nova sociedade</text>
+       <rect x="480" y="25" width="225" height="70" rx="8" fill="#fbbf2418"/>
+       <rect x="480" y="25" width="225" height="4" rx="2" fill="#fbbf24"/>
+       <text x="592" y="46" text-anchor="middle" font-family="monospace" font-size="11" fill="#fbbf24" font-weight="bold">INCORPORAÇÃO</text>
+       <text x="592" y="62" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">B incorporada por A → A continua</text>
+       <text x="592" y="76" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">EXTINGUE B</text>
+       <text x="592" y="89" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">A absorve patrimônio de B</text>
+       <rect x="715" y="25" width="235" height="70" rx="8" fill="#f87171"/>
+       <rect x="715" y="25" width="235" height="4" rx="2" fill="#dc2626"/>
+       <text x="832" y="46" text-anchor="middle" font-family="monospace" font-size="11" fill="#fff" font-weight="bold">CISÃO</text>
+       <text x="832" y="62" text-anchor="middle" font-family="monospace" font-size="9" fill="#fef2f2">A → partes p/ B e/ou C</text>
+       <text x="832" y="76" text-anchor="middle" font-family="monospace" font-size="9" fill="#fef2f2">Parcial (A sobrevive) ou</text>
+       <text x="832" y="89" text-anchor="middle" font-family="monospace" font-size="9" fill="#fef2f2">Total (A se extingue)</text>
+       <text x="480" y="170" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Tipos de Cisão — Doutrina<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill danger">Cisão pura: A se extingue → patrimônio vai para sociedades NOVAS</span>
+      <span class="pill warn">Cisão-Absorção: A se extingue → patrimônio vai para sociedades JÁ EXISTENTES</span>
+      <span class="pill ok">Cisão parcial (falsa cisão): A SOBREVIVE, dividindo parte do patrimônio</span>
+      <span class="pill">Cisão-Holding: A divide patrimônio e vira holding pura (controla as novas)</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Prazo de Proteção dos Credores — CC × LSA<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="130" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#facc15">PRAZO PARA CREDOR ANULAR OPER. SOCIETÁRIA</text>
+       <rect x="30" y="28" width="420" height="70" rx="8" fill="#0891b218"/>
+       <rect x="30" y="28" width="420" height="4" rx="2" fill="#38bdf8"/>
+       <text x="240" y="48" text-anchor="middle" font-family="monospace" font-size="12" fill="#38bdf8" font-weight="bold">CÓDIGO CIVIL (Art. 1.122)</text>
+       <text x="240" y="66" text-anchor="middle" font-family="monospace" font-size="14" fill="#fbbf24" font-weight="bold">90 dias</text>
+       <text x="240" y="84" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">após publicados os atos (Inc. Fusão Cisão)</text>
+       <text x="240" y="97" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Contagem da publicação</text>
+       <rect x="510" y="28" width="420" height="70" rx="8" fill="#f472b618"/>
+       <rect x="510" y="28" width="420" height="4" rx="2" fill="#f472b6"/>
+       <text x="720" y="48" text-anchor="middle" font-family="monospace" font-size="12" fill="#f472b6" font-weight="bold">LSA — Lei 6.404 (Art. 232)</text>
+       <text x="720" y="66" text-anchor="middle" font-family="monospace" font-size="14" fill="#fbbf24" font-weight="bold">60 dias</text>
+       <text x="720" y="84" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">após publicados os atos (Inc. ou Fusão)</text>
+       <text x="720" y="97" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Findo o prazo: DECAI o direito</text>
+       <text x="480" y="120" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill danger">PEGADINHA: CC = 90 dias; LSA = 60 dias. Cisão pelo CC tem prazo MAIOR que pela LSA</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🔗</span>Relações entre Sociedades<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Coligada, Controlada, Controladora<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Coligada: participa com ≥10% do capital da outra, sem controlá-la</span>
+      <span class="pill ok">Controlada: outra sociedade tem poder de eleger maioria dos administradores e controla deliberações</span>
+      <span class="pill warn">Controle: pode ser por participação majoritária ou por acordo de sócios ou acionistas</span>
+      <span class="pill danger">Sociedade controladora NÃO pode ter como sócia a sua própria controlada (participação recíproca vedada)</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">💀</span>Dissolução, Liquidação e Extinção<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Fases do Encerramento<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="90" rx="10" fill="#0f172a"/>
+       <rect x="30" y="20" width="200" height="50" rx="8" fill="#f8717118"/>
+       <rect x="30" y="20" width="200" height="4" rx="2" fill="#f87171"/>
+       <text x="130" y="43" text-anchor="middle" font-family="monospace" font-size="11" fill="#f87171" font-weight="bold">1. DISSOLUÇÃO</text>
+       <text x="130" y="60" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">causa que impede continuidade</text>
+       <line x1="230" y1="45" x2="280" y2="45" stroke="#475569" stroke-width="1.5"/>
+       <polygon points="280,41 288,45 280,49" fill="#475569"/>
+       <rect x="290" y="20" width="200" height="50" rx="8" fill="#fbbf2418"/>
+       <rect x="290" y="20" width="200" height="4" rx="2" fill="#fbbf24"/>
+       <text x="390" y="43" text-anchor="middle" font-family="monospace" font-size="11" fill="#fbbf24" font-weight="bold">2. LIQUIDAÇÃO</text>
+       <text x="390" y="60" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">realização do ativo, quitação do passivo</text>
+       <line x1="490" y1="45" x2="540" y2="45" stroke="#475569" stroke-width="1.5"/>
+       <polygon points="540,41 548,45 540,49" fill="#475569"/>
+       <rect x="550" y="20" width="200" height="50" rx="8" fill="#4ade8018"/>
+       <rect x="550" y="20" width="200" height="4" rx="2" fill="#4ade80"/>
+       <text x="650" y="43" text-anchor="middle" font-family="monospace" font-size="11" fill="#4ade80" font-weight="bold">3. EXTINÇÃO</text>
+       <text x="650" y="60" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">arquivamento na Junta</text>
+       <text x="480" y="82" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+   </div>
+  </div>
+
+ </div>
+</div>
+<div class="section-panel c8" id="panel-8">
+ <div class="section-title">
+  <div class="badge" style="background:#38bdf822;color:#38bdf8;">FALÊNCIA</div>
+  </div>
+ <div class="expand-wrap"><button class="expand-btn" onclick="toggleAll('panel-8')">⊞ Expandir tudo</button></div>
+ <div class="mm-grid cols-3">
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">⚖️</span>Pressupostos, Sujeitos e Competência<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Quem pode falir e competência<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Empresário individual, EIRELI, Ltda, S.A. — todos os empresários</span>
+      <span class="pill danger">Empresário IRREGULAR pode FALIR, mas NÃO pode pedir recuperação judicial</span>
+      <span class="pill">Sede no país: competente o juízo do PRINCIPAL estabelecimento do devedor</span>
+      <span class="pill">Sede fora do país: competente o juízo da FILIAL no Brasil</span>
+      <span class="pill warn">Não sujeitos: Empresas públicas, SEM, produtores rurais pessoas naturais não inscritos, cooperativas</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Efeitos — Art. 6º (Decretação/Deferimento RJ)<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="240" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#38bdf8">ART. 6º — EFEITOS DA FALÊNCIA / DEFERIMENTO DA RJ</text>
+       <rect x="10" y="26" width="940" height="28" rx="5" fill="#0891b225"/>
+       <text x="480" y="40" text-anchor="middle" font-family="monospace" font-size="10" fill="#38bdf8" font-weight="bold">APLICA-SE (Incisos I, II e III):</text>
+       <text x="480" y="52" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">I - Suspensão da prescrição · II - Suspensão das execuções · III - Proibição de constrição judicial/extrajudicial</text>
+       <rect x="10" y="60" width="940" height="55" rx="5" fill="#f8717118"/>
+       <rect x="10" y="60" width="940" height="3" fill="#f87171"/>
+       <text x="480" y="78" text-anchor="middle" font-family="monospace" font-size="10" fill="#f87171" font-weight="bold">NÃO SE APLICA — §7º-A (Exceções):</text>
+       <text x="480" y="94" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Alienação fiduciária · Arrendamento mercantil · Outros direitos reais · Contrato de câmbio para exportação</text>
+       <text x="480" y="108" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">(credor pode executar o bem — ação real não suspende)</text>
+       <rect x="10" y="120" width="940" height="40" rx="5" fill="#fbbf2418"/>
+       <rect x="10" y="120" width="940" height="3" fill="#fbbf24"/>
+       <text x="480" y="138" text-anchor="middle" font-family="monospace" font-size="10" fill="#fbbf24" font-weight="bold">NÃO SE APLICA — §7º-B (Execuções Fiscais):</text>
+       <text x="480" y="152" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Execuções fiscais prosseguem; juiz da RJ pode substituir constrição sobre bens de capital essencial</text>
+       <rect x="10" y="165" width="940" height="38" rx="5" fill="#4ade8018"/>
+       <rect x="10" y="165" width="940" height="3" fill="#4ade80"/>
+       <text x="480" y="183" text-anchor="middle" font-family="monospace" font-size="10" fill="#4ade80" font-weight="bold">EXCEÇÕES AO JUÍZO FALIMENTAR (ações NÃO atraídas):</text>
+       <text x="480" y="197" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">1) Ações não regidas pela 11.101 onde massa é POLO ATIVO · 2) Quantia ilíquida · 3) Justiça do Trabalho</text>
+       <text x="480" y="211" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">4) Execuções Fiscais · 5) União ou Ente Público Federal como parte/interessado</text>
+       <text x="480" y="230" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill lei">Súmula 480 STJ: juízo da RJ NÃO é competente para constrição de bens não abrangidos pelo plano</span>
+      <span class="pill lei">Súmula 581 STJ: RJ do devedor principal NÃO impede execução contra devedores solidários/coobrigados cambiais</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🗂️</span>Órgãos e Habilitação de Créditos<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Comitê × Assembleia de Credores<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="200" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#38bdf8">COMITÊ DE CREDORES (Art. 26) × ASSEMBLEIA (Art. 41)</text>
+       <rect x="10" y="26" width="200" height="26" rx="5" fill="#1e293b"/>
+       <text x="110" y="43" text-anchor="middle" font-family="monospace" font-size="10" fill="#64748b">CLASSE</text>
+       <rect x="218" y="26" width="350" height="26" rx="5" fill="#0891b218"/>
+       <rect x="218" y="26" width="350" height="3" fill="#38bdf8"/>
+       <text x="393" y="43" text-anchor="middle" font-family="monospace" font-size="11" fill="#38bdf8" font-weight="bold">COMITÊ</text>
+       <rect x="576" y="26" width="374" height="26" rx="5" fill="#4ade8018"/>
+       <rect x="576" y="26" width="374" height="3" fill="#4ade80"/>
+       <text x="763" y="43" text-anchor="middle" font-family="monospace" font-size="11" fill="#4ade80" font-weight="bold">ASSEMBLEIA</text>
+       <rect x="10" y="56" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Trabalhistas</text>
+       <rect x="218" y="56" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">✓</text>
+       <rect x="576" y="56" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="73" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">✓</text>
+       <rect x="10" y="86" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Direitos Reais</text>
+       <rect x="218" y="86" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">✓ + Privilégios Especiais</text>
+       <rect x="576" y="86" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">✓ (sem priv. especiais)</text>
+       <rect x="10" y="116" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Quirografários</text>
+       <rect x="218" y="116" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">✓ + Privilégios Gerais</text>
+       <rect x="576" y="116" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="133" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">✓ + Priv. Esp. + Geral + Subordinados</text>
+       <rect x="10" y="146" width="200" height="26" rx="3" fill="#1e293b"/>
+       <text x="110" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">ME e EPP</text>
+       <rect x="218" y="146" width="350" height="26" rx="3" fill="#0f172a"/>
+       <text x="393" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">✓</text>
+       <rect x="576" y="146" width="374" height="26" rx="3" fill="#1e293b"/>
+       <text x="763" y="163" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80">✓</text>
+       <text x="480" y="190" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill danger">PEGADINHA: Priv. Especiais ficam COM direitos reais no COMITÊ, mas COM quirografários na ASSEMBLEIA</span>
+      <span class="pill warn">Comitê é FACULTATIVO — se não houver, cabe ao administrador judicial (ou ao juiz se incompatível)</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Prazos para Habilitação de Créditos — Art. 7º<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="140" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#38bdf8">PRAZOS DE HABILITAÇÃO — SEQUÊNCIA (da publicação do edital)</text>
+       <line x1="60" y1="75" x2="900" y2="75" stroke="#334155" stroke-width="2"/>
+       <circle cx="180" cy="75" r="14" fill="#38bdf8"/>
+       <text x="180" y="55" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#38bdf8">15 dias</text>
+       <text x="180" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Credores apresentam</text>
+       <text x="180" y="115" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">divergências ao Adm.</text>
+       <circle cx="480" cy="75" r="14" fill="#fbbf24"/>
+       <text x="480" y="55" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#fbbf24">+ 45 dias</text>
+       <text x="480" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Adm. Judicial publica</text>
+       <text x="480" y="115" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">novo edital de credores</text>
+       <circle cx="780" cy="75" r="14" fill="#4ade80"/>
+       <text x="780" y="55" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#4ade80">+ 10 dias</text>
+       <text x="780" y="103" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Impugnações (credores,</text>
+       <text x="780" y="115" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Comitê, devedor, MP)</text>
+       <text x="480" y="132" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+      <span class="pill danger">Habilitações após 15 dias → RETARDATÁRIAS (não têm direito de voto na AG antes de julgadas)</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">💲</span>Ordem de Pagamento e Fases<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Ordem de Pagamento na Falência<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="200" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#38bdf8">ORDEM DE PAGAMENTO — FALÊNCIA (Art. 83)</text>
+       <rect x="20" y="26" width="920" height="22" rx="4" fill="#7c3aed33"/>
+       <text x="480" y="41" text-anchor="middle" font-family="monospace" font-size="10" fill="#c084fc" font-weight="bold">EXTRACONCURSAIS (Art. 84) — têm preferência SOBRE todos os concursais</text>
+       <rect x="20" y="52" width="920" height="20" rx="4" fill="#0f172a"/>
+       <text x="30" y="66" font-family="monospace" font-size="10" fill="#f87171" font-weight="bold">1º</text>
+       <text x="55" y="66" font-family="monospace" font-size="10" fill="#94a3b8">Créditos trabalhistas (até 150 s.m. por credor) e acidentários</text>
+       <rect x="20" y="74" width="920" height="20" rx="4" fill="#1e293b"/>
+       <text x="30" y="88" font-family="monospace" font-size="10" fill="#f87171" font-weight="bold">2º</text>
+       <text x="55" y="88" font-family="monospace" font-size="10" fill="#94a3b8">Créditos com garantia real (até o valor do bem gravado)</text>
+       <rect x="20" y="96" width="920" height="20" rx="4" fill="#0f172a"/>
+       <text x="30" y="110" font-family="monospace" font-size="10" fill="#f87171" font-weight="bold">3º</text>
+       <text x="55" y="110" font-family="monospace" font-size="10" fill="#94a3b8">Créditos tributários (exceto multas)</text>
+       <rect x="20" y="118" width="920" height="20" rx="4" fill="#1e293b"/>
+       <text x="30" y="132" font-family="monospace" font-size="10" fill="#fbbf24" font-weight="bold">4º</text>
+       <text x="55" y="132" font-family="monospace" font-size="10" fill="#94a3b8">Privilégio especial</text>
+       <rect x="20" y="140" width="920" height="20" rx="4" fill="#0f172a"/>
+       <text x="30" y="154" font-family="monospace" font-size="10" fill="#fbbf24" font-weight="bold">5º</text>
+       <text x="55" y="154" font-family="monospace" font-size="10" fill="#94a3b8">Privilégio geral</text>
+       <rect x="20" y="162" width="920" height="20" rx="4" fill="#1e293b"/>
+       <text x="30" y="176" font-family="monospace" font-size="10" fill="#64748b" font-weight="bold">6º</text>
+       <text x="55" y="176" font-family="monospace" font-size="10" fill="#94a3b8">Quirografários</text>
+       <text x="480" y="193" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+   </div>
+  </div>
+
+ </div>
+</div>
+<div class="section-panel c9" id="panel-9">
+ <div class="section-title">
+  <div class="badge" style="background:#4ade8022;color:#4ade80;">RECUPERAÇÃO</div>
+  </div>
+ <div class="expand-wrap"><button class="expand-btn" onclick="toggleAll('panel-9')">⊞ Expandir tudo</button></div>
+ <div class="mm-grid cols-2">
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🔄</span>Recuperação Judicial — Requisitos e Plano<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Requisitos — Art. 48<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill lei">Devedor deve exercer atividade regular há mais de 2 anos</span>
+      <span class="pill danger">Empresário IRREGULAR: pode falir, NÃO pode pedir recuperação judicial</span>
+      <span class="pill warn">Atividade rural: comprova prazo pela Escrituração Contábil Fiscal ou obrigação substituta</span>
+      <span class="pill ok">Créditos sujeitos: todos anteriores ao pedido (exceto os expressamente excluídos em lei)</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Prazos-Chave do Procedimento<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="170" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#4ade80">PRAZOS-CHAVE DA RECUPERAÇÃO JUDICIAL</text>
+       <line x1="30" y1="60" x2="930" y2="60" stroke="#334155" stroke-width="2"/>
+       <circle cx="120" cy="60" r="12" fill="#38bdf8"/>
+       <text x="120" y="40" text-anchor="middle" font-family="monospace" font-size="9" font-weight="bold" fill="#38bdf8">60 dias</text>
+       <text x="120" y="80" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">Devedor apresenta</text>
+       <text x="120" y="92" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">plano (improrrogável)</text>
+       <circle cx="320" cy="60" r="12" fill="#fbbf24"/>
+       <text x="320" y="40" text-anchor="middle" font-family="monospace" font-size="9" font-weight="bold" fill="#fbbf24">180 dias</text>
+       <text x="320" y="80" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">Stay period</text>
+       <text x="320" y="92" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">(suspensão exec.)</text>
+       <circle cx="520" cy="60" r="12" fill="#f87171"/>
+       <text x="520" y="40" text-anchor="middle" font-family="monospace" font-size="9" font-weight="bold" fill="#f87171">30 dias</text>
+       <text x="520" y="80" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">Crédito salarial</text>
+       <text x="520" y="92" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">(máx 5 s.m./trab.)</text>
+       <circle cx="720" cy="60" r="12" fill="#4ade80"/>
+       <text x="720" y="40" text-anchor="middle" font-family="monospace" font-size="9" font-weight="bold" fill="#4ade80">1 ano</text>
+       <text x="720" y="80" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">Crédito trabalhista</text>
+       <text x="720" y="92" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">e acidentário</text>
+       <circle cx="880" cy="60" r="12" fill="#c084fc"/>
+       <text x="880" y="40" text-anchor="middle" font-family="monospace" font-size="9" font-weight="bold" fill="#c084fc">2 anos</text>
+       <text x="880" y="80" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">Acompanhamento</text>
+       <text x="880" y="92" text-anchor="middle" font-family="monospace" font-size="8" fill="#94a3b8">pós-concessão</text>
+       <rect x="10" y="108" width="940" height="45" rx="5" fill="#1e3a5f"/>
+       <text x="480" y="124" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">⚠ Se em 180 dias NÃO houver deliberação → FACULTADA aos credores a proposta de plano alternativo</text>
+       <text x="480" y="138" text-anchor="middle" font-family="monospace" font-size="9" fill="#f87171">⚠ Durante os 2 primeiros anos: descumprimento do plano → convolação em FALÊNCIA</text>
+       <text x="480" y="152" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Recurso contra convolação em falência: AGRAVO DE INSTRUMENTO (art. 58-A)</text>
+       <text x="480" y="162" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Efeitos do Plano Aprovado<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill lei">Art. 59 — plano implica NOVAÇÃO dos créditos anteriores ao pedido</span>
+      <span class="pill ok">Decisão que concede a RJ = TÍTULO EXECUTIVO JUDICIAL</span>
+      <span class="pill danger">Devedor NÃO pode desistir após deferimento do processamento, salvo aprovação da AG de credores</span>
+      <span class="pill warn">Plano proposto pelos credores: se plano do devedor for rejeitado, AG pode votar prazo de 30 dias para apresentação de plano alternativo (§4º, Art. 55)</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🤝</span>Recuperação Extrajudicial e ME/EPP<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Recuperação Extrajudicial — Art. 161<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Acordo entre devedor e credores fora do âmbito judicial — pode ser homologado para efeitos vinculativos</span>
+      <span class="pill lei">NÃO pode ter pedido de RJ pendente, nem ter obtido RJ ou homologação de rec. extraj. nos últimos 2 anos</span>
+      <span class="pill">Plano NÃO pode: prever pagamento antecipado de dívidas nem tratamento desfavorável a credores não aderentes</span>
+      <span class="pill danger">Novidade (§1º art. 161): sujeição de créditos trabalhistas e acidentários EXIGE negociação coletiva com sindicato</span>
+      <span class="pill warn">Créditos em moeda estrangeira: variação cambial só pode ser afastada com aprovação EXPRESSA do credor titular</span>
+      <span class="pill danger">Credores NÃO podem desistir da adesão após a distribuição do pedido de homologação, salvo com anuência de todos os demais signatários</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">ME e EPP — Plano Especial (Arts. 70-72)<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Parcelamento em até 36 parcelas mensais (+ juros SELIC)</span>
+      <span class="pill ok">Pagamento da 1ª parcela em até 180 dias da distribuição do pedido</span>
+      <span class="pill danger">Credores NÃO atingidos pelo plano especial NÃO terão os créditos habilitados</span>
+      <span class="pill">Pedido com base no plano especial NÃO suspende prescrição nem execuções de créditos não abrangidos</span>
+      <span class="pill warn">Não será convocada AG de credores para deliberar sobre plano especial — juiz concede se cumpridos os requisitos</span>
+      <span class="pill lei">Art. 70-A (novo): produtor rural pode pedir plano especial se valor da causa ≤ R$ 4.800.000,00</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+ </div>
+</div>
+<div class="section-panel c0" id="panel-10">
+ <div class="section-title">
+  <div class="badge" style="background:#f8717122;color:#f87171;">ME e EPP</div>
+  </div>
+ <div class="expand-wrap"><button class="expand-btn" onclick="toggleAll('panel-10')">⊞ Expandir tudo</button></div>
+ <div class="mm-grid cols-2">
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🏷️</span>ME, EPP e MEI — Limites e Conceitos<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Definição e Limites de Receita Bruta Anual<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="120" rx="10" fill="#0f172a"/>
+       <text x="480" y="18" text-anchor="middle" font-family="monospace" font-size="11" font-weight="bold" fill="#f87171">LIMITES DE RECEITA BRUTA ANUAL — LC 123/2006</text>
+       <rect x="20" y="26" width="280" height="70" rx="8" fill="#0891b218"/>
+       <rect x="20" y="26" width="280" height="4" rx="2" fill="#38bdf8"/>
+       <text x="160" y="48" text-anchor="middle" font-family="monospace" font-size="11" fill="#38bdf8" font-weight="bold">MEI</text>
+       <text x="160" y="66" text-anchor="middle" font-family="monospace" font-size="13" fill="#fbbf24" font-weight="bold">até R$ 81.000</text>
+       <text x="160" y="84" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Microempreendedor Individual</text>
+       <rect x="320" y="26" width="280" height="70" rx="8" fill="#4ade8018"/>
+       <rect x="320" y="26" width="280" height="4" rx="2" fill="#4ade80"/>
+       <text x="460" y="48" text-anchor="middle" font-family="monospace" font-size="11" fill="#4ade80" font-weight="bold">ME</text>
+       <text x="460" y="66" text-anchor="middle" font-family="monospace" font-size="13" fill="#fbbf24" font-weight="bold">até R$ 360.000</text>
+       <text x="460" y="84" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Microempresa</text>
+       <rect x="620" y="26" width="320" height="70" rx="8" fill="#f8717118"/>
+       <rect x="620" y="26" width="320" height="4" rx="2" fill="#f87171"/>
+       <text x="780" y="48" text-anchor="middle" font-family="monospace" font-size="11" fill="#f87171" font-weight="bold">EPP</text>
+       <text x="780" y="66" text-anchor="middle" font-family="monospace" font-size="11" fill="#fbbf24" font-weight="bold">R$ 360k a R$ 4,8M</text>
+       <text x="780" y="84" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Empresa de Pequeno Porte</text>
+       <text x="480" y="110" text-anchor="middle" font-family="monospace" font-size="9" fill="#475569">Clique para ampliar</text>
+      </svg>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Exclusões e Vedações<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill danger">Não pode optar pelo Simples: S.A., sociedade com sócia PJ, sócia detentora de mais de 10% em outra empresa já no Simples</span>
+      <span class="pill danger">Veda: atividades financeiras, incorporação imobiliária, factoring, importação de combustíveis, entre outras</span>
+      <span class="pill warn">Sócio com mais de 10% em outra empresa = somatório das receitas, deve ficar abaixo do limite EPP</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">💸</span>Simples Nacional e Benefícios<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Simples Nacional — Principais Regras<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Regime unificado: IRPJ, CSLL, PIS, COFINS, IPI, ICMS, ISS e INSS patronal — em guia única (DAS)</span>
+      <span class="pill ok">Alíquota progressiva por faixa de receita bruta (6 anexos por atividade)</span>
+      <span class="pill">Benefícios: preferência em licitações (art. 48, LC 123), prazo 10 dias para regularização, parcelamento especial</span>
+      <span class="pill danger">Exclusão de ofício: se dívida com PGFN ou RFB superior a R$ 1 milhão (sem parcelamento)</span>
+     </div>
+    </div>
+    <div class="l2-item">
+     <div class="l2-title">Recuperação Judicial de ME/EPP — Resumo<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <span class="pill ok">Plano especial: 36 parcelas mensais + SELIC; 1ª parcela em até 180 dias</span>
+      <span class="pill danger">Sem convocação de AG de credores — juiz concede diretamente se requisitos cumpridos</span>
+      <span class="pill lei">Art. 70-A: produtor rural pode usar o plano especial se valor da causa ≤ R$ 4.800.000</span>
+      <span class="pill warn">Credores não abrangidos NÃO habilitam créditos neste procedimento especial</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="l1-card" onclick="toggleCard(this)">
+   <div class="l1-header"><span class="icon">🗳️</span>Reuniões e Assembleias da ME/EPP — Art. 70 LC 123<span class="toggle">▶</span></div>
+   <div class="l2-list">
+    <div class="l2-item">
+     <div class="l2-title">Dispensa, substituição e exceções (Esquema)<span class="l2-toggle">▶</span></div>
+     <div class="l3-pills">
+      <svg viewBox="0 0 960 356" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:6px auto;background:#0f172a;border-radius:10px;cursor:zoom-in;" onclick="event.stopPropagation();openSvgZoom(this)">
+       <rect width="960" height="356" rx="10" fill="#0f172a"/>
+       <rect x="10" y="8" width="940" height="40" rx="8" fill="#f8717122" stroke="#f87171" stroke-width="1.5"/>
+       <text x="480" y="28" text-anchor="middle" font-family="monospace" font-size="13" font-weight="bold" fill="#f87171">REUNIÕES E ASSEMBLEIAS DA ME/EPP — art. 70 da LC 123/2006</text>
+       <text x="480" y="43" text-anchor="middle" font-family="monospace" font-size="9" fill="#cbd5e1">Regra: ME e EPP são DESOBRIGADAS de realizar reuniões e assembleias previstas na legislação civil</text>
+
+       <rect x="10" y="56" width="465" height="74" rx="8" fill="#34d39912" stroke="#34d399" stroke-width="1.3"/>
+       <text x="242" y="76" text-anchor="middle" font-family="monospace" font-size="10.5" font-weight="bold" fill="#34d399">✓ DESOBRIGADAS (regra)</text>
+       <text x="24" y="97" font-family="monospace" font-size="9" fill="#e2e8f0">dispensadas de reuniões e assembleias em</text>
+       <text x="24" y="111" font-family="monospace" font-size="9" fill="#e2e8f0">QUALQUER das situações previstas na lei civil</text>
+       <text x="24" y="125" font-family="monospace" font-size="8.4" fill="#94a3b8">(simplificação da gestão da ME/EPP)</text>
+
+       <rect x="485" y="56" width="465" height="74" rx="8" fill="#38bdf812" stroke="#38bdf8" stroke-width="1.3"/>
+       <text x="717" y="76" text-anchor="middle" font-family="monospace" font-size="10.5" font-weight="bold" fill="#38bdf8">SUBSTITUÍDAS POR DELIBERAÇÃO</text>
+       <text x="499" y="97" font-family="monospace" font-size="9" fill="#e2e8f0">quando exigidas, são substituídas por</text>
+       <text x="499" y="111" font-family="monospace" font-size="9" font-weight="bold" fill="#7dd3fc">deliberação do 1º número inteiro SUPERIOR</text>
+       <text x="499" y="125" font-family="monospace" font-size="9" font-weight="bold" fill="#7dd3fc">à METADE do capital social</text>
+
+       <text x="20" y="152" font-family="monospace" font-size="10.5" font-weight="bold" fill="#fbbf24">⚠ A dispensa NÃO se aplica (art. 70, §único) — volta a exigir reunião/assembleia:</text>
+       <rect x="10" y="160" width="940" height="102" rx="8" fill="#f8717110" stroke="#f87171" stroke-width="1.3"/>
+       <text x="24" y="182" font-family="monospace" font-size="9.5" fill="#fca5a5">① houver disposição CONTRATUAL em contrário;</text>
+       <text x="24" y="205" font-family="monospace" font-size="9.5" fill="#fca5a5">② ocorrer JUSTA CAUSA que enseje a EXCLUSÃO de sócio;</text>
+       <text x="24" y="228" font-family="monospace" font-size="9.5" fill="#fca5a5">③ um ou mais sócios puserem em RISCO A CONTINUIDADE da empresa por atos de INEGÁVEL GRAVIDADE.</text>
+       <text x="24" y="252" font-family="monospace" font-size="9" fill="#fde68a">➡ nesses casos, realiza-se reunião ou assembleia de acordo com a legislação civil.</text>
+
+       <rect x="10" y="272" width="940" height="76" rx="10" fill="#1a0a0a" stroke="#f87171" stroke-width="1.4"/>
+       <text x="24" y="292" font-family="monospace" font-size="11.5" font-weight="bold" fill="#f87171">⚡ PEGADINHA DE PROVA</text>
+       <text x="24" y="313" font-family="monospace" font-size="9" fill="#fde68a">• Quórum de substituição = "1º número inteiro SUPERIOR à metade do capital" (não é "metade" nem "maioria" genérica)</text>
+       <text x="24" y="334" font-family="monospace" font-size="9" fill="#fca5a5">• A DISPENSA é a regra; as 3 hipóteses do §único RESTAURAM a obrigatoriedade da reunião/assembleia</text>
+      </svg>
+     </div>
+    </div>
+   </div>
+  </div>
+
+ </div>
+</div>
+
+
+
+<!-- SVG zoom overlay -->
+<div class="svg-zoom-overlay" id="svgZoomOverlay" onclick="closeSvgZoom(event)">
+  <div class="svg-zoom-box" onclick="event.stopPropagation()">
+    <button class="svg-zoom-close" onclick="closeSvgZoom(null,true)" title="Fechar">✕</button>
+    <div id="svgZoomContent"></div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+function showSection(idx, btn) {
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + idx).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleCard(card) {
+  card.classList.toggle('open');
+}
+
+function toggleAll(panelId) {
+  const panel = document.getElementById(panelId);
+  const cards = panel.querySelectorAll('.l1-card');
+  const items = panel.querySelectorAll('.l2-item');
+  const allOpen = [...cards].every(c => c.classList.contains('open'));
+  cards.forEach(c => allOpen ? c.classList.remove('open') : c.classList.add('open'));
+  items.forEach(i => allOpen ? i.classList.remove('open') : i.classList.add('open'));
+  const btn = panel.querySelector('.expand-btn');
+  btn.textContent = allOpen ? '⊞ Expandir tudo' : '⊟ Recolher tudo';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // L2 item toggle — does not bubble to L1 card
+  document.querySelectorAll('.l2-title').forEach(title => {
+    title.addEventListener('click', e => {
+      e.stopPropagation();
+      title.closest('.l2-item').classList.toggle('open');
+    });
+  });
+  // Prevent l2-list clicks from toggling the parent card
+  document.querySelectorAll('.l2-list').forEach(list => {
+    list.addEventListener('click', e => e.stopPropagation());
+  });
+});
+
+// ── SVG click-to-zoom ────────────────────────────────────────────────────────
+(function(){
+  function openSvgZoom(svgEl) {
+    const overlay = document.getElementById('svgZoomOverlay');
+    const content = document.getElementById('svgZoomContent');
+    const clone = svgEl.cloneNode(true);
+    clone.removeAttribute('style');
+    clone.removeAttribute('width');
+    clone.removeAttribute('height');
+    content.innerHTML = '';
+    content.appendChild(clone);
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  window.openSvgZoom = openSvgZoom;
+
+  window.closeSvgZoom = function(e, force) {
+    if (force || (e && e.target === document.getElementById('svgZoomOverlay'))) {
+      document.getElementById('svgZoomOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  };
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') window.closeSvgZoom(null, true);
+  });
+
+  function attachZoom() {
+    document.querySelectorAll('.l3-pills svg').forEach(svg => {
+      if (svg.dataset.zoomBound) return;
+      svg.dataset.zoomBound = '1';
+      svg.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openSvgZoom(this);
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', attachZoom);
+  const obs = new MutationObserver(attachZoom);
+  document.addEventListener('DOMContentLoaded', () =>
+    obs.observe(document.body, { childList: true, subtree: true })
+  );
+})();
+</script>
+
+</body>
+</html>

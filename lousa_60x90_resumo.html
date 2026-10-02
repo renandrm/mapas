@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lousa 60×90</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+:root{
+  --board:#F8F8F4; --grid:#E4E7DF; --page:#EEF0EA; --ink:#1C2024; --ink-soft:#5B636B;
+  --blue:#1E4FCB; --red:#C3261F; --green:#137A3D; --rule:#9AA3AB; --panel:#FFFFFF; --line:#D6DAD2;
+  --accent:#1E4FCB;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --board:#1B2A22; --grid:#26382E; --page:#121A15; --ink:#F1F3EE; --ink-soft:#A9B3AB;
+  --blue:#8FB3FF; --red:#FF8A80; --green:#7FE0A3; --rule:#7C8A83; --panel:#1A231E; --line:#2C3A32; --accent:#8FB3FF;
+}}
+:root[data-theme="dark"]{
+  --board:#1B2A22; --grid:#26382E; --page:#121A15; --ink:#F1F3EE; --ink-soft:#A9B3AB;
+  --blue:#8FB3FF; --red:#FF8A80; --green:#7FE0A3; --rule:#7C8A83; --panel:#1A231E; --line:#2C3A32; --accent:#8FB3FF;
+}
+body{margin:0;background:var(--page);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;padding-inline:16px;padding-block:20px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:grid;gap:18px}
+h1{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:clamp(28px,4vw,42px);line-height:1;margin:0;letter-spacing:.01em;text-wrap:balance}
+h1 small{display:block;font-size:.42em;font-weight:500;color:var(--ink-soft);letter-spacing:.06em;text-transform:uppercase;margin-top:6px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:14px;color:var(--ink-soft);align-items:center}
+.legend b{display:inline-flex;align-items:center;gap:7px;color:var(--ink);font-weight:600}
+.sw{width:22px;height:5px;border-radius:3px;display:inline-block}
+.note{font-size:14px;line-height:1.5;color:var(--ink-soft);max-width:72ch}
+.note strong{color:var(--ink)}
+.frame{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px;overflow-x:auto}
+#board{width:100%;height:auto;display:block;max-width:100%;aspect-ratio:2/3}
+#board .bg{fill:var(--board)}
+#board .grid{stroke:var(--grid);stroke-width:.35}
+#board .tick{stroke:var(--rule);stroke-width:.5}
+#board .rl{font:3.4px "IBM Plex Sans",sans-serif;fill:var(--rule)}
+#board .mid{stroke:var(--rule);stroke-width:.4;stroke-dasharray:2 2}
+#board .sep{stroke:var(--blue);stroke-width:.9}
+#board .hdr{font:700 9.5px "Barlow Condensed","Arial Narrow",sans-serif;fill:var(--blue);letter-spacing:.06em}
+#board .bt{font:700 8.4px "Barlow Condensed","Arial Narrow",sans-serif;fill:var(--blue);letter-spacing:.03em}
+#board .ln{font:6.2px "IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;fill:var(--ink);white-space:pre}
+#board .ln.r{fill:var(--red)}
+#board .ln.g{fill:var(--green)}
+.list{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:4px 28px;list-style:none;margin:0;padding:0}
+.list label{display:flex;gap:10px;align-items:baseline;padding:6px 4px;border-bottom:1px solid var(--line);cursor:pointer;font-size:14px}
+.list input{accent-color:var(--accent);transform:translateY(2px)}
+.list .k{font-family:"Barlow Condensed",sans-serif;font-weight:700;color:var(--ink-soft);letter-spacing:.06em;min-width:2.2em}
+.list em{margin-left:auto;font-style:normal;color:var(--ink-soft);font-size:12px;white-space:nowrap}
+.list input:checked + .k, .list input:checked ~ em{opacity:.55}
+.list label:has(input:checked){text-decoration:line-through;text-decoration-color:var(--rule)}
+h2{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:20px;margin:6px 0 0;letter-spacing:.03em}
+.small{font-size:13px;color:var(--ink-soft)}
+input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media print{
+  body{background:#fff;padding:0}
+  .wrap{gap:0}
+  h1,.legend,.note,.list,h2,.small{display:none}
+  .frame{border:0;padding:0}
+  #board{width:100%;height:auto}
+  @page{size:A4 portrait;margin:8mm}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Lousa 60 × 90<small>Ciência de Dados + Banco de Dados · o que mais cai, em 14 blocos</small></h1>
+  <div class="legend">
+    <b><span class="sw" style="background:var(--blue)"></span>azul: títulos</b>
+    <b><span class="sw" style="background:var(--ink)"></span>preto: conteúdo</b>
+    <b><span class="sw" style="background:var(--red)"></span>vermelho: pegadinha</b>
+    <b><span class="sw" style="background:var(--green)"></span>verde: fórmula</b>
+  </div>
+  <p class="note">Desenhada em <strong>escala real</strong> (a régua está em centímetros): coluna da esquerda = Ciência de Dados, direita = Banco de Dados, cada uma com <strong>7 blocos</strong>. O texto foi calibrado para <strong>letras de ~6 mm com caneta de ponta fina</strong> e ~70 caracteres por linha. Se a sua letra for maior, corte a partir da <strong>última linha de cada bloco</strong> — a ordem dentro do bloco já é a ordem de prioridade. Para imprimir como gabarito: Ctrl+P (sai só a lousa, em A4).</p>
+  <div class="frame"><svg id="board" viewBox="0 0 600 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Esquema da lousa 60 por 90 centímetros">
+<rect class="bg" x="0" y="0" width="600" height="900"/>
+<line class="grid" x1="50" y1="0" x2="50" y2="900"/><line class="grid" x1="100" y1="0" x2="100" y2="900"/><line class="grid" x1="150" y1="0" x2="150" y2="900"/><line class="grid" x1="200" y1="0" x2="200" y2="900"/><line class="grid" x1="250" y1="0" x2="250" y2="900"/><line class="grid" x1="300" y1="0" x2="300" y2="900"/><line class="grid" x1="350" y1="0" x2="350" y2="900"/><line class="grid" x1="400" y1="0" x2="400" y2="900"/><line class="grid" x1="450" y1="0" x2="450" y2="900"/><line class="grid" x1="500" y1="0" x2="500" y2="900"/><line class="grid" x1="550" y1="0" x2="550" y2="900"/><line class="grid" x1="0" y1="50" x2="600" y2="50"/><line class="grid" x1="0" y1="100" x2="600" y2="100"/><line class="grid" x1="0" y1="150" x2="600" y2="150"/><line class="grid" x1="0" y1="200" x2="600" y2="200"/><line class="grid" x1="0" y1="250" x2="600" y2="250"/><line class="grid" x1="0" y1="300" x2="600" y2="300"/><line class="grid" x1="0" y1="350" x2="600" y2="350"/><line class="grid" x1="0" y1="400" x2="600" y2="400"/><line class="grid" x1="0" y1="450" x2="600" y2="450"/><line class="grid" x1="0" y1="500" x2="600" y2="500"/><line class="grid" x1="0" y1="550" x2="600" y2="550"/><line class="grid" x1="0" y1="600" x2="600" y2="600"/><line class="grid" x1="0" y1="650" x2="600" y2="650"/><line class="grid" x1="0" y1="700" x2="600" y2="700"/><line class="grid" x1="0" y1="750" x2="600" y2="750"/><line class="grid" x1="0" y1="800" x2="600" y2="800"/><line class="grid" x1="0" y1="850" x2="600" y2="850"/>
+<line class="tick" x1="0" y1="0" x2="0" y2="6"/><text class="rl" x="1.2" y="8.5">0</text><line class="tick" x1="50" y1="0" x2="50" y2="3.5"/><line class="tick" x1="100" y1="0" x2="100" y2="6"/><text class="rl" x="101.2" y="8.5">10</text><line class="tick" x1="150" y1="0" x2="150" y2="3.5"/><line class="tick" x1="200" y1="0" x2="200" y2="6"/><text class="rl" x="201.2" y="8.5">20</text><line class="tick" x1="250" y1="0" x2="250" y2="3.5"/><line class="tick" x1="300" y1="0" x2="300" y2="6"/><text class="rl" x="301.2" y="8.5">30</text><line class="tick" x1="350" y1="0" x2="350" y2="3.5"/><line class="tick" x1="400" y1="0" x2="400" y2="6"/><text class="rl" x="401.2" y="8.5">40</text><line class="tick" x1="450" y1="0" x2="450" y2="3.5"/><line class="tick" x1="500" y1="0" x2="500" y2="6"/><text class="rl" x="501.2" y="8.5">50</text><line class="tick" x1="550" y1="0" x2="550" y2="3.5"/><line class="tick" x1="600" y1="0" x2="600" y2="6"/><text class="rl" x="601.2" y="8.5">60</text><line class="tick" x1="0" y1="0" x2="6" y2="0"/><line class="tick" x1="0" y1="50" x2="3.5" y2="50"/><line class="tick" x1="0" y1="100" x2="6" y2="100"/><text class="rl" x="1.2" y="98.5">10</text><line class="tick" x1="0" y1="150" x2="3.5" y2="150"/><line class="tick" x1="0" y1="200" x2="6" y2="200"/><text class="rl" x="1.2" y="198.5">20</text><line class="tick" x1="0" y1="250" x2="3.5" y2="250"/><line class="tick" x1="0" y1="300" x2="6" y2="300"/><text class="rl" x="1.2" y="298.5">30</text><line class="tick" x1="0" y1="350" x2="3.5" y2="350"/><line class="tick" x1="0" y1="400" x2="6" y2="400"/><text class="rl" x="1.2" y="398.5">40</text><line class="tick" x1="0" y1="450" x2="3.5" y2="450"/><line class="tick" x1="0" y1="500" x2="6" y2="500"/><text class="rl" x="1.2" y="498.5">50</text><line class="tick" x1="0" y1="550" x2="3.5" y2="550"/><line class="tick" x1="0" y1="600" x2="6" y2="600"/><text class="rl" x="1.2" y="598.5">60</text><line class="tick" x1="0" y1="650" x2="3.5" y2="650"/><line class="tick" x1="0" y1="700" x2="6" y2="700"/><text class="rl" x="1.2" y="698.5">70</text><line class="tick" x1="0" y1="750" x2="3.5" y2="750"/><line class="tick" x1="0" y1="800" x2="6" y2="800"/><text class="rl" x="1.2" y="798.5">80</text><line class="tick" x1="0" y1="850" x2="3.5" y2="850"/><line class="tick" x1="0" y1="900" x2="6" y2="900"/><text class="rl" x="1.2" y="898.5">90</text>
+<line class="mid" x1="305.0" y1="17" x2="305.0" y2="893"/>
+<text class="hdr" x="159.0" y="26.0" text-anchor="middle">CIÊNCIA DE DADOS</text>
+<line class="sep" x1="17.0" y1="31.0" x2="301.0" y2="31.0"/>
+<text class="bt" x="19.0" y="39.6">1 · CONCEITOS &amp; PARADIGMAS</text>
+<text class="ln n" x="20.0" y="48.65" xml:space="preserve">IA ⊃ ML ⊃ DL · IA FRACA = tudo que existe · FORTE (AGI) = teórica</text>
+<text class="ln n" x="20.0" y="56.95" xml:space="preserve">SUPERVISIONADO (rótulo): classificação = categoria · regressão = nº</text>
+<text class="ln n" x="20.0" y="65.25" xml:space="preserve">NÃO SUPERV. (sem rótulo): clustering · associação · redução (PCA)</text>
+<text class="ln n" x="20.0" y="73.55" xml:space="preserve">REFORÇO: recompensa × punição (Q-learning)</text>
+<text class="ln r" x="20.0" y="81.85" xml:space="preserve">Reg. LOGÍSTICA = classificação · k-NN (sup.) ≠ k-MEANS (não sup.)</text>
+<text class="ln n" x="20.0" y="90.15" xml:space="preserve">Viés: HISTÓRICO · REPRESENTATIVIDADE · dados VICIADOS · PROXY (CEP)</text>
+<text class="ln r" x="20.0" y="98.45" xml:space="preserve">Agente racional maximiza a utilidade DEFINIDA → 'racionalmente</text>
+<text class="ln r" x="20.0" y="106.75" xml:space="preserve">tendencioso, não irracional' (CESPE 26) · viés ≠ intenção</text>
+<text class="ln n" x="20.0" y="115.05" xml:space="preserve">Alucinação · viés de AUTOMAÇÃO · RAI ≠ XAI · LGPD art. 20 (revisão)</text>
+<text class="ln n" x="20.0" y="123.35" xml:space="preserve">CRISP-DM: Negócio→Dados→Preparação→Modelagem→Avaliação→Implantação</text>
+<text class="ln n" x="20.0" y="131.65" xml:space="preserve">KDD: seleção → pré-proc. → transformação → MINERAÇÃO → interpretação</text>
+<line class="sep" x1="17.0" y1="139.3" x2="301.0" y2="139.3"/>
+<text class="bt" x="19.0" y="147.9">2 · PRÉ-PROCESSAMENTO</text>
+<text class="ln n" x="20.0" y="156.95" xml:space="preserve">Ausentes: MCAR remove · MAR imputa · MNAR grave · categórica → MODA</text>
+<text class="ln n" x="20.0" y="165.25" xml:space="preserve">Outlier |z| &gt; 3 (antes de agregar) · ruído → BINNING (suaviza)</text>
+<text class="ln g" x="20.0" y="173.55" xml:space="preserve">MIN-MAX x' = (x−min)/(max−min) → [0,1] · Z-SCORE z = (x−μ)/σ</text>
+<text class="ln r" x="20.0" y="181.85" xml:space="preserve">Normaliza só CONTÍNUAS · min-max NÃO elimina outlier</text>
+<text class="ln n" x="20.0" y="190.15" xml:space="preserve">Discretização: largura FIXA · FREQ. IGUAL (quantil) · ENTROPIA (sup.)</text>
+<text class="ln n" x="20.0" y="198.45" xml:space="preserve">ONE-HOT n colunas · LABEL 1 (ordem falsa) · ORDINAL (tem ordem)</text>
+<text class="ln n" x="20.0" y="206.75" xml:space="preserve">PCA: não sup., máx. VARIÂNCIA, CRIA features (≠ seleção) · LDA sup.</text>
+<text class="ln n" x="20.0" y="215.05" xml:space="preserve">Desbalanceamento: SMOTE / oversampling (só TREINO) · estratificação</text>
+<text class="ln n" x="20.0" y="223.35" xml:space="preserve">BOOTSTRAP com reposição: 63,2% dentro · 36,8% out-of-bag</text>
+<text class="ln r" x="20.0" y="231.65" xml:space="preserve">BAGGING paralelo ↓VARIÂNCIA × BOOSTING sequencial ↓VIÉS</text>
+<text class="ln n" x="20.0" y="239.95" xml:space="preserve">DRIFT: CONCEPT (relação X→y) · DATA (população) · FEATURE (1 var.)</text>
+<text class="ln n" x="20.0" y="248.25" xml:space="preserve">  → monitorar + RETREINO (CT do MLOps)</text>
+<line class="sep" x1="17.0" y1="255.9" x2="301.0" y2="255.9"/>
+<text class="bt" x="19.0" y="264.5">3 · AVALIAÇÃO DE MODELOS</text>
+<text class="ln g" x="20.0" y="273.55" xml:space="preserve">Matriz: linha = REAL · coluna = PREVISTO · FP = tipo I · FN = tipo II</text>
+<text class="ln g" x="20.0" y="281.85" xml:space="preserve">RECALL/SENSIB. = VP/(VP+FN) · ESPECIFICIDADE = VN/(VN+FP)</text>
+<text class="ln g" x="20.0" y="290.15" xml:space="preserve">PRECISÃO = VP/(VP+FP) · ACURÁCIA = (VP+VN)/total · VPN = VN/(VN+FN)</text>
+<text class="ln g" x="20.0" y="298.45" xml:space="preserve">F1 = 2·P·R/(P+R) → média HARMÔNICA (nunca aritmética)</text>
+<text class="ln r" x="20.0" y="306.75" xml:space="preserve">Acurácia ENGANA com desbalanceamento (99%, recall 0) → recall/F1</text>
+<text class="ln n" x="20.0" y="315.05" xml:space="preserve">ROC: Y = TVP · X = TFP = 1−especif. · AUC 0,5 aleatório · canto sup. ESQ</text>
+<text class="ln r" x="20.0" y="323.35" xml:space="preserve">Matriz NÃO dá AUC (vários limiares) · ROC é BINÁRIA</text>
+<text class="ln n" x="20.0" y="331.65" xml:space="preserve">UNDERFIT = alto VIÉS (treino E teste ruins) · OVERFIT = alta VARIÂNCIA</text>
+<text class="ln n" x="20.0" y="339.95" xml:space="preserve">Regularização ↑viés ↓var.: L1 LASSO zera/seleciona · L2 RIDGE encolhe</text>
+<text class="ln n" x="20.0" y="348.25" xml:space="preserve">Early stopping (erro de VALIDAÇÃO sobe) · dropout só no treino</text>
+<text class="ln n" x="20.0" y="356.55" xml:space="preserve">HOLD-OUT 70/30 × k-FOLD (k=10) × LOO (k=n) · treino/VALIDAÇÃO/teste</text>
+<text class="ln r" x="20.0" y="364.85" xml:space="preserve">Hiperparâmetro ajusta na VALIDAÇÃO, nunca no teste</text>
+<text class="ln g" x="20.0" y="373.15" xml:space="preserve">R² = 1 − SQR/SQT · R² AJUSTADO penaliza variáveis · RMSE · MAE robusto</text>
+<line class="sep" x1="17.0" y1="380.8" x2="301.0" y2="380.8"/>
+<text class="bt" x="19.0" y="389.4">4 · ALGORITMOS SUPERVISIONADOS</text>
+<text class="ln g" x="20.0" y="398.45" xml:space="preserve">ÁRVORE: H = −Σ p·log₂p (puro 0 · 50/50 = 1) · GINI = 1 − Σp²</text>
+<text class="ln n" x="20.0" y="406.75" xml:space="preserve">ID3 ganho · C4.5 RAZÃO de ganho + numéricos · CART Gini/binária/regr.</text>
+<text class="ln n" x="20.0" y="415.05" xml:space="preserve">RANDOM FOREST = bagging + colunas aleatórias · AdaBoost repondera</text>
+<text class="ln n" x="20.0" y="423.35" xml:space="preserve">XGBoost = gradiente sobre RESÍDUOS (sequencial) · stacking = meta</text>
+<text class="ln n" x="20.0" y="431.65" xml:space="preserve">k-NN: vota k vizinhos (ÍMPAR), exige NORMALIZAR, predição lenta</text>
+<text class="ln n" x="20.0" y="439.95" xml:space="preserve">Distâncias: Euclidiana · Manhattan L1 · Chebyshev L∞ · Hamming</text>
+<text class="ln n" x="20.0" y="448.25" xml:space="preserve">SVM: margem MÁXIMA, vetores de suporte, KERNEL (RBF) · C alto = rígido</text>
+<text class="ln r" x="20.0" y="456.55" xml:space="preserve">SVM faz classificação E regressão · árvore NÃO precisa de escala</text>
+<text class="ln n" x="20.0" y="464.85" xml:space="preserve">NAIVE BAYES: independ. CONDICIONAL, generativo, pouca amostra, Laplace</text>
+<text class="ln n" x="20.0" y="473.15" xml:space="preserve">  Bernoulli (one-hot) · Multinomial (texto) · Gaussiano (contínuo)</text>
+<text class="ln g" x="20.0" y="481.45" xml:space="preserve">LOGÍSTICA: σ = 1/(1+e⁻ˣ) · σ(0) = 0,5 · MLE/log-loss (não MQO) · OR = e^β</text>
+<text class="ln g" x="20.0" y="489.75" xml:space="preserve">LINEAR (MQO min Σe²): β₁ = Sxy/Sxx · β₀ = ȳ − β₁x̄ · r=0,9 → R²=0,81</text>
+<text class="ln n" x="20.0" y="498.05" xml:space="preserve">Pressupostos L-H-I-N · VIF &gt; 10 = multicolinearidade</text>
+<line class="sep" x1="17.0" y1="505.7" x2="301.0" y2="505.7"/>
+<text class="bt" x="19.0" y="514.3">5 · NÃO SUPERVISIONADO</text>
+<text class="ln n" x="20.0" y="523.35" xml:space="preserve">K-MEANS: k = HIPERparâmetro · centroides = parâmetros · mínimo LOCAL</text>
+<text class="ln n" x="20.0" y="531.65" xml:space="preserve">  k-means++ · ELBOW (joelho) · silhueta (b−a)/max · convexos</text>
+<text class="ln n" x="20.0" y="539.95" xml:space="preserve">  sensível a outlier (média) → K-MEDOIDS (ponto real)</text>
+<text class="ln n" x="20.0" y="548.25" xml:space="preserve">HIERÁRQUICO: AGNES bottom-up (N−1 fusões) × DIANA top-down · sem k</text>
+<text class="ln n" x="20.0" y="556.55" xml:space="preserve">  single (chaining) · complete · WARD · corte do DENDROGRAMA = nº</text>
+<text class="ln n" x="20.0" y="564.85" xml:space="preserve">DBSCAN: ε + MinPts, SEM k, núcleo/borda/RUÍDO, forma ARBITRÁRIA</text>
+<text class="ln n" x="20.0" y="573.15" xml:space="preserve">GMM = soft (EM) · fuzzy = grau · espectral = grafo (Laplaciano)</text>
+<text class="ln g" x="20.0" y="581.45" xml:space="preserve">SUPORTE = f(A∪B)/N · CONFIANÇA = sup(AB)/sup(A) = P(B|A)</text>
+<text class="ln g" x="20.0" y="589.75" xml:space="preserve">LIFT = conf/sup(B): &gt;1 positiva · =1 independente · &lt;1 negativa</text>
+<text class="ln n" x="20.0" y="598.05" xml:space="preserve">APRIORI: anti-monotonicidade (subconjunto de frequente é frequente)</text>
+<text class="ln n" x="20.0" y="606.35" xml:space="preserve">  join + prune · k+1 varreduras · minsup → itemsets · minconf → regras</text>
+<text class="ln n" x="20.0" y="614.65" xml:space="preserve">FP-GROWTH: 2 varreduras, sem candidatos, FP-tree · MESMAS regras</text>
+<text class="ln r" x="20.0" y="622.95" xml:space="preserve">Suporte da regra (3/10) ≠ confiança (3/6) · associação ≠ CAUSA</text>
+<line class="sep" x1="17.0" y1="630.6" x2="301.0" y2="630.6"/>
+<text class="bt" x="19.0" y="639.2">6 · REDES NEURAIS</text>
+<text class="ln n" x="20.0" y="648.25" xml:space="preserve">Perceptron só LINEAR (XOR → MLP) · BACKPROP calcula, OTIMIZADOR atualiza</text>
+<text class="ln n" x="20.0" y="656.55" xml:space="preserve">Ativação: sigmoide (0,1) · tanh (−1,1) · ReLU max(0,x) · softmax Σ=1</text>
+<text class="ln n" x="20.0" y="664.85" xml:space="preserve">Saída: sigmoide+BCE binária · softmax+CCE multi · linear+MSE regr.</text>
+<text class="ln r" x="20.0" y="673.15" xml:space="preserve">VANISHING: sigmoide 0,25ⁿ → ReLU/LSTM · EXPLODING → clipping</text>
+<text class="ln n" x="20.0" y="681.45" xml:space="preserve">DROPOUT: máscara nas ocultas, só TREINO, nunca na saída</text>
+<text class="ln n" x="20.0" y="689.75" xml:space="preserve">CNN: convolução (filtros) + POOLING (sem parâmetros) · imagem/GRADE</text>
+<text class="ln g" x="20.0" y="698.05" xml:space="preserve">conv válida: n − k + 1 · pooling 2×2 → ÷2  (28 → 24 → 12)</text>
+<text class="ln n" x="20.0" y="706.35" xml:space="preserve">RNN: SEQUENCIAL · hₜ = f(W·xₜ + U·hₜ₋₁ + b) · curto prazo</text>
+<text class="ln n" x="20.0" y="714.65" xml:space="preserve">LSTM 3 portas (forget·input·output) · GRU 2 · resolvem vanishing</text>
+<text class="ln n" x="20.0" y="722.95" xml:space="preserve">TRANSFORMER: atenção Q·K·V, PARALELO, posicional, custo n²</text>
+<text class="ln n" x="20.0" y="731.25" xml:space="preserve">GAN gerador × discriminador · autoencoder → anomalia · DL = MUITOS dados</text>
+<line class="sep" x1="17.0" y1="738.9" x2="301.0" y2="738.9"/>
+<text class="bt" x="19.0" y="747.5">7 · PLN · IA GEN · SÉRIES · BIG DATA · SEGURANÇA</text>
+<text class="ln n" x="20.0" y="756.55" xml:space="preserve">Tokenização → stopwords → STEMMING (raiz) × LEMATIZAÇÃO (válida)</text>
+<text class="ln n" x="20.0" y="764.85" xml:space="preserve">  → POS (gramática) → PARSING (sintaxe) → NER (entidades, B-I-O)</text>
+<text class="ln r" x="20.0" y="773.15" xml:space="preserve">NER = classificação SUPERVISIONADA (CRF/HMM/BERT) — não k-means</text>
+<text class="ln n" x="20.0" y="781.45" xml:space="preserve">BoW / TF-IDF (esparso) → EMBEDDINGS Word2Vec (CBOW · skip-gram)</text>
+<text class="ln n" x="20.0" y="789.75" xml:space="preserve">BERT = encoder (lê) · GPT = decoder AUTOREGRESSIVO (escreve)</text>
+<text class="ln n" x="20.0" y="798.05" xml:space="preserve">LLM: pré-treino AUTOSSUPERV. · fine-tuning MUDA pesos · RAG/prompt não</text>
+<text class="ln n" x="20.0" y="806.35" xml:space="preserve">RAG: busca semântica, REDUZ (não elimina) alucinação · zero/few-shot</text>
+<text class="ln n" x="20.0" y="814.65" xml:space="preserve">SÉRIES: tendência · SAZONAL (fixo) · CICLO (irregular) · ruído</text>
+<text class="ln n" x="20.0" y="822.95" xml:space="preserve">  estacionária → ARIMA · ACF corta → MA(q) · PACF corta → AR(p)</text>
+<text class="ln n" x="20.0" y="831.25" xml:space="preserve">BIG DATA 5V · CAP escolha 2 · BASE · escala HORIZONTAL (nós)</text>
+<text class="ln n" x="20.0" y="839.55" xml:space="preserve">SEGURANÇA: CIA · AUTENTICAÇÃO (quem) × AUTORIZAÇÃO (o quê) · MFA</text>
+<text class="ln n" x="20.0" y="847.85" xml:space="preserve">Anonimização IRREVERSÍVEL × pseudonimização · k-anonymity</text>
+<text class="hdr" x="451.0" y="26.0" text-anchor="middle">BANCO DE DADOS</text>
+<line class="sep" x1="309.0" y1="31.0" x2="593.0" y2="31.0"/>
+<text class="bt" x="311.0" y="39.6">1 · FUNDAMENTOS &amp; MER</text>
+<text class="ln n" x="312.0" y="48.65" xml:space="preserve">ANSI/SPARC: EXTERNO (views) · CONCEITUAL (único) · INTERNO (físico)</text>
+<text class="ln n" x="312.0" y="56.95" xml:space="preserve">Independência FÍSICA (fácil) × LÓGICA (difícil) · esquema × instância</text>
+<text class="ln n" x="312.0" y="65.25" xml:space="preserve">Conceitual (MER, leigo) → Lógico (DER, paradigma) → Físico (DDL)</text>
+<text class="ln r" x="312.0" y="73.55" xml:space="preserve">CESPE: 'como será ORGANIZADO + REGRAS DE NEGÓCIO' = CONCEITUAL</text>
+<text class="ln n" x="312.0" y="81.85" xml:space="preserve">Entidade FRACA: retângulo duplo, chave PARCIAL + PK da forte</text>
+<text class="ln n" x="312.0" y="90.15" xml:space="preserve">Associativa = N:M com atributos · recursivo = GRAU 1</text>
+<text class="ln g" x="312.0" y="98.45" xml:space="preserve">FK: 1:1 em uma + UNIQUE · 1:N no lado N · N:M → 3ª tabela (2 FKs)</text>
+<text class="ln n" x="312.0" y="106.75" xml:space="preserve">(min,max): mín 0 parcial · mín 1 total · linha DUPLA = total</text>
+<text class="ln n" x="312.0" y="115.05" xml:space="preserve">G/E: total × parcial · disjunta × sobreposta · categoria (união)</text>
+<text class="ln n" x="312.0" y="123.35" xml:space="preserve">Chaves: SUPER ⊃ CANDIDATA (mínima) ⊃ PRIMÁRIA · alternativa</text>
+<text class="ln r" x="312.0" y="131.65" xml:space="preserve">FK → PK ou UNIQUE, pode ser NULL e REPETIR · PK: NOT NULL + única</text>
+<text class="ln n" x="312.0" y="139.95" xml:space="preserve">Integridade: DOMÍNIO · ENTIDADE (PK ≠ NULL) · REFERENCIAL · CHAVE</text>
+<text class="ln n" x="312.0" y="148.25" xml:space="preserve">ON DELETE: CASCADE (apaga filhos) · SET NULL · RESTRICT (padrão)</text>
+<line class="sep" x1="309.0" y1="155.9" x2="593.0" y2="155.9"/>
+<text class="bt" x="311.0" y="164.5">2 · NORMALIZAÇÃO &amp; ÁLGEBRA</text>
+<text class="ln n" x="312.0" y="173.55" xml:space="preserve">1FN atômico (sem tel1, tel2…) · 2FN sem dep. PARCIAL (PK composta)</text>
+<text class="ln n" x="312.0" y="181.85" xml:space="preserve">3FN sem TRANSITIVA (não-chave → não-chave; campo CALCULADO viola)</text>
+<text class="ln n" x="312.0" y="190.15" xml:space="preserve">FNBC: todo determinante é CK · 4FN sem MULTIVALORADA · 5FN junção</text>
+<text class="ln r" x="312.0" y="198.45" xml:space="preserve">PK simples → já 2FN · 2 atributos → já 4FN · toda FNBC está na 3FN</text>
+<text class="ln n" x="312.0" y="206.75" xml:space="preserve">Armstrong: reflexividade · aumento · transitividade</text>
+<text class="ln n" x="312.0" y="215.05" xml:space="preserve">OLTP NORMALIZA × OLAP DESNORMALIZA (estrela) · desnormalizar = decisão</text>
+<text class="ln g" x="312.0" y="223.35" xml:space="preserve">Álgebra: σ linhas (WHERE) · π colunas · ⋈ junção · × cartesiano · ÷</text>
+<text class="ln n" x="312.0" y="231.65" xml:space="preserve">Relação = conjunto: tuplas SEM ordem, SEM duplicata · grau = colunas</text>
+<line class="sep" x1="309.0" y1="239.3" x2="593.0" y2="239.3"/>
+<text class="bt" x="311.0" y="247.9">3 · SQL</text>
+<text class="ln n" x="312.0" y="256.95" xml:space="preserve">DDL create/alter/drop/TRUNCATE (commit implícito) · DML ins/upd/del</text>
+<text class="ln n" x="312.0" y="265.25" xml:space="preserve">DCL grant/revoke (WITH GRANT OPTION) · TCL commit/rollback/savepoint</text>
+<text class="ln g" x="312.0" y="273.55" xml:space="preserve">Ordem lógica: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY</text>
+<text class="ln r" x="312.0" y="281.85" xml:space="preserve">Alias do SELECT só no ORDER BY · WHERE = linhas · HAVING = grupos</text>
+<text class="ln n" x="312.0" y="290.15" xml:space="preserve">NULL: IS NULL · COUNT(*) conta NULL · COUNT(col)/SUM/AVG ignoram</text>
+<text class="ln n" x="312.0" y="298.45" xml:space="preserve">JOIN: INNER (só par) · LEFT (todas da esq.) · FULL · CROSS m×n</text>
+<text class="ln n" x="312.0" y="306.75" xml:space="preserve">UNION tira duplicata × UNION ALL · INTERSECT · EXCEPT · IN × EXISTS</text>
+<text class="ln n" x="312.0" y="315.05" xml:space="preserve">DELETE (WHERE, rollback, trigger) × TRUNCATE (rápido, DDL) × DROP</text>
+<text class="ln n" x="312.0" y="323.35" xml:space="preserve">VIEW virtual (não guarda) × MATERIALIZADA guarda (refresh)</text>
+<text class="ln n" x="312.0" y="331.65" xml:space="preserve">RANK pula · DENSE_RANK não · ROW_NUMBER único · ROLLUP n+1 · CUBE 2ⁿ</text>
+<text class="ln n" x="312.0" y="339.95" xml:space="preserve">ÍNDICE: B-Tree (=, range, LIKE 'x%') · Hash (só =) · BITMAP (baixa card.)</text>
+<text class="ln r" x="312.0" y="348.25" xml:space="preserve">Função na coluna QUEBRA índice · clustered = 1 · índice atrasa INSERT</text>
+<line class="sep" x1="309.0" y1="355.9" x2="593.0" y2="355.9"/>
+<text class="bt" x="311.0" y="364.5">4 · TRANSAÇÕES</text>
+<text class="ln n" x="312.0" y="373.55" xml:space="preserve">ACID: ATOMICIDADE (tudo ou nada → UNDO) · DURABILIDADE (commit → REDO)</text>
+<text class="ln n" x="312.0" y="381.85" xml:space="preserve">WAL: log ANTES do disco · before-image UNDO · after-image REDO</text>
+<text class="ln n" x="312.0" y="390.15" xml:space="preserve">Problemas: DIRTY read · NON-REPEATABLE · PHANTOM · LOST UPDATE</text>
+<text class="ln n" x="312.0" y="398.45" xml:space="preserve">READ COMMITTED evita dirty · REPEATABLE READ ainda permite phantom</text>
+<text class="ln r" x="312.0" y="406.75" xml:space="preserve">Só SERIALIZABLE evita phantom · ↑ isolamento = ↓ concorrência</text>
+<text class="ln n" x="312.0" y="415.05" xml:space="preserve">2PL: cresce → encolhe → serializável · NÃO evita DEADLOCK</text>
+<text class="ln n" x="312.0" y="423.35" xml:space="preserve">2PL estrito: X-lock até o commit · MVCC: leitor NÃO bloqueia escritor</text>
+<text class="ln n" x="312.0" y="431.65" xml:space="preserve">Deadlock: WAIT-DIE (velho espera, jovem morre) · WOUND-WAIT (velho fere)</text>
+<text class="ln n" x="312.0" y="439.95" xml:space="preserve">Timestamp: sem deadlock, risco de STARVATION</text>
+<text class="ln n" x="312.0" y="448.25" xml:space="preserve">Serializável ≠ serial (≡ ALGUMA ordem serial) · conflito RW, WR, WW</text>
+<text class="ln n" x="312.0" y="456.55" xml:space="preserve">Cascading rollback ← dirty read · ARIES: analysis → REDO → UNDO</text>
+<line class="sep" x1="309.0" y1="464.2" x2="593.0" y2="464.2"/>
+<text class="bt" x="311.0" y="472.8">5 · NOSQL &amp; DISTRIBUÍDOS</text>
+<text class="ln n" x="312.0" y="481.85" xml:space="preserve">CAP (escolha 2): RDBMS = CA · MongoDB/HBase = CP · Cassandra = AP</text>
+<text class="ln n" x="312.0" y="490.15" xml:space="preserve">BASE: basically available · soft state · EVENTUALLY consistent</text>
+<text class="ln n" x="312.0" y="498.45" xml:space="preserve">CHAVE-VALOR Redis (cache, TTL) · DOCUMENTO MongoDB (BSON, _id)</text>
+<text class="ln n" x="312.0" y="506.75" xml:space="preserve">COLUNAR Cassandra/HBase (volume) · GRAFO Neo4j (nós e arestas)</text>
+<text class="ln n" x="312.0" y="515.05" xml:space="preserve">MongoDB: find(filtro, proj.) · $match→$group→$sort · $lookup = join</text>
+<text class="ln n" x="312.0" y="523.35" xml:space="preserve">  replica set (write só no PRIMARY) · sharding = mongos + config</text>
+<text class="ln n" x="312.0" y="531.65" xml:space="preserve">Fragmentação HORIZONTAL (linhas = sharding) × VERTICAL (colunas, PK)</text>
+<text class="ln n" x="312.0" y="539.95" xml:space="preserve">Replicação SÍNCRONA (forte, lenta) × ASSÍNCRONA (lag)</text>
+<text class="ln n" x="312.0" y="548.25" xml:space="preserve">2PC: prepare (READY/ABORT) → commit · coordenador cai = BLOQUEIO → 3PC</text>
+<text class="ln n" x="312.0" y="556.55" xml:space="preserve">Consenso: Paxos · Raft (líder) · PBFT (bizantino) · NewSQL = ACID+escala</text>
+<text class="ln n" x="312.0" y="564.85" xml:space="preserve">Escala VERTICAL (1 servidor maior) × HORIZONTAL (mais nós)</text>
+<line class="sep" x1="309.0" y1="572.5" x2="593.0" y2="572.5"/>
+<text class="bt" x="311.0" y="581.1">6 · DW · ETL · DIMENSIONAL · OLAP</text>
+<text class="ln n" x="312.0" y="590.15" xml:space="preserve">INMON (OVIN: Orientado·Variável·Integrado·NÃO volátil) top-down 3FN</text>
+<text class="ln n" x="312.0" y="598.45" xml:space="preserve">KIMBALL bottom-up: data marts primeiro, ESTRELA, dim. CONFORMADAS</text>
+<text class="ln n" x="312.0" y="606.75" xml:space="preserve">ETL (staging, transforma ANTES) × ELT (bruto no destino: cloud/lake)</text>
+<text class="ln n" x="312.0" y="615.05" xml:space="preserve">Staging (transitória) ≠ ODS (atual, consultável) ≠ data mart</text>
+<text class="ln n" x="312.0" y="623.35" xml:space="preserve">Transf. BÁSICA: limpeza · dedup · formato · AVANÇADA: DERIVAÇÃO (calcula)</text>
+<text class="ln n" x="312.0" y="631.65" xml:space="preserve">  JUNÇÃO (cruza fontes) · separação · resumo · encriptação</text>
+<text class="ln n" x="312.0" y="639.95" xml:space="preserve">FATO = métricas + FKs (PK composta, TEMPO obrigatória) · DIMENSÃO = texto</text>
+<text class="ln n" x="312.0" y="648.25" xml:space="preserve">Aditiva SUM · SEMI (saldo: no tempo → LAST) · NÃO aditiva (%) · SK</text>
+<text class="ln n" x="312.0" y="656.55" xml:space="preserve">Degenerada (nº NF na fato) · junk (flags) · role-playing · factless</text>
+<text class="ln n" x="312.0" y="664.85" xml:space="preserve">ESTRELA desnormalizada, rápida × FLOCO normalizada × CONSTELAÇÃO</text>
+<text class="ln n" x="312.0" y="673.15" xml:space="preserve">SCD: 0 congela · 1 sobrescreve · 2 NOVA LINHA + datas · 3 coluna</text>
+<text class="ln n" x="312.0" y="681.45" xml:space="preserve">OLAP: DRILL-DOWN ↓grão · ROLL-UP ↑ · SLICE 1 dim · DICE várias · PIVOT</text>
+<text class="ln n" x="312.0" y="689.75" xml:space="preserve">MOLAP cubo pré-calculado · ROLAP relacional (escala) · HOLAP misto</text>
+<text class="ln n" x="312.0" y="698.05" xml:space="preserve">LAKE schema-on-READ (swamp) · LAKEHOUSE ACID · MESH domínios · Parquet</text>
+<text class="ln r" x="312.0" y="706.35" xml:space="preserve">BITMAP ideal no DW (baixa cardinalidade), péssimo no OLTP</text>
+<line class="sep" x1="309.0" y1="714.0" x2="593.0" y2="714.0"/>
+<text class="bt" x="311.0" y="722.6">7 · BI &amp; ADMINISTRAÇÃO</text>
+<text class="ln n" x="312.0" y="731.65" xml:space="preserve">BI: ETL → DW → OLAP → dashboards · REATIVO (pergunta) × PROATIVO</text>
+<text class="ln n" x="312.0" y="739.95" xml:space="preserve">KDD ≠ mining (etapa) · KPI = métrica COM META · leading × lagging</text>
+<text class="ln n" x="312.0" y="748.25" xml:space="preserve">Power BI: IMPORT (copia) × DIRECTQUERY (fonte) × LIVE · Gateway</text>
+<text class="ln n" x="312.0" y="756.55" xml:space="preserve">M/Power Query (antes, case-sens.) × DAX (depois) · MEDIDA × coluna calc.</text>
+<text class="ln n" x="312.0" y="764.85" xml:space="preserve">CALCULATE muda filtro · ALL remove · RLS = linhas por papel</text>
+<text class="ln n" x="312.0" y="773.15" xml:space="preserve">Dashboards: OPERACIONAL (tempo real) · tático · ESTRATÉGICO (poucos KPI)</text>
+<text class="ln n" x="312.0" y="781.45" xml:space="preserve">Backup FULL · DIFERENCIAL (desde o full) · INCREMENTAL (desde o último)</text>
+<text class="ln n" x="312.0" y="789.75" xml:space="preserve">RPO (quanto dado perder) × RTO (tempo p/ voltar) · hot × cold standby</text>
+<text class="ln n" x="312.0" y="798.05" xml:space="preserve">EXPLAIN (plano) × EXPLAIN ANALYZE (executa) · full scan = falta índice</text>
+<text class="ln n" x="312.0" y="806.35" xml:space="preserve">Joins: nested loop (poucas) · hash (grandes) · merge (ordenadas)</text>
+<text class="ln n" x="312.0" y="814.65" xml:space="preserve">Partição RANGE · LIST · HASH (sem pruning) · sharding = servidores</text>
+<text class="ln n" x="312.0" y="822.95" xml:space="preserve">Segurança: DAC · MAC · RBAC · menor privilégio · TDE · SQL injection</text>
+</svg></div>
+  <h2>Progresso da cópia</h2>
+  <p class="small">Marque cada bloco ao terminar de passar para a lousa — fica salvo neste navegador.</p>
+  <ul class="list"><li><label><input type="checkbox" id="chk-CD-0" data-key="CD0"><span class="k">CD</span> 1 · CONCEITOS &amp; PARADIGMAS<em>11 linhas</em></label></li><li><label><input type="checkbox" id="chk-CD-1" data-key="CD1"><span class="k">CD</span> 2 · PRÉ-PROCESSAMENTO<em>12 linhas</em></label></li><li><label><input type="checkbox" id="chk-CD-2" data-key="CD2"><span class="k">CD</span> 3 · AVALIAÇÃO DE MODELOS<em>13 linhas</em></label></li><li><label><input type="checkbox" id="chk-CD-3" data-key="CD3"><span class="k">CD</span> 4 · ALGORITMOS SUPERVISIONADOS<em>13 linhas</em></label></li><li><label><input type="checkbox" id="chk-CD-4" data-key="CD4"><span class="k">CD</span> 5 · NÃO SUPERVISIONADO<em>13 linhas</em></label></li><li><label><input type="checkbox" id="chk-CD-5" data-key="CD5"><span class="k">CD</span> 6 · REDES NEURAIS<em>11 linhas</em></label></li><li><label><input type="checkbox" id="chk-CD-6" data-key="CD6"><span class="k">CD</span> 7 · PLN · IA GEN · SÉRIES · BIG DATA · SEGURANÇA<em>12 linhas</em></label></li><li><label><input type="checkbox" id="chk-BD-0" data-key="BD0"><span class="k">BD</span> 1 · FUNDAMENTOS &amp; MER<em>13 linhas</em></label></li><li><label><input type="checkbox" id="chk-BD-1" data-key="BD1"><span class="k">BD</span> 2 · NORMALIZAÇÃO &amp; ÁLGEBRA<em>8 linhas</em></label></li><li><label><input type="checkbox" id="chk-BD-2" data-key="BD2"><span class="k">BD</span> 3 · SQL<em>12 linhas</em></label></li><li><label><input type="checkbox" id="chk-BD-3" data-key="BD3"><span class="k">BD</span> 4 · TRANSAÇÕES<em>11 linhas</em></label></li><li><label><input type="checkbox" id="chk-BD-4" data-key="BD4"><span class="k">BD</span> 5 · NOSQL &amp; DISTRIBUÍDOS<em>11 linhas</em></label></li><li><label><input type="checkbox" id="chk-BD-5" data-key="BD5"><span class="k">BD</span> 6 · DW · ETL · DIMENSIONAL · OLAP<em>15 linhas</em></label></li><li><label><input type="checkbox" id="chk-BD-6" data-key="BD6"><span class="k">BD</span> 7 · BI &amp; ADMINISTRAÇÃO<em>12 linhas</em></label></li></ul>
+</div>
+<script>
+(function(){
+  const KEY='lousa6090-blocos';
+  let st={};
+  try{ st=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ st={}; }
+  document.querySelectorAll('.list input').forEach(cb=>{
+    cb.checked=!!st[cb.dataset.key];
+    cb.addEventListener('change',()=>{ st[cb.dataset.key]=cb.checked; try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} });
+  });
+})();
+</script>
+
+</body>
+</html>

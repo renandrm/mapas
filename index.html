@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0f172a">
+<meta name="description" content="Mapas mentais de estudo para concursos fiscais.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mapas">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<title>Mapas Mentais — Concurso Fiscal</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f172a; color: #e2e8f0; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    border-bottom: 1px solid #334155;
+    padding: 32px 48px 24px;
+  }
+  header h1 { font-size: 1.7rem; font-weight: 700; color: #fff; }
+  header h1 span { color: #38bdf8; }
+  header p { color: #64748b; font-size: 0.85rem; margin-top: 6px; }
+
+  .toolbar { display: flex; align-items: center; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+
+  #search {
+    background: #1e293b; border: 1px solid #334155; border-radius: 8px;
+    color: #e2e8f0; padding: 8px 16px; font-size: 0.9rem; width: 260px;
+    outline: none; transition: border-color .2s;
+  }
+  #search:focus { border-color: #38bdf8; }
+  #search::placeholder { color: #475569; }
+
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-btn {
+    background: #1e293b; border: 1px solid #334155; border-radius: 20px;
+    color: #94a3b8; padding: 5px 15px; font-size: 0.78rem; cursor: pointer; transition: all .18s;
+  }
+  .filter-btn:hover { border-color: #64748b; color: #e2e8f0; }
+  .filter-btn.active { background: #38bdf8; border-color: #38bdf8; color: #0f172a; font-weight: 700; }
+
+  #count { margin-left: auto; color: #475569; font-size: 0.82rem; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+    padding: 32px 48px 48px;
+  }
+
+  .card {
+    background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+    overflow: hidden; text-decoration: none; color: inherit;
+    display: flex; flex-direction: column;
+    transition: transform .15s, box-shadow .15s, border-color .15s;
+    position: relative;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px; background: var(--c);
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    border-color: var(--c);
+  }
+  .card.hidden { display: none; }
+
+  .card-body { padding: 18px 18px 14px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+  .card-icon { font-size: 1.8rem; }
+  .card-cat { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--c); }
+  .card-title { font-size: 0.95rem; font-weight: 600; line-height: 1.3; color: #f1f5f9; }
+  .card-sub { font-size: 0.73rem; color: #64748b; line-height: 1.4; flex: 1; }
+
+  .card-footer {
+    padding: 10px 18px; background: #162032; border-top: 1px solid #263548;
+    font-size: 0.75rem; color: var(--c);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-footer span { color: #475569; }
+  .card-footer::after { content: '→'; font-size: 1.1rem; margin-left: auto; }
+
+  #no-results { display: none; grid-column: 1/-1; text-align: center; padding: 80px 0; color: #475569; }
+
+
+  /* ——— PWA: botões de instalar e de uso offline ——— */
+  .pwa-btn {
+    background: #1e293b; border: 1px solid #334155; border-radius: 8px;
+    color: #94a3b8; padding: 7px 14px; font-size: .8rem; cursor: pointer;
+    transition: all .18s; font-family: inherit; display: none; align-items: center; gap: 7px;
+  }
+  .pwa-btn:hover { border-color: #38bdf8; color: #e2e8f0; }
+  .pwa-btn.show { display: inline-flex; }
+  .pwa-btn:disabled { opacity: .55; cursor: default; }
+  #pwa-instalar { border-color: #38bdf8; color: #38bdf8; font-weight: 700; }
+  #pwa-status { font-size: .78rem; color: #475569; align-self: center; }
+  @media (max-width: 640px) {
+    header { padding: 20px 18px 16px; }
+    .grid { padding: 20px 18px 36px; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    #search { width: 100%; }
+    #count { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📚 Mapas Mentais — <span>Concurso Fiscal</span></h1>
+  <p>Clique em qualquer card para abrir o mapa mental</p>
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="🔍  Buscar matéria..." oninput="filter()">
+    <div class="filters">
+      <button class="filter-btn active" onclick="setcat('todos',this)">Todos</button>
+      <button class="filter-btn" onclick="setcat('direito',this)">Direito</button>
+      <button class="filter-btn" onclick="setcat('contabil',this)">Contábil / AFO</button>
+      <button class="filter-btn" onclick="setcat('ti',this)">TI / Dados</button>
+      <button class="filter-btn" onclick="setcat('outros',this)">Outros</button>
+      <button class="filter-btn" onclick="setcat('matematica',this)">Matemática</button>
+      <button id="pwa-instalar" class="pwa-btn" type="button">⬇ Instalar app</button>
+      <button id="pwa-offline" class="pwa-btn" type="button">⤓ Baixar tudo para offline</button>
+      <span id="pwa-status"></span>
+
+    </div>
+    <a class="filter-btn" style="text-decoration:none;color:#86efac;border-color:#4ade8066;"
+       href="ms-excel:ofe|u|file:///C:/Users/renan/OneDrive/Estudos/concursos/geral/26.%20Bizus/conteudo_programatico_fiscal_estadual.xlsx"
+       title="Abrir a planilha de conteúdo programático (Programa · Ciclo · DePara TI · Edital SEFAZ-AL)">📊 Conteúdo Programático</a>
+    <span id="count">26 mapas</span>
+  </div>
+</header>
+
+<div class="grid" id="grid">
+
+  <a class="card" style="--c:#38bdf8" data-cat="direito" data-title="Direito Tributário"
+     href="mapa_mental_tributario.html">
+    <div class="card-body">
+      <div class="card-icon">💼</div>
+      <div class="card-cat">Direito</div>
+      <div class="card-title">Direito Tributário</div>
+      <div class="card-sub">CTN, Obrigação, Crédito, Lançamento, Extinção, Exclusão</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#7dd3fc" data-cat="direito" data-title="Direito Tributário II"
+     href="mapa_mental_tributario2.html">
+    <div class="card-body">
+      <div class="card-icon">📋</div>
+      <div class="card-cat">Direito</div>
+      <div class="card-title">Direito Tributário II</div>
+      <div class="card-sub">ICMS, ISS, IPI, PIS/COFINS, Simples Nacional, Imunidades</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#fbbf24" data-cat="direito" data-title="Tributário III"
+     href="mapa_mental_iss.html">
+    <div class="card-body">
+      <div class="card-icon">🏙️</div>
+      <div class="card-cat">Direito</div>
+      <div class="card-title">Direito Tributário III</div>
+      <div class="card-sub">LC 116/03, Fato Gerador, Base de Cálculo, Alíquotas</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#f472b6" data-cat="direito" data-title="Legislação Tributária AL"
+     href="mapa_mental_legislacao_al.html">
+    <div class="card-body">
+      <div class="card-icon">⚖️</div>
+      <div class="card-cat">Direito</div>
+      <div class="card-title">Legislação Tributária — Alagoas</div>
+      <div class="card-sub">ICMS · IPVA · ITCD · Contribuinte Arretado — 18 abas ponderadas pela incidência nas questões</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#f472b6" data-cat="direito" data-title="Reforma Tributária"
+     href="mapa_mental_reftrib.html">
+    <div class="card-body">
+      <div class="card-icon">🔄</div>
+      <div class="card-cat">Direito</div>
+      <div class="card-title">Reforma Tributária</div>
+      <div class="card-sub">EC 132/2023, IBS, CBS, IS, Dual VAT, Split Payment</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#fb923c" data-cat="direito" data-title="Reforma Tributária II"
+     href="mapa_mental_reftrib2.html">
+    <div class="card-body">
+      <div class="card-icon">🔄</div>
+      <div class="card-cat">Direito</div>
+      <div class="card-title">Reforma Tributária II</div>
+      <div class="card-sub">LC 227/2026, ITCMD, ITBI, Comitê Gestor IBS, Distribuição</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#fb923c" data-cat="contabil" data-title="Contabilidade Geral e Avançada"
+     href="mapa_mental_contabilidade_completo.html">
+    <div class="card-body">
+      <div class="card-icon">📒</div>
+      <div class="card-cat">Contábil / AFO</div>
+      <div class="card-title">Contabilidade Geral e Avançada</div>
+      <div class="card-sub">CPC, Balanço, DRE, Consolidação, IFRS</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#f59e0b" data-cat="contabil" data-title="Contabilidade de Custos"
+     href="mapa_mental_contabilidade_custos.html">
+    <div class="card-body">
+      <div class="card-icon">🧮</div>
+      <div class="card-cat">Contábil / AFO</div>
+      <div class="card-title">Contabilidade de Custos</div>
+      <div class="card-sub">Custeio Absorção, ABC, Variável, Ponto de Equilíbrio</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#7ec8e3" data-cat="contabil" data-title="Contabilidade Pública"
+     href="mapa_mental_contabilidade_publica.html">
+    <div class="card-body">
+      <div class="card-icon">📘</div>
+      <div class="card-cat">Contábil / AFO</div>
+      <div class="card-title">Contabilidade Pública</div>
+      <div class="card-sub">Conceitos · Princípios · Despesas · Patrimônio · Transações · NBC TSP · PCASP · DCASP · NBC TSP Ativos · Consolidação</div>
+    </div>
+    <div class="card-footer"><span>12 abas</span></div>
+  </a>
+
+  <a class="card" style="--c:#fb923c" data-cat="contabil" data-title="Direito Financeiro AFO"
+     href="mapa_mental_afo.html">
+    <div class="card-body">
+      <div class="card-icon">💰</div>
+      <div class="card-cat">Contábil / AFO</div>
+      <div class="card-title">Direito Financeiro — AFO</div>
+      <div class="card-sub">Orçamento Público, LRF, Receitas e Despesas Públicas</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#facc15" data-cat="contabil" data-title="Auditoria"
+     href="mapa_mental_auditoria.html">
+    <div class="card-body">
+      <div class="card-icon">🔎</div>
+      <div class="card-cat">Contábil / AFO</div>
+      <div class="card-title">Auditoria</div>
+      <div class="card-sub">Técnicas, Tipos, Normas, Controle Interno e Externo</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#60a5fa" data-cat="direito" data-title="Direito Constitucional"
+     href="mapa_mental_constitucional.html">
+    <div class="card-body">
+      <div class="card-icon">🏛️</div>
+      <div class="card-cat">Direito</div>
+      <div class="card-title">Direito Constitucional</div>
+      <div class="card-sub">Direitos Fundamentais, Organização do Estado, CF/88</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#f87171" data-cat="direito" data-title="Direito Administrativo"
+     href="mapa_mental_administrativo.html">
+    <div class="card-body">
+      <div class="card-icon">⚖️</div>
+      <div class="card-cat">Direito</div>
+      <div class="card-title">Direito Administrativo</div>
+      <div class="card-sub">Atos, Poderes, Serviços Públicos, Licitações, Improbidade</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#34d399" data-cat="direito" data-title="Direito Civil"
+     href="mapa_mental_civil.html">
+    <div class="card-body">
+      <div class="card-icon">📜</div>
+      <div class="card-cat">Direito</div>
+      <div class="card-title">Direito Civil</div>
+      <div class="card-sub">Fato Jurídico, Negócio, Prescrição, Decadência, Invalidade</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#c084fc" data-cat="direito" data-title="Direito Empresarial"
+     href="mapa_mental_empresarial.html">
+    <div class="card-body">
+      <div class="card-icon">🏢</div>
+      <div class="card-cat">Direito</div>
+      <div class="card-title">Direito Empresarial</div>
+      <div class="card-sub">Sociedades, Títulos de Crédito, Falência, Recuperação</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#f87171" data-cat="direito" data-title="Direito Penal"
+     href="mapa_mental_penal.html">
+    <div class="card-body">
+      <div class="card-icon">⚔️</div>
+      <div class="card-cat">Direito</div>
+      <div class="card-title">Direito Penal</div>
+      <div class="card-sub">Teoria do Crime, Crimes Fiscais, Fé Pública, Adm. Pública</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#4ade80" data-cat="outros" data-title="Economia"
+     href="mapa_mental_economia.html">
+    <div class="card-body">
+      <div class="card-icon">📈</div>
+      <div class="card-cat">Outros</div>
+      <div class="card-title">Economia</div>
+      <div class="card-sub">Micro, Macro, Mercado, Políticas Econômicas</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#fbbf24" data-cat="outros" data-title="Administração Pública + Governança"
+     href="mapa_mental_adm_pub.html">
+    <div class="card-body">
+      <div class="card-icon">🏛️</div>
+      <div class="card-cat">Outros</div>
+      <div class="card-title">Administração Pública + Governança</div>
+      <div class="card-sub">Adm. Pública (Modelos · Reformas · Transparência · Gov Eletrônico · GPR · Participação · Mudanças) + Governança (Accountability · Corporativa · Gestão de Riscos · OIT 190 · Ética CE · Lei 16.710)</div>
+    </div>
+    <div class="card-footer"><span>13 abas</span></div>
+  </a>
+
+  <a class="card" style="--c:#f472b6" data-cat="matematica" data-title="Matemática Financeira"
+     href="mapa_mental_financeira.html">
+    <div class="card-body">
+      <div class="card-icon">💰</div>
+      <div class="card-cat">Matemática</div>
+      <div class="card-title">Matemática Financeira</div>
+      <div class="card-sub">Juros Simples, Juros Compostos, Desconto, Amortização, Séries</div>
+    </div>
+    <div class="card-footer"><span>5 abas</span></div>
+  </a>
+
+  <a class="card" style="--c:#7ec8e3" data-cat="matematica" data-title="Estatística"
+     href="mapa_mental_estatistica.html">
+    <div class="card-body">
+      <div class="card-icon">📊</div>
+      <div class="card-cat">Matemática</div>
+      <div class="card-title">Estatística</div>
+      <div class="card-sub">Descritiva, Probabilidade, Distribuições, Inferência, Regressão</div>
+    </div>
+    <div class="card-footer"><span>8 abas</span></div>
+  </a>
+
+  <a class="card" style="--c:#34d399" data-cat="matematica" data-title="Raciocínio Lógico"
+     href="mapa_mental_raciocinio_logico.html">
+    <div class="card-body">
+      <div class="card-icon">🧩</div>
+      <div class="card-cat">Matemática</div>
+      <div class="card-title">Raciocínio Lógico</div>
+      <div class="card-sub">Estrutura Lógica, Lógica das Situações, Processo Lógico</div>
+    </div>
+    <div class="card-footer"><span>3 abas</span></div>
+  </a>
+
+  <a class="card" style="--c:#38bdf8" data-cat="ti" data-title="TI - Banco de Dados"
+     href="mapa_banco_de_dados.html">
+    <div class="card-body">
+      <div class="card-icon">🗄️</div>
+      <div class="card-cat">TI / Dados</div>
+      <div class="card-title">TI - Banco de Dados</div>
+      <div class="card-sub">SGBD, Modelo ER, Relacional, Normalização, SQL, Transações, NoSQL, Distribuídos, BI/ETL, OLAP, Power BI</div>
+    </div>
+    <div class="card-footer"><span>11 abas</span></div>
+  </a>
+
+  <a class="card" style="--c:#a78bfa" data-cat="ti" data-title="TI - Ciência &amp; Análise de Dados"
+     href="mapa_ciencia_de_dados.html">
+    <div class="card-body">
+      <div class="card-icon">🤖</div>
+      <div class="card-cat">TI / Dados</div>
+      <div class="card-title">TI - Ciência &amp; Análise de Dados</div>
+      <div class="card-sub">Conceitos, Mineração &amp; Big Data, Pré-processamento, Machine Learning, Classificação, Regressão, Clustering, Associação, Redes Neurais, IA Generativa, PLN, Séries Temporais, Segurança</div>
+    </div>
+    <div class="card-footer"><span>13 abas</span></div>
+  </a>
+
+  <a class="card" style="--c:#4ade80" data-cat="ti" data-title="TI - Engenharia de Software &amp; Programação"
+     href="mapa_eng_software.html">
+    <div class="card-body">
+      <div class="card-icon">💻</div>
+      <div class="card-cat">TI / Dados</div>
+      <div class="card-title">TI - Engenharia de Software &amp; Programação</div>
+      <div class="card-sub">Testes, Arquitetura Web, Microsserviços, Orientada a Eventos, SOA, Web Services, Lógica, JavaScript, Java, Cloud Computing</div>
+    </div>
+    <div class="card-footer"><span>10 abas</span></div>
+  </a>
+
+  <a class="card" style="--c:#67e8f9" data-cat="outros" data-title="TI - Gestão de Projetos"
+     href="mapa_mental_gestao_projetos.html">
+    <div class="card-body">
+      <div class="card-icon">🗂️</div>
+      <div class="card-cat">Outros</div>
+      <div class="card-title">TI - Gestão de Projetos</div>
+      <div class="card-sub">PMBOK, Ágil, Scrum, Escopo, Riscos, Cronograma</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <a class="card" style="--c:#a3e635" data-cat="outros" data-title="Língua Portuguesa"
+     href="mapa_mental_portugues.html">
+    <div class="card-body">
+      <div class="card-icon">✍️</div>
+      <div class="card-cat">Outros</div>
+      <div class="card-title">Língua Portuguesa</div>
+      <div class="card-sub">Gramática, Interpretação de Texto, Redação Oficial</div>
+    </div>
+    <div class="card-footer"></div>
+  </a>
+
+  <p id="no-results">Nenhum mapa encontrado.</p>
+</div>
+
+<script>
+  let cat = 'todos';
+
+  function setcat(c, btn) {
+    cat = c;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filter();
+  }
+
+  function filter() {
+    const term = document.getElementById('search').value.toLowerCase();
+    const cards = document.querySelectorAll('.card');
+    let n = 0;
+    cards.forEach(c => {
+      const matchCat = cat === 'todos' || c.dataset.cat === cat;
+      const matchTerm = !term || c.dataset.title.toLowerCase().includes(term)
+        || c.querySelector('.card-sub').textContent.toLowerCase().includes(term);
+      const show = matchCat && matchTerm;
+      c.classList.toggle('hidden', !show);
+      if (show) n++;
+    });
+    document.getElementById('count').textContent = n + ' mapa' + (n !== 1 ? 's' : '');
+    document.getElementById('no-results').style.display = n === 0 ? 'block' : 'none';
+  }
+
+  /* ——— PWA ——— */
+  (function () {
+    const status = document.getElementById('pwa-status');
+    const btnOff = document.getElementById('pwa-offline');
+    const btnIns = document.getElementById('pwa-instalar');
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js', { scope: './' })
+          .then(() => btnOff.classList.add('show'))
+          .catch(err => { status.textContent = 'offline indisponível'; console.warn(err); });
+      });
+    }
+
+    let prompt = null;
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault(); prompt = e; btnIns.classList.add('show');
+    });
+    btnIns.addEventListener('click', async () => {
+      if (!prompt) return;
+      prompt.prompt();
+      const r = await prompt.userChoice;
+      if (r.outcome === 'accepted') btnIns.classList.remove('show');
+      prompt = null;
+    });
+    window.addEventListener('appinstalled', () => btnIns.classList.remove('show'));
+
+    btnOff.addEventListener('click', () => {
+      const urls = [...document.querySelectorAll('a.card')].map(a => a.getAttribute('href'));
+      const sw = navigator.serviceWorker.controller;
+      if (!sw) { status.textContent = 'recarregue a página e tente de novo'; return; }
+      btnOff.disabled = true;
+      const canal = new MessageChannel();
+      canal.port1.onmessage = ev => {
+        const d = ev.data;
+        if (d.tipo === 'PROGRESSO') status.textContent = 'baixando ' + d.feitos + '/' + d.total + '…';
+        if (d.tipo === 'CONCLUIDO') {
+          status.textContent = d.erros
+            ? d.feitos - d.erros + ' de ' + d.total + ' salvos (' + d.erros + ' falharam)'
+            : 'tudo disponível offline ✓';
+          btnOff.disabled = false;
+        }
+      };
+      status.textContent = 'baixando…';
+      sw.postMessage({ tipo: 'BAIXAR_TUDO', urls }, [canal.port2]);
+    });
+  })();
+
+</script>
+</body>
+</html>

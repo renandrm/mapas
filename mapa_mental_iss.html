@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISS — Mapa Mental (Aulas 22 e 23)</title>
+<style>
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f1117; color: #e0e0e0; overflow-x: hidden; }
+  header { text-align: center; padding: 18px 10px 10px; background: linear-gradient(135deg,#1a1d2e 0%,#0f1117 100%); border-bottom: 1px solid #2a2d3e; }
+  header h1 { font-size: 1.4rem; color: #7ec8e3; letter-spacing: 1px; }
+  header p  { font-size: 0.78rem; color: #666; margin-top: 4px; }
+  #tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; padding: 12px 10px; background: #13151f; border-bottom: 1px solid #2a2d3e; }
+  .tab-btn { padding: 7px 16px; border: 1.5px solid #2a2d3e; border-radius: 20px; background: #1a1d2e; color: #aaa; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all .2s; }
+  .tab-btn:hover { border-color: #7ec8e3; color: #7ec8e3; }
+  .tab-btn.active { background: #7ec8e3; color: #0f1117; border-color: #7ec8e3; }
+  #main { padding: 20px 10px 40px; max-width: 1600px; margin: 0 auto; }
+  .section-panel { display: none; }
+  .section-panel.active { display: block; }
+  .section-title { text-align: center; margin-bottom: 22px; }
+  .section-title .badge { display: inline-block; padding: 6px 22px; border-radius: 30px; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .section-title h2 { font-size: 1.25rem; color: #fff; }
+  .section-title p  { font-size: 0.8rem; color: #888; margin-top: 4px; }
+  .mm-grid { display: grid; gap: 16px; }
+  .mm-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .mm-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  @media(max-width:700px) { .mm-grid.cols-2,.mm-grid.cols-3 { grid-template-columns: 1fr; } }
+  .l1-card { border-radius: 12px; overflow: hidden; border: 1.5px solid transparent; background: #1a1d2e; transition: transform .2s,box-shadow .2s; }
+  .l1-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.5); }
+  .l1-header { padding: 12px 16px; font-size: 0.9rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; user-select: none; }
+  .l1-header .toggle { margin-left: auto; font-size: 0.75rem; opacity: .7; transition: transform .3s; }
+  .l1-card.open .toggle { transform: rotate(90deg); }
+  .l2-list { display: none; padding: 0 12px 12px 12px; }
+  .l1-card.open .l2-list { display: block; }
+  .l2-item { margin-top: 10px; border-left: 3px solid; padding-left: 10px; }
+  .l2-item .l2-title { font-size: 0.82rem; font-weight: 700; margin-bottom: 5px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; }
+  .l2-item .l2-toggle { font-size: 0.7rem; opacity: .6; transition: transform .3s; }
+  .l2-item.open .l2-toggle { transform: rotate(90deg); }
+  .l3-pills { display: none; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+  .l2-item.open .l3-pills { display: flex; }
+  .pill { font-size: 0.72rem; padding: 3px 9px; border-radius: 12px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); line-height: 1.4; }
+  .pill.warn   { border-color: #f0a500; color: #f0a500; background: rgba(240,165,0,.08); }
+  .pill.danger { border-color: #e05252; color: #e05252; background: rgba(224,82,82,.08); }
+  .pill.ok     { border-color: #52c97a; color: #52c97a; background: rgba(82,201,122,.08); }
+  .pill.lei    { border-color: #facc15; color: #facc15; background: rgba(250,204,21,.08); font-style: italic; }
+  .expand-wrap { text-align: right; margin-bottom: 10px; }
+  .expand-btn { font-size: 0.75rem; padding: 5px 14px; border-radius: 14px; border: 1px solid #2a2d3e; background: #1a1d2e; color: #aaa; cursor: pointer; transition: all .2s; }
+  .expand-btn:hover { border-color: #7ec8e3; color: #7ec8e3; }
+  .c0{--ac:#7ec8e3} .c0 .l1-card{border-color:#7ec8e321} .c0 .l1-header{background:linear-gradient(90deg,#1a3a4a,#1a1d2e);color:#7ec8e3} .c0 .l2-item{border-color:#7ec8e3} .c0 .l2-title{color:#7ec8e3}
+  .c1{--ac:#a78bfa} .c1 .l1-card{border-color:#a78bfa21} .c1 .l1-header{background:linear-gradient(90deg,#2a1a4a,#1a1d2e);color:#a78bfa} .c1 .l2-item{border-color:#a78bfa} .c1 .l2-title{color:#a78bfa}
+  .c2{--ac:#34d399} .c2 .l1-card{border-color:#34d39921} .c2 .l1-header{background:linear-gradient(90deg,#1a3a2a,#1a1d2e);color:#34d399} .c2 .l2-item{border-color:#34d399} .c2 .l2-title{color:#34d399}
+  .c3{--ac:#fb923c} .c3 .l1-card{border-color:#fb923c21} .c3 .l1-header{background:linear-gradient(90deg,#3a2a1a,#1a1d2e);color:#fb923c} .c3 .l2-item{border-color:#fb923c} .c3 .l2-title{color:#fb923c}
+  .c4{--ac:#f472b6} .c4 .l1-card{border-color:#f472b621} .c4 .l1-header{background:linear-gradient(90deg,#3a1a2a,#1a1d2e);color:#f472b6} .c4 .l2-item{border-color:#f472b6} .c4 .l2-title{color:#f472b6}
+  .c5{--ac:#facc15} .c5 .l1-card{border-color:#facc1521} .c5 .l1-header{background:linear-gradient(90deg,#3a3a1a,#1a1d2e);color:#facc15} .c5 .l2-item{border-color:#facc15} .c5 .l2-title{color:#facc15}
+  .c6{--ac:#38bdf8} .c6 .l1-card{border-color:#38bdf821} .c6 .l1-header{background:linear-gradient(90deg,#1a2a3a,#1a1d2e);color:#38bdf8} .c6 .l2-item{border-color:#38bdf8} .c6 .l2-title{color:#38bdf8}
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 30px; font-size: 0.73rem; color: #777; border-top: 1px solid #2a2d3e; padding-top: 16px; }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  .dot { width:10px; height:10px; border-radius:50%; }
+
+
+  /* ─── FULL-WIDTH OVERRIDES (cards em coluna única, largura total) ─── */
+  .mm-grid.cols-2, .mm-grid.cols-3 { grid-template-columns: 1fr !important; gap: 20px !important; }
+  .l1-card { width: 100%; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ISS — Imposto sobre Serviços</h1>
+</header>
+
+<div id="tabs">
+<button class="tab-btn active" onclick="showSection(0,this)">ISS na CF/88</button>
+<button class="tab-btn" onclick="showSection(1,this)">Aspecto Material</button>
+<button class="tab-btn" onclick="showSection(2,this)">Aspecto Temporal</button>
+<button class="tab-btn" onclick="showSection(3,this)">Aspecto Espacial</button>
+<button class="tab-btn" onclick="showSection(4,this)">Aspecto Pessoal</button>
+<button class="tab-btn" onclick="showSection(5,this)">Aspecto Quantitativo</button>
+<button class="tab-btn" onclick="showSection(6,this)">Jurisprudências</button>
+</div>
+
+<div id="main">
+
+  <div class="section-panel c0 active" id="panel-0">
+    <div class="section-title">
+      <div class="badge" style="background:#7ec8e322;color:#7ec8e3;">Aula 22</div>
+  </div>
+    <div class="expand-wrap">
+      <button class="expand-btn" onclick="toggleAll('panel-0')">&#8862; Expandir tudo</button>
+    </div>
+    <div class="mm-grid cols-2">
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">🏛️</span>Competência e Fundamento Constitucional<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Art. 156, III CF/88 — regra básica<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Competência: Municípios e Distrito Federal</span><span class="pill ok">Incide sobre serviços NÃO compreendidos no art. 155, II CF (ICMS)</span><span class="pill ok">Serviços tributáveis: definidos em lei complementar (LC 116/03)</span><span class="pill danger">'Qualquer natureza' NÃO é carta branca — só os serviços da lista da LC</span><span class="pill danger">Transporte intermunicipal e interestadual: ICMS (Estado)</span><span class="pill danger">Transporte intramunicipal (dentro do mesmo Município): ISS</span><span class="pill danger">Comunicação: ICMS — NUNCA ISS</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Art. 156, §3º CF — papel da LC<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">I — Fixar alíquotas máximas e mínimas do ISS</span><span class="pill ok">II — Excluir da incidência as exportações de serviços ao exterior</span><span class="pill ok">III — Regular forma e condições de concessão/revogação de isenções e benefícios fiscais</span><span class="pill ok">LC 116/03: lei complementar vigente que rege o ISS</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">📊</span>Alíquotas — Limites Constitucionais e Infraconstitucionais<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Alíquota máxima<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Máxima: 5% para todos os serviços (Art. 8º LC 116/03)</span><span class="pill ok">Lei municipal não pode ultrapassar 5%</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Alíquota mínima — art. 88 ADCT e art. 8º-A LC 116/03<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill warn">ADCT Art. 88: alíquota mínima de 2% desde a CF/88 (antes da LC 157/16)</span><span class="pill ok">LC 157/16: inseriu art. 8º-A na LC 116/03 formalizando a alíquota mínima de 2%</span><span class="pill danger">Vedado qualquer benefício (isenção, redução de BC, crédito presumido) que resulte em carga < 2%</span><span class="pill danger">Lei municipal que descumpra a alíquota mínima em serviço prestado a tomador de outro Município: NULA</span><span class="pill ok">Nulidade gera direito do prestador à restituição do ISS pago com base em lei nula</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Exceções à alíquota mínima de 2%<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill warn">7.02 — Obras de construção civil (empreitada/subempreitada): pode ser < 2%</span><span class="pill warn">7.05 — Reparação, conservação, reforma de edifícios, estradas, pontes, portos: pode ser < 2%</span><span class="pill warn">16.01 — Transporte coletivo municipal (rodoviário, metro, ferroviário, aquaviário): pode ser < 2%</span><span class="pill ok">Apenas esses 3 subitens têm exceção à alíquota mínima</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">💡</span>Isenções e Benefícios Fiscais<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Regras para concessão<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Isenção concedida por lei específica do próprio Município competente</span><span class="pill danger">Municípios NÃO podem conceder benefício que resulte em carga < 2% (exceto 7.02, 7.05, 16.01)</span><span class="pill ok">Benefícios incluem: isenção, redução de BC, crédito presumido, outorgado ou qualquer outra forma</span><span class="pill warn">Descumprimento: ISS passa a ser devido no Município do TOMADOR (Art. 3º, §4º)</span><span class="pill ok">Guerra fiscal do ISS: Municípios não podem atrair prestadores com alíquota < 2%</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Imunidade do Município tomador<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill danger">Município que toma serviço de terceiro NÃO possui imunidade de ISS</span><span class="pill warn">Imunidade recíproca (Art. 150, VI, 'a' CF): vedação de impostos sobre patrimônio, renda ou serviços</span><span class="pill danger">Mas: imunidade recíproca não alcança o ISS cobrado DO PRESTADOR pelo serviço prestado ao Município</span><span class="pill ok">FGV: Município que contrata serviço de manutenção de eletrodomésticos paga ISS normalmente</span></div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="section-panel c1" id="panel-1">
+    <div class="section-title">
+      <div class="badge" style="background:#a78bfa22;color:#a78bfa;">Aula 22</div>
+  </div>
+    <div class="expand-wrap">
+      <button class="expand-btn" onclick="toggleAll('panel-1')">&#8862; Expandir tudo</button>
+    </div>
+    <div class="mm-grid cols-2">
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">🎯</span>Conceito de Serviço para o ISS<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Definição de serviço tributável<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Prestação de esforço humano a terceiros, com conteúdo econômico, sem subordinação, sob regime de direito privado</span><span class="pill ok">Obrigação de FAZER — não de dar (que caracteriza o ICMS)</span><span class="pill danger">Exige utilidade para outrem — serviço prestado a si próprio não gera ISS</span><span class="pill danger">Incorporador que constrói em terreno próprio: NÃO incide ISS (STJ AgRg REsp 1.295.814)</span><span class="pill danger">Relação de emprego (subordinação): NÃO configura serviço tributável</span><span class="pill ok">Incidência independe da denominação dada ao serviço (Art. 1º, §4º LC 116/03)</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Lista taxativa da LC 116/03<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Lista TAXATIVA — só os serviços nela previstos podem ser tributados</span><span class="pill warn">RE 784.439 STF (repercussão geral): 'congêneres' permite interpretação extensiva apenas para atividades inerentes ao item</span><span class="pill danger">'Congêneres' NÃO torna a lista exemplificativa — não amplia para serviços de outro gênero</span><span class="pill ok">Incidência independe de ser a atividade preponderante do prestador</span><span class="pill ok">Incidência independe da denominação dada ao serviço pelo contribuinte</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">✅</span>Incidência — Serviços mais cobrados em prova<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Construção civil e obras<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">7.02 — Construção civil (empreitada, subempreitada): ISS</span><span class="pill ok">7.04 — Demolição: ISS</span><span class="pill ok">7.05 — Reforma, conservação de edifícios, estradas, pontes, portos: ISS</span><span class="pill ok">7.09 — Varrição, coleta, reciclagem de resíduos: ISS</span><span class="pill ok">7.10 — Limpeza de vias públicas, imóveis, chaminés, piscinas, parques: ISS</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Serviços financeiros, saúde e outros<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">4.23 — Planos de saúde e medicina de grupo: ISS (STF)</span><span class="pill warn">15.01 — Serviços bancários e financeiros: ISS sobre a taxa/comissão</span><span class="pill ok">15.09 — Arrendamento mercantil financeiro e lease-back: ISS (RE 547.245 STF)</span><span class="pill ok">17.05 — Fornecimento de mão-de-obra: ISS</span><span class="pill ok">16.01 — Transporte coletivo intramunicipal: ISS (rodoviário, metro, ferroviário, aquaviário)</span><span class="pill ok">11.01 — Guarda e estacionamento de veículos, aeronaves, embarcações: ISS</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">O que INCIDE apesar da polêmica<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Concreto usinado (betoneira no trajeto): ISS — Súmula STJ 167 (obrigação de fazer)</span><span class="pill ok">Streaming, software por download: ISS (STF RE 688.223)</span><span class="pill ok">Serviços de informática e TI previstos na lista: ISS</span><span class="pill ok">Serviços de assessoria e consultoria em geral: ISS</span><span class="pill ok">Pesquisa e desenvolvimento de qualquer natureza: ISS</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">🚫</span>Não-Incidência — Art. 2º LC 116/03<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Exportações de serviços (inciso I + parágrafo único)<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">ISS NÃO incide sobre exportações de serviços para o exterior do País</span><span class="pill ok">Resultado verificado no EXTERIOR: exportação legítima → NÃO incide ISS</span><span class="pill danger">Resultado verificado no BRASIL: NÃO é exportação → INCIDE ISS</span><span class="pill danger">Pagamento por residente no exterior ≠ exportação (resultado deve ser no exterior)</span><span class="pill danger">Exemplo: reparo de aeronave estrangeira em solo brasileiro → INCIDE (resultado aqui)</span><span class="pill warn">COPESE/UFPI: serviço não constante na lista da LC → NÃO-INCIDÊNCIA (não isenção)</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Relações de emprego e assemelhados (inciso II)<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Relação de emprego (subordinação): NÃO incide ISS</span><span class="pill ok">Trabalhadores avulsos: NÃO incide ISS</span><span class="pill ok">Diretores e membros de conselho consultivo/fiscal de sociedades e fundações: NÃO incide</span><span class="pill ok">Sócios-gerentes e gerentes-delegados: NÃO incide ISS</span><span class="pill warn">Prestador autônomo sem subordinação: INCIDE normalmente</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Operações financeiras (inciso III)<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Valor total intermediado no mercado de títulos e valores mobiliários: NÃO incide sobre o total</span><span class="pill danger">ISS incide APENAS sobre a comissão/taxa de intermediação (não sobre o principal)</span><span class="pill ok">Valor dos depósitos bancários: NÃO incide ISS</span><span class="pill ok">Principal, juros e acréscimos moratórios de operações de crédito em IFs: NÃO incide</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Locação de bens móveis — SV 31<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill danger">SV 31 STF: inconstitucional ISS sobre locação de bens móveis (obrigação de dar)</span><span class="pill danger">Leasing operacional: equiparado à locação → NÃO incide ISS</span><span class="pill ok">Razão: locação é obrigação de dar, não de fazer (prestação de serviço)</span></div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="section-panel c2" id="panel-2">
+    <div class="section-title">
+      <div class="badge" style="background:#34d39922;color:#34d399;">Aula 22</div>
+  </div>
+    <div class="expand-wrap">
+      <button class="expand-btn" onclick="toggleAll('panel-2')">&#8862; Expandir tudo</button>
+    </div>
+    <div class="mm-grid cols-2">
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">🕐</span>Classificação dos Serviços quanto ao Tempo<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Serviços instantâneos (não fracionáveis)<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">FG ocorre no momento da CONCLUSÃO da prestação do serviço</span><span class="pill warn">Exemplos: assistência médica, cuidados pessoais, estética, hospedagem, turismo</span><span class="pill ok">Barbeiro: instantâneo — FG só ocorre ao finalizar o serviço por completo</span><span class="pill ok">Não é possível fracionar — o serviço inacabado não gera FG</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Serviços fracionáveis (continuados / por etapas)<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">FG ocorre ao término de CADA ETAPA ou fração de tempo (medição)</span><span class="pill warn">Exemplos: construção civil, informática, pesquisa e desenvolvimento</span><span class="pill ok">Pavimentação: fracionável — ISS sobre cada km/etapa medida</span><span class="pill warn">Permite que o ISS seja exigido mesmo com serviço inacabado (por etapa concluída)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">📅</span>Ocorrência do Fato Gerador — Art. 116 CTN<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Momento da ocorrência do FG<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Situação de fato: desde o momento em que se verifiquem as circunstâncias materiais</span><span class="pill ok">Situação jurídica: desde que definitivamente constituída</span><span class="pill ok">Incidência independe do efetivo pagamento do preço do serviço</span><span class="pill danger">Adiantamento recebido antes do serviço: NÃO faz nascer o FG antecipado</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Pagamento antecipado e FG presumido<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill warn">Municípios que preveem pagamento antecipado: FG real ainda é na execução</span><span class="pill warn">Art. 150, §7º CF: permite atribuir responsabilidade por FG futuro e presumido</span><span class="pill danger">Mas: pagamento antecipado ≠ FG — são institutos distintos</span><span class="pill warn">ITBI e promessa de compra e venda: situação análoga — pagamento ≠ FG</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Distinção importante para provas<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Questão IDIB 2016: incidência NÃO depende do efetivo pagamento — gabarito ERRADO a afirmação contrária</span><span class="pill warn">Momento da apuração e pagamento do tributo pode ser diferente do FG</span><span class="pill warn">Lei municipal pode exigir pagamento antecipado de serviços fracionáveis, mas FG ocorre na execução</span></div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="section-panel c3" id="panel-3">
+    <div class="section-title">
+      <div class="badge" style="background:#fb923c22;color:#fb923c;">Aula 23</div>
+  </div>
+    <div class="expand-wrap">
+      <button class="expand-btn" onclick="toggleAll('panel-3')">&#8862; Expandir tudo</button>
+    </div>
+    <div class="mm-grid cols-2">
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">📍</span>Regra Geral — Local do Estabelecimento Prestador (Art. 3º)<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Regra: onde está o estabelecimento prestador<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">ISS devido ao Município do estabelecimento prestador do serviço</span><span class="pill warn">Na falta de estabelecimento: local do domicílio do prestador</span><span class="pill ok">Estabelecimento prestador (Art. 4º): local onde contribuinte presta serviços, permanente ou temporariamente, configurando unidade econômica ou profissional</span><span class="pill danger">Irrelevante a denominação: sede, filial, agência, posto, sucursal, escritório de representação</span><span class="pill warn">Simulação de estabelecimento em Município com alíquota menor: coibida pelo conceito do Art. 4º</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Posição do STJ — REsp 1.769.657 (Temas 354 e 355)<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill warn">STJ: ISS devido ao Município onde o serviço é EFETIVAMENTE prestado, desde que haja unidade econômica local</span><span class="pill warn">Prestador com estabelecimentos em vários Municípios: ISS apenas onde executado o serviço</span><span class="pill warn">Preferência do STJ pelo local de efetiva execução, não pelo local da sede</span><span class="pill danger">Cuidado: STJ não é a regra da LC 116/03 — avalie se a questão pede literalidade ou jurisprudência</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">§4º — Descumprimento da alíquota mínima<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill danger">Município prestador que descumpre o Art. 8º-A (alíquota mínima 2%): critério espacial muda</span><span class="pill danger">ISS passa a ser devido no Município do TOMADOR ou intermediário</span><span class="pill warn">Consequência: tomador PJ também se torna responsável pelo recolhimento</span><span class="pill warn">§§5º ao 12: declarados inconstitucionais (ADI 5.835) — LC 175/20 parcialmente inconstitucional</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Parágrafos especiais do Art. 3º<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill warn">§1º — Subitem 3.04 (ferrovia, rodovia, postes, cabos, dutos locados): FG em cada Município com extensão</span><span class="pill warn">§2º — Subitem 22.01 (exploração de rodovia/pedágio): FG em cada Município com extensão da rodovia</span><span class="pill ok">§3º — Serviços em águas marítimas (exceto 20.01): regra geral — local do estabelecimento prestador</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">🗺️</span>Exceções — ISS Devido no Local de Execução ou do Tomador<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Exceções: local da EXECUÇÃO do serviço (obras e in loco)<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">3.05 — Instalação de andaimes, palcos, coberturas: onde instalado</span><span class="pill ok">7.02 — Obras de construção civil + 7.19 acompanhamento: local da obra</span><span class="pill ok">7.04 — Demolição: local da execução</span><span class="pill ok">7.05 — Reforma de edificações, estradas, pontes, portos: local das edificações</span><span class="pill ok">7.09 — Varrição, coleta, reciclagem de resíduos: local de execução</span><span class="pill ok">7.10 — Limpeza de vias, imóveis, piscinas, jardins: local de execução</span><span class="pill ok">7.12 — Controle e tratamento de efluentes: local de execução</span><span class="pill ok">7.16 — Florestamento, silvicultura, exploração florestal: local de execução</span><span class="pill ok">7.17 — Escoramento e contenção de encostas: local de execução</span><span class="pill ok">7.18 — Limpeza e dragagem de rios, portos, canais, baías: local de execução</span><span class="pill ok">16 — Transporte intramunicipal: onde executado o transporte</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Exceções: local do BEM, EVENTO ou TERMINAL<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">11.01 — Guarda/estacionamento de veículos, aeronaves, embarcações: onde guardado/estacionado</span><span class="pill ok">11.02 — Vigilância/monitoramento de bens, semoventes ou pessoas: local dos bens ou domicílio das pessoas</span><span class="pill ok">11.04 — Armazenamento, depósito, carga, descarga, guarda do bem: local do armazenamento</span><span class="pill ok">12 (exceto 12.13) — Diversão, lazer, entretenimento: local da execução</span><span class="pill danger">12.13 — Produção de eventos: regra geral (local do estabelecimento prestador)</span><span class="pill ok">17.10 — Planejamento de feiras, exposições, congressos: onde realizado o evento</span><span class="pill ok">20 — Serviços portuários, aeroportuários, ferroportuários, terminais: local do porto/aeroporto/terminal</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Exceções: local do TOMADOR ou seu domicílio<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill warn">Importação de serviços do exterior: Município do TOMADOR ou intermediário (LC 175/20 — novidade)</span><span class="pill ok">17.05 — Fornecimento de mão-de-obra: Município do TOMADOR da mão-de-obra</span><span class="pill danger">Descumprimento da alíquota mínima pelo prestador (Art. 3º, §4º): Município do TOMADOR</span></div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="section-panel c4" id="panel-4">
+    <div class="section-title">
+      <div class="badge" style="background:#f472b622;color:#f472b6;">Aula 23</div>
+  </div>
+    <div class="expand-wrap">
+      <button class="expand-btn" onclick="toggleAll('panel-4')">&#8862; Expandir tudo</button>
+    </div>
+    <div class="mm-grid cols-2">
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">👤</span>Sujeito Passivo: Contribuinte — Art. 5º LC 116/03<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Contribuinte = prestador do serviço<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Art. 5º LC 116/03: contribuinte é o PRESTADOR do serviço</span><span class="pill ok">PJ ou profissional autônomo: ambos podem ser contribuintes</span><span class="pill ok">Sujeito ativo: o Município onde se considera ocorrido o FG (critério espacial)</span><span class="pill warn">Tomador do serviço: em regra NÃO é contribuinte — pode ser responsável por lei</span><span class="pill danger">Município que toma serviço de terceiro: paga ISS normalmente (não tem imunidade nesse caso)</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Quem NÃO é contribuinte do ISS<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Empregados (relação de emprego — subordinação): NÃO são contribuintes</span><span class="pill ok">Trabalhadores avulsos: NÃO são contribuintes</span><span class="pill ok">Diretores e membros de conselhos consultivo/fiscal: NÃO são contribuintes</span><span class="pill ok">Sócios-gerentes e gerentes-delegados: NÃO são contribuintes</span><span class="pill ok">Fundamento: relação de emprego/regime estatutário ≠ prestação de serviço</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">🔁</span>Sujeito Passivo: Responsável — Art. 6º LC 116/03<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Regra geral da responsabilidade tributária<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Municípios, mediante LEI, podem atribuir responsabilidade a terceiro vinculado ao FG</span><span class="pill ok">Art. 128 CTN: fundamento da responsabilidade de terceiros</span><span class="pill warn">Pode excluir a responsabilidade do contribuinte OU atribuí-la em caráter supletivo</span><span class="pill danger">Responsável obrigado ao imposto + multa + acréscimos, mesmo sem reter na fonte</span><span class="pill ok">Quadrix/SEDF 2017: correto — Municípios podem atribuir responsabilidade a quem não seja prestador</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Responsabilidade OBRIGATÓRIA — Art. 6º, §2º (tomador PJ, mesmo imune/isenta)<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">I — Importação de serviços: TOMADOR é o responsável</span><span class="pill ok">II — Construção civil e relacionados: 3.05, 7.02, 7.04, 7.05, 7.09, 7.10, 7.12, 7.14, 7.15, 7.16, 7.17, 7.19</span><span class="pill ok">II — Vigilância e monitoramento: 11.02 (bens, semoventes, pessoas)</span><span class="pill ok">II — Fornecimento de mão-de-obra: 17.05</span><span class="pill ok">II — Planejamento de feiras/eventos: 17.10</span><span class="pill warn">III — Descumprimento da alíquota mínima (Art. 3º, §4º): tomador PJ é responsável</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Serviços SEM responsabilidade do tomador — decorar para prova<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill danger">7.11 — Decoração e jardinagem: NÃO há responsabilidade do tomador</span><span class="pill danger">7.18 — Dragagem de rios, lagos, baías: NÃO há responsabilidade</span><span class="pill danger">11.01 — Guarda/estacionamento de veículos: NÃO há responsabilidade</span><span class="pill danger">11.04 — Armazenamento e depósito: NÃO há responsabilidade</span><span class="pill danger">12 — Diversão, lazer, entretenimento: NÃO há responsabilidade</span><span class="pill danger">15.01 — Cartão de crédito/débito: NÃO há responsabilidade</span><span class="pill danger">15.09 — Arrendamento mercantil: NÃO há responsabilidade</span><span class="pill danger">16 — Transporte intramunicipal: NÃO há responsabilidade</span><span class="pill danger">20 — Serviços portuários/aeroportuários: NÃO há responsabilidade</span><span class="pill danger">4.23 — Planos de saúde/medicina veterinária: NÃO há responsabilidade</span></div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="section-panel c5" id="panel-5">
+    <div class="section-title">
+      <div class="badge" style="background:#facc1522;color:#facc15;">Aula 23</div>
+  </div>
+    <div class="expand-wrap">
+      <button class="expand-btn" onclick="toggleAll('panel-5')">&#8862; Expandir tudo</button>
+    </div>
+    <div class="mm-grid cols-2">
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">🧮</span>Base de Cálculo — Art. 7º LC 116/03<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Regra geral: preço do serviço<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Base de cálculo: PREÇO DO SERVIÇO — valor total da contraprestação</span><span class="pill ok">Inclui todos os componentes do preço, salvo deduções expressas em lei</span><span class="pill ok">ISS não é cumulativo — incide sobre o preço total da operação de serviço</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">BC proporcional — Subitem 3.04 (Art. 7º, §1º)<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill warn">Serviços de locação de ferrovia, rodovia, postes, cabos, dutos prestados em vários Municípios</span><span class="pill ok">BC proporcional à EXTENSÃO (km) de ferrovia, rodovia, dutos e cabos em cada Município</span><span class="pill danger">BC proporcional ao NÚMERO DE POSTES em cada Município (não à extensão, no caso de postes)</span><span class="pill ok">Mesmo método para exploração de rodovia com pedágio — subitem 22.01</span><span class="pill ok">Exemplo: 1.000 km total, Município A com 100 km (10%) → BC = 10% do preço total</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Deduções da BC — Subitens 7.02 e 7.05<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill warn">Art. 7º, §2º, I LC 116/03: deduz-se da BC o valor dos materiais fornecidos pelo prestador em 7.02 e 7.05</span><span class="pill danger">STJ REsp 1.916.376: NÃO é possível deduzir materiais da BC do ISS (posição atual do STJ)</span><span class="pill warn">Para prova: literalidade LC → possível dedução; STJ → impossível dedução</span><span class="pill ok">Materiais produzidos FORA do local da obra (7.02/7.05): sujeitos ao ICMS, não integram BC do ISS</span><span class="pill ok">Súmula STJ 167: concreto usinado no trajeto = serviço → BC é o valor total (sem dedução de materiais)</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">BC para serviços específicos<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill warn">Assistência médica: BC inclui refeições, medicamentos e diárias hospitalares (Súmula STJ 274)</span><span class="pill warn">Agência de trabalho temporário — intermediação: BC = taxa de agenciamento APENAS (Súmula STJ 524)</span><span class="pill ok">Agência — fornecimento de mão-de-obra: BC inclui salários e encargos (Súmula STJ 524)</span><span class="pill ok">Intermediação no mercado de valores: BC = comissão (não o valor total negociado)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">📐</span>Alíquotas — Máxima e Mínima (Resumo Quantitativo)<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Alíquota máxima: 5%<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Art. 8º LC 116/03: máxima de 5% para todos os serviços</span><span class="pill ok">Fixada por LC federal — Municípios não podem ultrapassar</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Alíquota mínima: 2% (Art. 8º-A — LC 157/16)<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Mínima geral: 2% — Municípios não podem conceder benefício que resulte em carga inferior</span><span class="pill warn">Exceções à mínima: 7.02 (construção civil), 7.05 (reforma/conservação), 16.01 (transporte coletivo municipal)</span><span class="pill danger">Nulidade da lei municipal que descumpra a alíquota mínima p/ serviço prestado a tomador de outro Município</span><span class="pill ok">Nulidade gera direito do prestador à restituição</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">ISS fixo para profissionais autônomos e sociedades uniprofissionais<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill warn">Profissionais liberais (médicos, advogados, engenheiros autônomos): ISS fixo por lei municipal</span><span class="pill warn">Sociedades uniprofissionais: ISS calculado por profissional habilitado (não sobre receita), se previsto em lei municipal</span><span class="pill danger">STJ: regime de ISS fixo não se aplica a sociedades empresariais (apenas às sociedades de profissionais)</span></div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="section-panel c6" id="panel-6">
+    <div class="section-title">
+      <div class="badge" style="background:#38bdf822;color:#38bdf8;">Aulas 22/23</div>
+  </div>
+    <div class="expand-wrap">
+      <button class="expand-btn" onclick="toggleAll('panel-6')">&#8862; Expandir tudo</button>
+    </div>
+    <div class="mm-grid cols-2">
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">⚖️</span>STF — Súmulas Vinculantes e Leading Cases<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">SV 31 — Locação de bens móveis<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill danger">SV 31: inconstitucional ISS sobre locação de bens móveis</span><span class="pill ok">Razão: locação é obrigação de DAR, não de FAZER — não é serviço</span><span class="pill danger">Leasing operacional: equiparado à locação → NÃO incide ISS</span><span class="pill warn">Serviços associados à locação: incidem ISS normalmente (sobre a parte de serviço)</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">RE 547.245 — Leasing financeiro e lease-back<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Leasing financeiro: núcleo é o financiamento (serviço) → INCIDE ISS</span><span class="pill ok">Lease-back: INCIDE ISS (RE 547.245 STF)</span><span class="pill warn">Três modalidades de leasing: operacional (não incide), financeiro (incide), lease-back (incide)</span><span class="pill ok">Repercussão geral reconhecida — tese vinculante</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Planos de saúde e medicina de grupo<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">STF: operadoras de plano de saúde (4.23) estão sujeitas ao ISS</span><span class="pill ok">Não cabe ICMS sobre as operações da operadora — ISS prevalece</span><span class="pill warn">Súmula STJ 274: BC do ISS nos serviços hospitalares inclui refeições, medicamentos e diárias</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Incorporação imobiliária própria<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill danger">STJ AgRg REsp 1.295.814: NÃO incide ISS quando incorporador constrói em terreno PRÓPRIO</span><span class="pill ok">Razão: não há prestação de serviço a terceiro — falta o elemento 'outrem'</span><span class="pill warn">Incorporador que contrata construtora: a construtora presta serviço e paga ISS (7.02)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">📜</span>STJ — Súmulas e Teses Relevantes<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Súmulas mais cobradas em prova<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Súmula STJ 167: fornecimento de concreto usinado (betoneira no trajeto) = prestação de serviço → ISS</span><span class="pill ok">Súmula STJ 274: ISS incide sobre o valor integral dos serviços médicos (inclui refeições, medicamentos, diárias hospitalares)</span><span class="pill warn">Súmula STJ 524: ISS agência de trabalho temporário — se intermediação: BC = taxa de agenciamento; se fornecimento de mão-de-obra: BC inclui salários e encargos</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Temas 354/355 — Local do ISS (REsp 1.769.657)<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill warn">STJ: ISS devido ao Município onde o serviço é EFETIVAMENTE prestado</span><span class="pill warn">Requisito: no local de execução deve existir unidade econômica ou profissional</span><span class="pill ok">Julgado em rito do art. 543-C (repetitivo) — vincula demais Tribunais</span><span class="pill danger">Diferença da regra da LC 116/03 (local do estabelecimento prestador): avalie o enunciado da questão</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="l1-card" onclick="toggleCard(this)">
+      <div class="l1-header"><span class="icon">🔀</span>ISS × ICMS — Operações Mistas e Conflitos<span class="toggle">&#9658;</span></div>
+      <div class="l2-list">
+        <div class="l2-item">
+          <div class="l2-title">Regra de solução de conflitos ISS × ICMS<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill ok">Serviço previsto na lista da LC 116/03: ISS prevalece sobre ICMS</span><span class="pill warn">Mercadoria produzida FORA do local da obra (7.02/7.05): ICMS sobre a mercadoria</span><span class="pill ok">Concreto usinado (betoneira no trajeto): ISS (Súmula STJ 167) — não ICMS</span><span class="pill danger">Transporte intramunicipal: ISS (não ICMS, que só alcança inter e interestadual)</span><span class="pill danger">Prestação de serviços de comunicação: ICMS (nunca ISS)</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Operações mistas específicas<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill warn">Recondicionamento de motores com peças: ISS sobre o serviço + ICMS sobre as peças (STJ)</span><span class="pill warn">Fornecimento de software + suporte: ISS sobre o serviço; ICMS pode incidir sobre o produto físico</span><span class="pill ok">Plano de saúde com internação e medicamentos: ISS sobre tudo (STF)</span><span class="pill warn">Construção civil por empreitada global: ISS sobre o serviço; ICMS sobre materiais produzidos fora</span></div>
+        </div>
+        <div class="l2-item">
+          <div class="l2-title">Pegadinhas recorrentes nas questões<span class="l2-toggle">&#9658;</span></div>
+          <div class="l3-pills"><span class="pill warn">Município A contrata serviço de empresa de Município B: quem recebe o ISS? → Município do estabelecimento prestador (regra geral)</span><span class="pill ok">Empresa em Goiânia presta serviço no aeroporto de Brasília (item 20): ISS para o DF (exceção)</span><span class="pill ok">ISS incide sobre serviço proveniente do exterior: INCIDE (tomador é o responsável)</span><span class="pill ok">ISS NÃO incide sobre exportações cujo resultado se verifique no exterior: correto</span><span class="pill warn">Serviço não constante na lista da LC: não-incidência (não isenção, não imunidade)</span></div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><div class="dot" style="background:#52c97a"></div> Regra / Favorável</span>
+    <span><div class="dot" style="background:#f0a500"></div> Atenção / Exceção</span>
+    <span><div class="dot" style="background:#e05252"></div> Pegadinha / Restrição</span>
+    <span style="color:#555;">· Clique nos cards e subtópicos para expandir ·</span>
+  </div>
+</div>
+
+<script>
+
+function showSection(idx,btn){
+  document.querySelectorAll('.section-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+idx).classList.add('active');
+  btn.classList.add('active');
+}
+function toggleCard(card){card.classList.toggle('open');}
+function toggleAll(panelId){
+  const panel=document.getElementById(panelId);
+  const cards=panel.querySelectorAll('.l1-card');
+  const items=panel.querySelectorAll('.l2-item');
+  const allOpen=[...cards].every(c=>c.classList.contains('open'));
+  cards.forEach(c=>allOpen?c.classList.remove('open'):c.classList.add('open'));
+  items.forEach(i=>allOpen?i.classList.remove('open'):i.classList.add('open'));
+  const btn=panel.querySelector('.expand-btn');
+  btn.textContent=allOpen?'\u229e Expandir tudo':'\u229f Recolher tudo';
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.l2-title').forEach(t=>{
+    t.addEventListener('click',e=>{e.stopPropagation();t.closest('.l2-item').classList.toggle('open');});
+  });
+  document.querySelectorAll('.l2-list').forEach(l=>{
+    l.addEventListener('click',e=>e.stopPropagation());
+  });
+});
+
+</script>
+</body>
+</html>
