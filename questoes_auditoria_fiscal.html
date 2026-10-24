@@ -96,7 +96,23 @@ table.tb tr:first-child td{font-weight:700;background:var(--panel2)}
 .zoom .zc{position:fixed;top:10px;right:16px;color:#e2e8f0;font-size:1.6rem;font-weight:700;background:none;border:none;cursor:pointer}
 .redo{margin-top:12px;background:none;border:1px solid var(--line);color:var(--muted);border-radius:16px;padding:4px 12px;cursor:pointer;font-size:.78rem}
 .redo:hover{color:var(--text);border-color:var(--head)}
-.more{display:block;margin:4px auto 0;background:var(--panel);color:var(--head);border:1.5px solid var(--line);border-radius:18px;padding:8px 20px;font-weight:700;cursor:pointer}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 12px}
+.nav button{background:var(--panel);color:var(--text);border:1.5px solid var(--line);border-radius:18px;padding:7px 14px;font-size:.84rem;font-weight:700;cursor:pointer;font-family:inherit}
+.nav button:hover:not(:disabled){border-color:var(--head)}
+.nav button:disabled{opacity:.4;cursor:default}
+.nav .rnd{background:linear-gradient(90deg,#2a1a3e,var(--panel));color:var(--acc);border-color:color-mix(in srgb,var(--acc) 45%,var(--line))}
+.nav .pos{color:var(--muted);font-size:.84rem;margin:0 4px}
+.nav .pos b{color:var(--text)}
+.nav .sp{flex:1}
+details.qmap{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:12px}
+details.qmap summary{cursor:pointer;padding:9px 14px;font-weight:700;color:var(--head);font-size:.86rem}
+.grid{display:flex;flex-wrap:wrap;gap:5px;padding:4px 14px 12px}
+.grid button{width:36px;height:30px;border-radius:7px;border:1.5px solid var(--line);background:var(--panel2);color:var(--muted);font-size:.74rem;font-weight:700;cursor:pointer;font-family:inherit}
+.grid button.g-ok{background:var(--okbg);color:var(--ok);border-color:var(--ok)}
+.grid button.g-bad{background:var(--badbg);color:var(--bad);border-color:var(--bad)}
+.grid button.g-cur{outline:2.5px solid var(--head);outline-offset:1px;color:var(--text)}
+.legend{font-size:.74rem;color:var(--muted);padding:0 14px 10px}
+.kbd{text-align:center;font-size:.74rem;color:var(--muted);margin-top:8px}
 @media (max-width:600px){
   .bar{position:static}
   header h1{font-size:1.1rem}
@@ -133,7 +149,6 @@ table.tb tr:first-child td{font-weight:700;background:var(--panel2)}
       <option value="bad">Errei</option>
       <option value="ok">Acertei</option>
     </select>
-    <button id="shuffleBtn" type="button">⇄ Embaralhar</button>
     <button id="resetBtn" type="button" class="danger">↺ Zerar respostas</button>
   </div>
   <div class="progress">
@@ -146,8 +161,11 @@ table.tb tr:first-child td{font-weight:700;background:var(--panel2)}
 
 <main>
   <details class="stats" id="stats"><summary>Desempenho por tema</summary><table><thead><tr><th>Tema</th><th class="n">Respondidas</th><th class="n">Acertos</th></tr></thead><tbody id="statsBody"></tbody></table></details>
+  <details class="qmap" id="qmap"><summary>Mapa das questões da seleção</summary><div class="grid" id="qgrid"></div><div class="legend">verde = acertou · vermelho = errou · contorno = questão atual</div></details>
+  <div class="nav" id="navTop"></div>
   <div id="list"></div>
-  <button class="more" id="moreBtn" type="button">Mostrar mais questões</button>
+  <div class="nav" id="navBot"></div>
+  <p class="kbd">Atalhos do teclado: ← anterior · → próxima · R questão aleatória</p>
 </main>
 <div class="zoom" id="zoom" role="dialog" aria-label="Resumo ampliado"><button class="zc" type="button" aria-label="Fechar">×</button><div id="zoomBody"></div></div>
 
@@ -163,8 +181,11 @@ table.tb tr:first-child td{font-weight:700;background:var(--panel2)}
   try { answers = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { answers = {}; }
   function save(){ try { localStorage.setItem(KEY, JSON.stringify(answers)); } catch (e) {} }
 
-  var order = Q.map(function(_, i){ return i; });
-  var PAGE = 25, shown = PAGE;
+  var POS = {}; Q.forEach(function(q, i){ POS[q.id] = i; });
+  var CURK = 'quiz_auditoria_fiscal_cur', cur = null;
+  try { cur = localStorage.getItem(CURK); } catch (e) {}
+  if (location.hash && POS[location.hash.slice(1)] != null) cur = location.hash.slice(1);
+  if (cur == null || POS[cur] == null) cur = Q[0].id;
   var $ = function(id){ return document.getElementById(id); };
 
   // ---------- tema ----------
@@ -195,29 +216,20 @@ table.tb tr:first-child td{font-weight:700;background:var(--panel2)}
   fill($('fBanca'), 'Todas as bancas', uniq(function(q){ return q.banca; }).sort());
   var asl = {}; Object.keys(RES).forEach(function(k){ asl[k] = RES[k].nome; });
   fill($('fAss'), 'Todos os assuntos', Object.keys(RES).sort(), asl);
-  ['fAula','fTema','fAss','fBanca','fTipo','fSit'].forEach(function(id){ $(id).onchange = function(){ shown = PAGE; render(); }; });
+  ['fAula','fTema','fAss','fBanca','fTipo','fSit'].forEach(function(id){ $(id).onchange = function(){ var l = filtered(); if (l.length && l.indexOf(Q[POS[cur]]) < 0) setCur(l[0].id); render(); }; });
 
-  $('shuffleBtn').onclick = function(){
-    if (this.dataset.on === '1') { order = Q.map(function(_, i){ return i; }); this.dataset.on = ''; this.textContent = '⇄ Embaralhar'; }
-    else {
-      for (var i = order.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = order[i]; order[i] = order[j]; order[j] = t; }
-      this.dataset.on = '1'; this.textContent = '↧ Ordem original';
-    }
-    shown = PAGE; render();
-  };
   $('resetBtn').onclick = function(){
     var sel = filtered();
     var n = sel.filter(function(q){ return answers[q.id]; }).length;
     if (!n) return;
     if (!window.confirm('Apagar as ' + n + ' respostas das questões da seleção atual?')) return;
     sel.forEach(function(q){ delete answers[q.id]; });
-    save(); render();
+    save(); if (sel.length) setCur(sel[0].id); render();
   };
-  $('moreBtn').onclick = function(){ shown += PAGE; render(); };
 
   function filtered(){
     var a = $('fAula').value, t = $('fTema').value, as = $('fAss').value, b = $('fBanca').value, ti = $('fTipo').value, s = $('fSit').value;
-    return order.map(function(i){ return Q[i]; }).filter(function(q){
+    return Q.filter(function(q){
       if (a && q.aula !== a) return false;
       if (t && q.tema !== t) return false;
       if (as && q.assunto !== as) return false;
@@ -281,7 +293,7 @@ table.tb tr:first-child td{font-weight:700;background:var(--panel2)}
         else if (k === r) btn.classList.add('is-wrong');
         else btn.classList.add('dim');
       } else {
-        btn.onclick = function(){ answers[q.id] = k; save(); var nc = card(q, n, true); c.replaceWith(nc); updateProgress(); };
+        btn.onclick = function(){ answers[q.id] = k; save(); var nc = card(q, n, true); c.replaceWith(nc); updateProgress(); drawMap(); drawNav(); };
       }
       opts.appendChild(btn);
     });
@@ -301,7 +313,7 @@ table.tb tr:first-child td{font-weight:700;background:var(--panel2)}
         var bz = el('button', null, '⤢ Ampliar'); bz.type = 'button';
         bz.onclick = function(ev){ ev.preventDefault(); ev.stopPropagation(); openZoom(q.assunto); };
         var bf = el('button', null, 'Questões deste assunto (' + R.n + ')'); bf.type = 'button';
-        bf.onclick = function(ev){ ev.preventDefault(); ev.stopPropagation(); $('fAss').value = q.assunto; shown = PAGE; render(); window.scrollTo({top: 0, behavior: 'smooth'}); };
+        bf.onclick = function(ev){ ev.preventDefault(); ev.stopPropagation(); $('fAss').value = q.assunto; render(); window.scrollTo({top: 0, behavior: 'smooth'}); };
         acts.appendChild(bz); acts.appendChild(bf); sm.appendChild(acts); det.appendChild(sm);
         var sb = el('div', 'svgbox');
         var fill1 = function(){ if (!sb.firstChild) { sb.innerHTML = R.svg; sb.firstChild.onclick = function(){ openZoom(q.assunto); }; } };
@@ -310,7 +322,7 @@ table.tb tr:first-child td{font-weight:700;background:var(--panel2)}
         det.appendChild(sb); fb.appendChild(det);
       }
       var redo = el('button', 'redo', '↺ Refazer esta questão'); redo.type = 'button';
-      redo.onclick = function(){ delete answers[q.id]; save(); var nc = card(q, n); c.replaceWith(nc); updateProgress(); };
+      redo.onclick = function(){ delete answers[q.id]; save(); var nc = card(q, n); c.replaceWith(nc); updateProgress(); drawMap(); drawNav(); };
       fb.appendChild(redo);
     }
     b.appendChild(fb);
@@ -344,15 +356,74 @@ table.tb tr:first-child td{font-weight:700;background:var(--panel2)}
   function closeZoom(){ $('zoom').classList.remove('on'); $('zoomBody').innerHTML = ''; document.body.style.overflow = ''; }
   $('zoom').onclick = closeZoom;
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeZoom(); });
-  function render(){
-    var sel = filtered(), list = $('list');
-    list.innerHTML = '';
-    if (!sel.length) list.appendChild(el('div', 'empty', 'Nenhuma questão com esses filtros.'));
-    sel.slice(0, shown).forEach(function(q, i){ list.appendChild(card(q, i + 1)); });
-    $('moreBtn').style.display = sel.length > shown ? 'block' : 'none';
-    $('moreBtn').textContent = 'Mostrar mais questões (' + (sel.length - shown) + ' restantes)';
-    updateProgress();
+  function setCur(id){
+    cur = id;
+    try { localStorage.setItem(CURK, id); } catch (e) {}
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
   }
+  // vizinho na seleção, mesmo que a questão atual tenha saído do filtro (ex.: "não respondidas")
+  function neighbor(dir){
+    var l = filtered(); if (!l.length) return null;
+    var i = l.indexOf(Q[POS[cur]]);
+    if (i >= 0) { var j = i + dir; return (j >= 0 && j < l.length) ? l[j] : null; }
+    var p = POS[cur];
+    if (dir > 0) { for (var k = 0; k < l.length; k++) if (POS[l[k].id] > p) return l[k]; return null; }
+    for (var k2 = l.length - 1; k2 >= 0; k2--) if (POS[l[k2].id] < p) return l[k2];
+    return null;
+  }
+  function randomQ(){
+    var l = filtered().filter(function(q){ return q.id !== cur; });
+    if (!l.length) return null;
+    var pend = l.filter(function(q){ return !answers[q.id]; });
+    var pool = pend.length ? pend : l;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+  function go(q){ if (!q) return; setCur(q.id); render(); var top = $('navTop').getBoundingClientRect().top + window.scrollY - 70; window.scrollTo({top: Math.max(0, top), behavior: 'smooth'}); }
+  function drawNav(){
+    var l = filtered(), i = l.indexOf(Q[POS[cur]]);
+    ['navTop', 'navBot'].forEach(function(id){
+      var n = $(id); n.innerHTML = '';
+      var bp = el('button', null, '← Anterior'); bp.type = 'button'; bp.disabled = !neighbor(-1); bp.onclick = function(){ go(neighbor(-1)); };
+      var pos = el('span', 'pos'); pos.innerHTML = '';
+      pos.appendChild(document.createTextNode('Questão ')); pos.appendChild(el('b', null, i >= 0 ? String(i + 1) : '—'));
+      pos.appendChild(document.createTextNode(' de ')); pos.appendChild(el('b', null, String(l.length)));
+      var bn = el('button', null, 'Próxima →'); bn.type = 'button'; bn.disabled = !neighbor(1); bn.onclick = function(){ go(neighbor(1)); };
+      var br = el('button', 'rnd', '🎲 Questão aleatória'); br.type = 'button'; br.disabled = !randomQ(); br.title = 'Sorteia outra questão da seleção, dando preferência às não respondidas';
+      br.onclick = function(){ go(randomQ()); };
+      n.appendChild(bp); n.appendChild(pos); n.appendChild(bn); n.appendChild(el('span', 'sp')); n.appendChild(br);
+    });
+  }
+  function drawMap(){
+    var l = filtered(), g = $('qgrid'); g.innerHTML = '';
+    l.forEach(function(q, i){
+      var r = answers[q.id], b = el('button', null, String(i + 1)); b.type = 'button'; b.title = q.id + ' · ' + fonte(q);
+      if (r) b.classList.add(r === q.gabarito ? 'g-ok' : 'g-bad');
+      if (q.id === cur) b.classList.add('g-cur');
+      b.onclick = function(){ go(q); };
+      g.appendChild(b);
+    });
+  }
+  function render(){
+    var l = filtered(), list = $('list');
+    list.innerHTML = '';
+    if (!l.length) { list.appendChild(el('div', 'empty', 'Nenhuma questão com esses filtros.')); }
+    else {
+      if (POS[cur] == null) setCur(l[0].id);
+      var q = Q[POS[cur]], i = l.indexOf(q);
+      if (i < 0 && !answers[q.id]) { setCur(l[0].id); q = l[0]; i = 0; }
+      setCur(q.id);
+      list.appendChild(card(q, i >= 0 ? i + 1 : '—'));
+    }
+    drawNav(); drawMap(); updateProgress();
+  }
+  document.addEventListener('keydown', function(e){
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    var tg = (e.target && e.target.tagName) || ''; if (tg === 'SELECT' || tg === 'INPUT' || tg === 'TEXTAREA') return;
+    if ($('zoom').classList.contains('on')) return;
+    if (e.key === 'ArrowRight') { var n = neighbor(1); if (n) { e.preventDefault(); go(n); } }
+    else if (e.key === 'ArrowLeft') { var p = neighbor(-1); if (p) { e.preventDefault(); go(p); } }
+    else if (e.key === 'r' || e.key === 'R') { var r = randomQ(); if (r) { e.preventDefault(); go(r); } }
+  });
   $('totalTxt').textContent = Q.length;
   render();
 })();

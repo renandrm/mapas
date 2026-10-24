@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards — Registros da EFD</title>
+<style>
+:root{
+  --bg:#0f1117; --panel:#1a1d2e; --panel2:#151826; --line:#2a2d3e; --text:#e0e0e0; --muted:#94a3b8; --head:#7ec8e3;
+  --ok:#4ade80; --okbg:#0f2a1a; --bad:#f87171; --badbg:#2a1215; --warn:#facc15; --warnbg:#2a2410; --acc:#a78bfa; --chip:#232742;
+}
+body.light{
+  --bg:#f8fafc; --panel:#ffffff; --panel2:#f1f5f9; --line:#e2e8f0; --text:#1e293b; --muted:#64748b; --head:#0369a1;
+  --ok:#15803d; --okbg:#dcfce7; --bad:#b91c1c; --badbg:#fee2e2; --warn:#a16207; --warnbg:#fef9c3; --acc:#6d28d9; --chip:#eef2ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+header{text-align:center;padding:16px 16px 10px;background:linear-gradient(135deg,var(--panel) 0%,var(--bg) 100%);border-bottom:1px solid var(--line)}
+header h1{font-size:1.3rem;color:var(--head)}
+header p{font-size:.84rem;color:var(--muted);margin-top:3px}
+.top-links{display:flex;justify-content:space-between;align-items:center;max-width:900px;margin:0 auto 6px;font-size:.8rem;gap:10px;flex-wrap:wrap}
+.top-links a{color:var(--head);text-decoration:none}
+.top-links a:hover{text-decoration:underline}
+.theme-btn{background:var(--chip);border:1px solid var(--line);color:var(--text);border-radius:16px;padding:3px 12px;cursor:pointer;font-size:.8rem}
+main{max-width:900px;margin:0 auto;padding:14px 16px 50px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters select,.filters button{background:var(--panel);color:var(--text);border:1.5px solid var(--line);border-radius:18px;padding:6px 12px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;max-width:100%}
+.filters select:hover,.filters button:hover{border-color:var(--head)}
+.filters .danger{color:var(--bad)}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:18px;overflow:hidden}
+.seg button{border:none;border-radius:0;background:var(--panel);padding:6px 12px}
+.seg button.on{background:var(--chip);color:var(--acc)}
+.progress{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:10px 0 12px;font-size:.8rem;color:var(--muted)}
+.progress b{color:var(--text)}
+.pbar{flex:1;min-width:140px;height:8px;background:var(--panel);border-radius:6px;overflow:hidden;border:1px solid var(--line);display:flex}
+.pbar i{display:block;height:100%}
+.pbar .g{background:var(--ok)} .pbar .r{background:var(--bad)}
+/* cartão */
+.scene{perspective:1400px;margin:6px 0 12px}
+.card{position:relative;width:100%;min-height:340px;transform-style:preserve-3d;transition:transform .45s ease;cursor:pointer}
+.card.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;border:1.5px solid var(--line);background:var(--panel);padding:20px 24px;display:flex;flex-direction:column;overflow:auto}
+.back{transform:rotateY(180deg)}
+.front{align-items:center;justify-content:center;text-align:center}
+.chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+.back .chips{justify-content:flex-start}
+.chip{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:2px 10px;color:var(--muted);font-size:.74rem;white-space:nowrap}
+.chip.bl{color:var(--acc)}
+.chip.st-ok{color:var(--ok);border-color:var(--ok)} .chip.st-bad{color:var(--bad);border-color:var(--bad)}
+.code{font-family:Consolas,'Courier New',monospace;font-size:2.6rem;font-weight:800;color:var(--head);letter-spacing:1px;line-height:1.2}
+.code.long{font-size:1.7rem}
+.ask{color:var(--muted);font-size:.86rem;margin-top:14px}
+.qtext{font-size:1.05rem;max-width:720px}
+.hint{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:.74rem;color:var(--muted)}
+.b-code{font-family:Consolas,'Courier New',monospace;font-size:1.6rem;font-weight:800;color:var(--head)}
+.b-name{font-weight:700;font-size:1rem;margin:2px 0 10px;color:var(--text)}
+.b-sec{margin-top:8px;font-size:.92rem}
+.b-sec .lbl{display:block;font-size:.7rem;font-weight:800;letter-spacing:.6px;color:var(--muted);text-transform:uppercase;margin-bottom:1px}
+.b-pg{margin-top:10px;background:var(--badbg);border-left:3px solid var(--bad);padding:7px 11px;border-radius:6px;font-size:.88rem}
+.b-pg b{color:var(--bad)}
+.b-dt{background:var(--warnbg);border-left:3px solid var(--warn);padding:7px 11px;border-radius:6px}
+.b-one{font-size:1rem;font-weight:700;color:var(--acc);margin:2px 0 6px}
+.b-ex{background:var(--panel2);border-left:3px solid var(--head);padding:7px 11px;border-radius:6px;font-family:inherit}
+.b-ln{background:var(--okbg);border-left:3px solid var(--ok);padding:7px 11px;border-radius:6px}
+.chip.et{color:var(--head)}
+.f-one{font-size:1.15rem;font-weight:700;color:var(--acc);max-width:720px;margin-bottom:10px}
+.ghead{width:100%;font-size:.74rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:6px 0 0}
+.ghead:first-child{margin-top:0}
+/* ações */
+.rate{display:flex;gap:10px;justify-content:center;margin:4px 0 6px;flex-wrap:wrap}
+.rate button{min-width:170px;padding:10px 16px;border-radius:12px;font-weight:800;font-size:.9rem;cursor:pointer;border:1.5px solid var(--line);background:var(--panel);color:var(--text);font-family:inherit}
+.rate .no{border-color:var(--bad);color:var(--bad)} .rate .no:hover{background:var(--badbg)}
+.rate .yes{border-color:var(--ok);color:var(--ok)} .rate .yes:hover{background:var(--okbg)}
+.rate .flipb{border-color:var(--head);color:var(--head)}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0}
+.nav button{background:var(--panel);color:var(--text);border:1.5px solid var(--line);border-radius:18px;padding:7px 14px;font-size:.84rem;font-weight:700;cursor:pointer;font-family:inherit}
+.nav button:hover:not(:disabled){border-color:var(--head)}
+.nav button:disabled{opacity:.4;cursor:default}
+.nav .rnd{color:var(--acc);border-color:color-mix(in srgb,var(--acc) 45%,var(--line))}
+.nav .pos{color:var(--muted);font-size:.84rem}
+.nav .pos b{color:var(--text)}
+.nav .sp{flex:1}
+details.qmap{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin:10px 0}
+details.qmap summary{cursor:pointer;padding:9px 14px;font-weight:700;color:var(--head);font-size:.86rem}
+.grid{display:flex;flex-wrap:wrap;gap:5px;padding:4px 14px 12px}
+.grid button{min-width:52px;height:28px;padding:0 6px;border-radius:7px;border:1.5px solid var(--line);background:var(--panel2);color:var(--muted);font-size:.7rem;font-weight:700;cursor:pointer;font-family:Consolas,monospace}
+.grid button.g-ok{background:var(--okbg);color:var(--ok);border-color:var(--ok)}
+.grid button.g-bad{background:var(--badbg);color:var(--bad);border-color:var(--bad)}
+.grid button.g-cur{outline:2.5px solid var(--head);outline-offset:1px;color:var(--text)}
+.legend{font-size:.74rem;color:var(--muted);padding:0 14px 10px}
+.empty{text-align:center;color:var(--muted);padding:60px 0}
+.kbd{text-align:center;font-size:.74rem;color:var(--muted);margin-top:10px}
+@media (max-width:600px){
+  .filters select,.filters button{flex:1 1 45%}
+  .seg{flex:1 1 100%} .seg button{flex:1}
+  .code{font-size:2rem} .code.long{font-size:1.35rem}
+  .card{min-height:420px}
+  .face{padding:16px}
+  .rate button{min-width:0;flex:1}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="top-links">
+    <a href="mapa_mental_auditoria.html">← Mapa mental de Auditoria</a>
+    <a href="questoes_auditoria_fiscal.html">Caderno de questões →</a>
+    <button class="theme-btn" id="themeBtn" type="button">☀ Claro</button>
+  </div>
+  <h1>Flashcards — Registros da EFD ICMS/IPI</h1>
+  <p>Guia Prático 3.2.2 · <span id="totalTxt"></span> cartões em 6 etapas: do formato do arquivo à apuração do imposto</p>
+</header>
+<main>
+  <div class="filters">
+    <select id="fBloco" aria-label="Etapa"></select>
+    <select id="fSit" aria-label="Situação">
+      <option value="">Todos os cartões</option>
+      <option value="new">Ainda não vistos</option>
+      <option value="bad">Não sabia</option>
+      <option value="ok">Sabia</option>
+    </select>
+    <span class="seg" role="group" aria-label="Sentido">
+      <button type="button" id="mCode" class="on">Registro → função</button>
+      <button type="button" id="mFunc">Função → registro</button>
+    </span>
+    <button type="button" id="resetBtn" class="danger">↺ Zerar</button>
+  </div>
+  <div class="progress">
+    <span>Na seleção: <b id="pSel">0</b></span>
+    <span>Sabia: <b id="pOk">0</b></span>
+    <span>Não sabia: <b id="pBad">0</b></span>
+    <span>Não vistos: <b id="pNew">0</b></span>
+    <div class="pbar" aria-hidden="true"><i class="g" id="barG"></i><i class="r" id="barR"></i></div>
+  </div>
+  <div class="nav" id="navTop"></div>
+  <div id="stage"></div>
+  <div class="rate" id="rate"></div>
+  <details class="qmap"><summary>Mapa da trilha</summary><div class="grid" id="grid"></div><div class="legend">verde = sabia · vermelho = não sabia · contorno = cartão atual</div></details>
+  <p class="kbd">Atalhos: Espaço vira · 1 não sabia · 2 sabia · ← → navega · R aleatório</p>
+</main>
+<script type="application/json" id="deck">{"etapas": {"1": "Como o arquivo é montado", "2": "Os cadastros: quem e o quê", "3": "Os documentos: notas e seus campos", "4": "A apuração do imposto (Bloco E)", "5": "Estoque, produção e ativo", "6": "Blocos especiais"}, "blocos": {"G": "Estrutura", "0": "Bloco 0", "B": "Bloco B", "C": "Bloco C", "D": "Bloco D", "E": "Bloco E", "Gc": "Bloco G", "H": "Bloco H", "K": "Bloco K", "1": "Bloco 1", "9": "Bloco 9", "F": "Campo"}, "cards": [{"m": 1, "b": "G", "c": "Ordem dos blocos", "n": "A sequência obrigatória do arquivo", "s": "A EFD é um arquivo de texto dividido em blocos, sempre na mesma ordem.", "f": "0 (abertura e cadastros) → B (ISS, só DF) → C (documentos de mercadorias) → D (documentos de serviços) → E (apuração) → G (CIAP) → H (inventário) → K (produção e estoque) → 1 (outras informações) → 9 (controle).", "ex": "Pense num livro: a capa e o índice (Bloco 0), os capítulos de dados (os blocos com letra) e a contracapa que confere o número de páginas (Bloco 9).", "d": "Só três blocos têm nome numérico — 0, 1 e 9. Todos os blocos de DADOS são letras.", "p": "Blocos A e F não existem na EFD ICMS/IPI: são da EFD-Contribuições.", "id": "c_ordem_dos_blocos"}, {"m": 1, "b": "G", "c": "X001 e X990", "n": "Abertura e encerramento de cada bloco", "s": "Cada bloco tem uma \"porta de entrada\" e uma \"porta de saída\".", "f": "O \"X\" é só um coringa para o nome do bloco. O X001 abre o bloco e diz se ele tem dados (0 = com dados · 1 = sem dados); o X990 fecha o bloco informando quantas linhas ele tem.", "ex": "Bloco 0 → 0001 e 0990 · Bloco C → C001 e C990 · Bloco E → E001 e E990 · Bloco 1 → 1001 e 1990 · Bloco 9 → 9001 e 9990.", "d": "Não confunda o bloco com o arquivo: o 0001 abre o BLOCO 0, mas quem abre o ARQUIVO é o 0000; o 9990 fecha o BLOCO 9, mas quem fecha o ARQUIVO é o 9999.", "p": "Bloco sem dados NÃO some do arquivo: aparece só com o X001 (indicador 1) e o X990.", "id": "c_x001_e_x990"}, {"m": 1, "b": "G", "c": "Níveis hierárquicos", "n": "Registros pai e filho", "s": "Dentro dos blocos, os registros se organizam como pai e filho.", "f": "Nível 0 = o arquivo (0000 e 9999) · nível 1 = o bloco (X001 e X990) · nível 2 = registros \"pai\" (0150, C100, E100, H005, K100) · nível 3 = \"filhos\" (0175, C170, C190, E110, H010, K200).", "ex": "O C100 (a nota) é o pai; cada C170 (um item dessa nota) é filho dele.", "d": "O filho vem logo depois do pai e só existe se o pai existir. Dentro do bloco, a ordem é sequencial e crescente.", "p": "Filho sem pai é erro de validação no PVA.", "id": "c_n_veis_hier_rquicos"}, {"m": 1, "b": "0", "c": "0000", "n": "Abertura do Arquivo Digital e Identificação da Entidade", "s": "A \"capa\" do arquivo: diz quem está entregando e de qual período.", "f": "Abre o arquivo e identifica o contribuinte: período, nome, CNPJ ou CPF, UF, IE, município, perfil de apresentação (A, B ou C, definido pela UF) e se a atividade é industrial.", "d": "Divide o nível 0 só com o 9999 (os dois tratam do ARQUIVO) e é obrigatório até no mês SEM movimento.", "p": "\"O 0001 abre o arquivo\": ERRADO — o 0001 abre só o Bloco 0; o arquivo abre no 0000.", "id": "c_0000"}, {"m": 1, "b": "9", "c": "9900 e 9999", "n": "Registros do Arquivo · Encerramento do Arquivo Digital", "s": "A \"contracapa\": confere se nenhuma linha se perdeu.", "f": "O 9900 tem uma linha para cada TIPO de registro, com a quantidade de linhas daquele tipo. O 9999 fecha o arquivo com o total de linhas.", "ex": "|9900|C100|1| informa que o arquivo tem 1 linha de C100.", "d": "O Bloco 9 abre no 9001 e fecha no 9990; o arquivo inteiro fecha no 9999.", "p": "\"O 9000 encerra o arquivo\": ERRADO — é o 9999.", "id": "c_9900_e_9999"}, {"m": 2, "b": "0", "c": "0150", "n": "Tabela de Cadastro do Participante", "s": "O cadastro de QUEM negociou com a empresa no mês.", "f": "Lista clientes, fornecedores, transportadores, remetentes e destinatários, com COD_PART, nome, CNPJ ou CPF, IE, município (IBGE) e endereço.", "l": "O C100 não repete CNPJ nem nome: traz só o COD_PART, que aponta para cá.", "ex": "|0150|FORN001|Comércio ABC Ltda|…| — e no C100 da nota desse fornecedor aparece apenas FORN001.", "p": "Participante SEM movimentação no período NÃO entra: o 0150 não é um cadastro geral e permanente.", "id": "c_0150"}, {"m": 2, "b": "0", "c": "0190", "n": "Identificação das Unidades de Medida", "s": "A legenda das unidades de medida usadas no arquivo.", "f": "Lista cada unidade (UN, KG, CX…) com a sua descrição.", "d": "Só entram as unidades efetivamente usadas em outros registros (0200, C170, H010…).", "id": "c_0190"}, {"m": 2, "b": "0", "c": "0200", "n": "Tabela de Identificação do Item (Produtos e Serviços)", "s": "O cadastro de O QUÊ a empresa compra, produz, vende ou estoca.", "f": "Identifica mercadorias, serviços, produtos e insumos: COD_ITEM, descrição, unidade de estoque (→ 0190), TIPO_ITEM, NCM e CEST.", "l": "O C170 (itens da nota), o H010 (inventário) e o K200 (estoque) apontam para cá pelo COD_ITEM.", "p": "O código é ÚNICO: itens distintos não podem compartilhar o mesmo código, nem sendo \"do mesmo grupo\".", "id": "c_0200"}, {"m": 2, "b": "F", "c": "TIPO_ITEM (0200)", "n": "Tipo do item", "s": "Diz para que o item serve dentro da empresa.", "f": "00 revenda · 01 matéria-prima · 02 embalagem · 03 produto em processo · 04 produto acabado · 05 subproduto · 06 produto intermediário · 07 uso e consumo · 08 ativo imobilizado · 09 serviços · 10 outros insumos · 99 outras.", "d": "Ajuda a achar crédito indevido: entrada de item 07 (uso e consumo) com crédito de ICMS.", "id": "c_tipo_item_0200"}, {"m": 3, "b": "C", "c": "C100", "n": "Documento — NF (01), NF Avulsa (1B), NF de Produtor (04), NF-e (55) e NFC-e (65)", "s": "O \"cabeçalho\" de cada nota fiscal de mercadoria.", "f": "Um C100 POR DOCUMENTO, nas entradas e nas saídas: tipo de operação, emitente, participante, modelo, situação, série, número, chave de acesso, datas e totais (VL_DOC, VL_MERC, VL_ICMS, VL_ICMS_ST, VL_IPI).", "l": "Filhos principais: C170 (os itens) e C190 (o resumo por CST + CFOP + alíquota).", "d": "A NFC-e (65) entra SÓ nas saídas: o consumidor final não escritura entradas.", "p": "O C100 NÃO traz CNPJ nem nome do participante: traz o COD_PART (→ 0150).", "id": "c_c100"}, {"m": 3, "b": "F", "c": "IND_OPER (C100)", "n": "Indicador do tipo de operação", "s": "A nota é de entrada ou de saída?", "f": "0 = ENTRADA · 1 = SAÍDA. É a mesma lógica da tag <tpNF> do XML da NF-e.", "d": "Macete: ordem alfabética — Entrada (0) vem antes de Saída (1).", "id": "c_ind_oper_c100"}, {"m": 3, "b": "F", "c": "IND_EMIT (C100)", "n": "Indicador do emitente", "s": "Quem emitiu a nota: a própria empresa ou um terceiro?", "f": "0 = EMISSÃO PRÓPRIA · 1 = TERCEIROS.", "d": "Existe emissão própria também em ENTRADAS: importação, compra de produtor rural, devolução de venda. Macete: Própria (0) antes de Terceiros (1).", "id": "c_ind_emit_c100"}, {"m": 3, "b": "F", "c": "COD_SIT (C100)", "n": "Código da situação do documento", "s": "Em que situação está a nota?", "f": "00 regular · 01 extemporâneo regular · 02 cancelado · 03 extemporâneo cancelado · 04 denegado · 05 numeração inutilizada · 06 complementar · 07 extemporâneo complementar · 08 regime especial ou norma específica.", "d": "A denegação foi extinta em 01/08/2024 (Ajuste SINIEF 43/23): o 04 fica para notas anteriores. O 08 é usado, por exemplo, na NF-e de devolução simbólica e na de saída em correção (Ajuste SINIEF 13/24).", "p": "COD_SIT 00 é REGULAR, não cancelado (cancelado é 02).", "id": "c_cod_sit_c100"}, {"m": 3, "b": "F", "c": "CHV_NFE (C100)", "n": "Chave de acesso da NF-e", "s": "O \"RG\" da nota eletrônica dentro da EFD.", "f": "Informa a chave de 44 dígitos — é ela que liga o registro da EFD ao XML da nota no cruzamento.", "d": "Obrigatória, exceto com COD_SIT 05: a numeração inutilizada não chegou a gerar nota nem chave.", "p": "Nota cancelada também informa a chave.", "id": "c_chv_nfe_c100"}, {"m": 3, "b": "F", "c": "IND_FRT e IND_PGTO (C100)", "n": "Indicador do frete · Indicador do pagamento", "s": "Quem paga o frete e como a nota foi paga.", "f": "Frete: 0 = remetente (CIF) · 1 = destinatário (FOB) · 2 = terceiros · 3/4 = transporte próprio do remetente/destinatário · 9 = sem frete. Pagamento: 0 = à vista · 1 = a prazo · 2 = outros.", "p": "CIF = 0 e FOB = 1 (ordem alfabética).", "id": "c_ind_frt_e_ind_pgto_c100"}, {"m": 3, "b": "C", "c": "C170", "n": "Complemento do Documento — Itens do Documento (01, 1B, 04 e 55)", "s": "A lista de itens da nota, um por linha.", "f": "Um registro por ITEM: COD_ITEM (→ 0200), quantidade, unidade, valor, CFOP, CST, base, alíquota, ICMS, ICMS-ST e IPI. É o nível MAIS detalhado.", "d": "Exigido nas ENTRADAS com NF-e de terceiros — o comprador usa o seu código de item, o seu CFOP de entrada e o crédito a que tem direito — e nas notas em papel. Na NF-e de EMISSÃO PRÓPRIA a regra é só C100 + C190, porque os itens já estão no XML (o C170 só aparece se houver C176, C177, C180 ou C181 a informar).", "p": "\"O C170 é um resumo do documento\": ERRADO — é o ITEM; quem resume é o C190.", "id": "c_c170"}, {"m": 3, "b": "C", "c": "C190", "n": "Registro Analítico do Documento (01, 1B, 04, 55 e 65)", "s": "O resumo da nota que segue para a apuração.", "f": "Soma os itens que têm a MESMA combinação de CST + CFOP + ALÍQUOTA de ICMS, informando VL_OPR, base, ICMS, base e ICMS-ST, redução de base e IPI. É por documento (filho do C100).", "ex": "Nota com 2 itens 000 / 5102 / 18%, de 3.000 e 2.000 → UM C190 com VL_OPR 5.000 e ICMS 900. Um 3º item com ST (060 / 5405) geraria um segundo C190.", "l": "A soma dos C190 de saída forma os DÉBITOS do E110; a dos de entrada, os CRÉDITOS.", "p": "\"O C190 não tem reflexo no Bloco E\" ou \"agrupa por NCM\": ERRADO.", "id": "c_c190"}, {"m": 3, "b": "C", "c": "C197", "n": "Outras Obrigações Tributárias, Ajustes e Informações de Valores Provenientes de Documento Fiscal", "s": "Um ajuste que nasce de UMA nota específica.", "f": "Registra o ajuste de apuração que decorre do documento (código da Tabela 5.3), como o estorno ou o crédito ligado àquela nota.", "l": "Alimenta os campos VL_AJ_DEBITOS e VL_AJ_CREDITOS do E110 — diferente do E111, que é ajuste da APURAÇÃO como um todo.", "id": "c_c197"}, {"m": 3, "b": "C", "c": "C400", "n": "Equipamento ECF (códigos 02, 2D e 60)", "s": "A impressora fiscal (ECF) do varejo.", "f": "Um C400 POR EQUIPAMENTO, para o cupom fiscal (2D), o CF-e-ECF (60) e a nota de venda a consumidor (02) emitida no ECF.", "l": "Filhos: C405 = Redução Z (uma por dia de movimento) → C420 totalizadores, C460 cupons e C490 resumo analítico do dia.", "p": "Cupom do ECF não vai ao C100; o CF-e-SAT (59) vai ao C800, não ao C400.", "id": "c_c400"}, {"m": 3, "b": "F", "c": "VL_DOC × VL_OPR (Reforma)", "n": "CBS, IBS e IS na EFD ICMS/IPI (Guia 3.2.2)", "s": "Como os novos tributos da Reforma aparecem — ou não — na EFD.", "f": "C190 VL_OPR: NUNCA inclui CBS, IBS ou IS. C100 VL_DOC: pela regra geral inclui, mas no exercício de 2026 também NÃO inclui.", "d": "Documento só com os tributos da Reforma (sem ICMS ou IPI) NÃO se escritura; com ICMS/IPI (Ajuste SINIEF 49/25) escritura-se quanto ao ICMS/IPI.", "p": "A EFD ICMS/IPI NÃO apura CBS nem IBS: continua voltada ao ICMS e ao IPI.", "id": "c_vl_doc_vl_opr_reforma"}, {"m": 3, "b": "D", "c": "D100", "n": "NF de Serviço de Transporte e Conhecimentos de Transporte (07, 08, 8B, 09, 10, 11, 26, 27, CT-e 57, CT-e OS 67 e BP-e 63)", "s": "O \"C100\" do transporte.", "f": "Escritura cada documento de serviço de TRANSPORTE, nas aquisições e nas prestações.", "l": "O D190 é o resumo analítico (CST + CFOP + alíquota), como o C190 da nota de mercadoria.", "p": "O CT-e vai para o Bloco D, não para o C100.", "id": "c_d100"}, {"m": 4, "b": "E", "c": "Bloco E — visão geral", "n": "As quatro apurações", "s": "É onde o imposto do mês é calculado.", "f": "Quatro famílias: E100/E110 = ICMS PRÓPRIO · E200/E210 = ICMS-ST · E300/E310 = DIFAL e FCP · E500/E520 = IPI. Em cada uma, o registro X00 abre o período e o X10 faz a conta.", "p": "Trocar os regimes (\"o E110 apura o ICMS-ST\") é a pegadinha mais comum do bloco.", "id": "c_bloco_e_vis_o_geral"}, {"m": 4, "b": "E", "c": "E110", "n": "Apuração do ICMS — Operações Próprias", "s": "A \"conta corrente\" do ICMS próprio do mês.", "f": "Débitos − créditos ± ajustes e estornos + saldo credor anterior − deduções = ICMS A RECOLHER (ou saldo credor a transportar). Traz ainda os débitos especiais.", "l": "Débitos e créditos vêm dos C190; os ajustes de documento vêm do C197; os ajustes da apuração vêm do E111; o recolhimento é detalhado no E116.", "p": "\"Sem movimento, o E110 pode ser omitido\": ERRADO — vai ZERADO.", "id": "c_e110"}, {"m": 4, "b": "E", "c": "E111", "n": "Ajuste/Benefício/Incentivo da Apuração do ICMS", "s": "A explicação de cada ajuste feito na apuração.", "f": "Filho do E110: discrimina, por código da Tabela 5.1.1, cada ajuste, estorno, dedução, benefício e débito especial lançado na apuração.", "p": "Ajuste sem respaldo legal ou documental, usado para \"fechar a conta\", é alvo clássico da auditoria.", "id": "c_e111"}, {"m": 4, "b": "E", "c": "E112 e E113", "n": "Informações Adicionais dos Ajustes — Processos e Arrecadação (E112) · Documentos Fiscais (E113)", "s": "A \"prova\" de onde veio o ajuste.", "f": "Ambos são filhos do E111. O E112 aponta o PROCESSO judicial ou administrativo ou o DOCUMENTO DE ARRECADAÇÃO que fundamenta o ajuste; o E113 identifica as NOTAS FISCAIS ligadas a ele.", "p": "\"O E112 substitui o E113\" ou \"é exclusivo para chaves de NF-e\": ERRADO — os dois coexistem.", "id": "c_e112_e_e113"}, {"m": 4, "b": "E", "c": "E115", "n": "Informações Adicionais da Apuração — Valores Declaratórios", "s": "Uma informação só para a UF acompanhar.", "f": "Informa valores exigidos pela UF apenas para fins DECLARATÓRIOS.", "p": "Os valores do E115 NÃO entram no cálculo do imposto.", "id": "c_e115"}, {"m": 4, "b": "E", "c": "E116", "n": "Obrigações do ICMS Recolhido ou a Recolher — Operações Próprias", "s": "O \"boleto\" do ICMS próprio: quanto pagar e quando.", "f": "Filho do E110: discrimina cada obrigação — código, valor, data de VENCIMENTO e código de receita.", "l": "A soma do E116 tem de ser igual a VL_ICMS_RECOLHER + DEB_ESP do E110. Na auditoria, confronta-se com a conta ICMS a recolher da contabilidade (ECD).", "id": "c_e116"}, {"m": 4, "b": "E", "c": "E200 e E210", "n": "Período e Apuração do ICMS — Substituição Tributária", "s": "A apuração do ICMS que a empresa recolhe como substituta.", "f": "O E200 abre a apuração do ICMS-ST — UM POR UF: a do estabelecimento e cada UF em que ele é inscrito como substituto (0015). O E210 faz a conta.", "d": "E220 = ajustes · E250 = obrigações do ICMS-ST a recolher.", "id": "c_e200_e_e210"}, {"m": 4, "b": "E", "c": "E300 e E310", "n": "Período e Apuração do ICMS Diferencial de Alíquota e do FCP (EC 87/15)", "s": "A apuração do DIFAL nas vendas a consumidor de outro Estado.", "f": "O E300 abre, por UF, a apuração do DIFAL e do FCP nas operações interestaduais com consumidor final NÃO contribuinte; o E310 faz a conta.", "d": "O E310 é obrigatório sempre que existir o E300, mesmo zerado. E316 = obrigações a recolher.", "id": "c_e300_e_e310"}, {"m": 4, "b": "E", "c": "E500 a E531", "n": "Apuração do IPI", "s": "A apuração do IPI, separada da do ICMS.", "f": "E500 = período · E510 = consolidação por CFOP e CST do IPI · E520 = APURAÇÃO · E530 = ajustes · E531 = documentos dos ajustes.", "p": "Quem apura o IPI é o E520 — o E510 só consolida.", "id": "c_e500_a_e531"}, {"m": 5, "b": "H", "c": "H005", "n": "Totais do Inventário", "s": "A \"foto\" do estoque — o total.", "f": "Informa a DATA, o VALOR TOTAL e o MOTIVO do inventário: 01 final do período · 02 mudança na forma de tributação · 03 baixa ou paralisação · 04 alteração do regime de pagamento · 05 determinação do fisco · 06 controle de mercadorias sujeitas à ST.", "p": "\"O H005 discrimina os itens do estoque\": ERRADO — o H005 traz os TOTAIS; os itens estão no H010.", "id": "c_h005"}, {"m": 5, "b": "H", "c": "H010", "n": "Inventário (itens)", "s": "A \"foto\" do estoque — item a item.", "f": "Para cada item: COD_ITEM (→ 0200), unidade, quantidade, valor unitário, valor total e conta contábil. O IND_PROP diz de quem é: 0 = próprio em seu poder · 1 = próprio em poder de terceiros · 2 = de terceiros em seu poder.", "l": "Cruzamento clássico: H010 (estoque físico) × K200 (estoque escriturado) × movimentação de notas.", "id": "c_h010"}, {"m": 5, "b": "K", "c": "Bloco K — visão geral", "n": "Controle da Produção e do Estoque", "s": "O \"filme\" da produção e do estoque, mês a mês.", "f": "É o Livro de Registro de Controle da Produção e do Estoque em formato digital: estoque escriturado, o que foi produzido e quanto insumo foi consumido.", "d": "Obrigatoriedade ESCALONADA por porte e atividade (industriais e atacadistas). O K010 informa se o leiaute é simplificado ou completo.", "id": "c_bloco_k_vis_o_geral"}, {"m": 5, "b": "K", "c": "K200", "n": "Estoque Escriturado", "s": "O estoque segundo os registros da empresa.", "f": "Informa a QUANTIDADE de cada item no último dia do período, por tipo de posse (próprio em seu poder, próprio em terceiros, de terceiros em seu poder).", "l": "Confrontado com o inventário (H010) e com a movimentação, revela entradas ou saídas sem nota.", "id": "c_k200"}, {"m": 5, "b": "K", "c": "K230 e K235", "n": "Itens Produzidos (K230) · Insumos Consumidos (K235)", "s": "O que a fábrica produziu e o que gastou para produzir.", "f": "Na produção própria, o K230 informa o que saiu de cada ordem de produção e o K235 os insumos consumidos nela.", "p": "Insumo consumido sem produção correspondente é indício de DESVIO de mercadoria.", "id": "c_k230_e_k235"}, {"m": 5, "b": "Gc", "c": "G110", "n": "ICMS — Ativo Permanente — CIAP", "s": "O crédito de ICMS das máquinas e equipamentos, em parcelas.", "f": "Apura o crédito do ativo imobilizado no mês: 1/48 do ICMS do bem, multiplicado pelo índice = saídas tributadas e exportações ÷ total das saídas.", "l": "Os bens são cadastrados no 0300 e movimentados no G125.", "id": "c_g110"}, {"m": 6, "b": "B", "c": "Bloco B", "n": "Escrituração e Apuração do ISS", "s": "O ISS dentro da EFD — só para o Distrito Federal.", "f": "Escritura documentos e apura o ISS apenas dos contribuintes do DF, que cobra ICMS e ISS ao mesmo tempo.", "d": "Nas demais UFs o bloco aparece só com B001 (indicador 1, sem dados) e B990.", "p": "\"Bloco B exigido de todo contribuinte do ICMS\": ERRADO.", "id": "c_bloco_b"}, {"m": 6, "b": "B", "c": "B440 e B470", "n": "Totalização dos Valores Retidos · Apuração do ISS (normal)", "s": "O ISS retido × a apuração do ISS.", "f": "O B440 totaliza SÓ o ISS RETIDO; o B470 faz a APURAÇÃO do ISS: totais das prestações e valores a recolher do ISS próprio, do retido como tomador e do uniprofissional.", "d": "O B500 apura o ISS da sociedade uniprofissional.", "p": "\"O valor total do ISS apurado está no B440\": ERRADO — a apuração é o B470.", "id": "c_b440_e_b470"}, {"m": 6, "b": "1", "c": "Bloco 1 — visão geral", "n": "Outras Informações", "s": "Informações complementares que não cabem nos outros blocos.", "f": "1010 = questionário S/N dos registros do bloco · 1100 = exportação · 1200 = controle de créditos fiscais · 1400 = valor agregado por município (IPM) · 1600/1601 = recebimentos por cartão e meios eletrônicos · 1700 = documentos utilizados.", "d": "O 1600/1601 é útil na auditoria: venda paga por cartão ou PIX e não documentada aparece aqui.", "id": "c_bloco_1_vis_o_geral"}]}</script>
+<script>
+(function(){
+  var D = JSON.parse(document.getElementById('deck').textContent);
+  var CARDS = D.cards, BL = D.blocos, ET = D.etapas;
+  var KEY = 'flash_efd_v2', CURK = 'flash_efd_cur3', MODEK = 'flash_efd_mode', THEME = 'quiz_auditoria_fiscal_theme';
+  var st = {}; try { st = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { st = {}; }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  var POS = {}; CARDS.forEach(function(c, i){ POS[c.id] = i; });
+  var cur = null; try { cur = localStorage.getItem(CURK); } catch (e) {}
+  if (cur == null || POS[cur] == null) cur = CARDS[0].id;
+  var mode = 'code'; try { mode = localStorage.getItem(MODEK) || 'code'; } catch (e) {}
+  var flipped = false;
+  var $ = function(id){ return document.getElementById(id); };
+  function el(tag, cls, txt){ var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+
+  // tema (o mesmo do caderno de questões)
+  var th = 'dark'; try { th = localStorage.getItem(THEME) || 'dark'; } catch (e) {}
+  function applyTheme(){ document.body.classList.toggle('light', th === 'light'); $('themeBtn').textContent = th === 'light' ? '☾ Escuro' : '☀ Claro'; }
+  applyTheme();
+  $('themeBtn').onclick = function(){ th = th === 'light' ? 'dark' : 'light'; applyTheme(); try { localStorage.setItem(THEME, th); } catch (e) {} };
+
+  // filtros
+  var fb = $('fBloco'), o = el('option', null, 'Trilha completa (todas as etapas)'); o.value = ''; fb.appendChild(o);
+  Object.keys(ET).forEach(function(k){
+    var n = CARDS.filter(function(c){ return String(c.m) === k; }).length; if (!n) return;
+    var op = el('option', null, 'Etapa ' + k + ' — ' + ET[k] + ' (' + n + ')'); op.value = k; fb.appendChild(op);
+  });
+  function filtered(){
+    var b = fb.value, s = $('fSit').value;
+    return CARDS.filter(function(c){
+      if (b && String(c.m) !== b) return false;
+      var r = st[c.id];
+      if (s === 'new' && r) return false;
+      if (s === 'ok' && r !== 'ok') return false;
+      if (s === 'bad' && r !== 'bad') return false;
+      return true;
+    });
+  }
+  [fb, $('fSit')].forEach(function(s){ s.onchange = function(){ var l = filtered(); if (l.length && l.indexOf(CARDS[POS[cur]]) < 0) setCur(l[0].id); flipped = false; render(); }; });
+  function setMode(m){ mode = m; try { localStorage.setItem(MODEK, m); } catch (e) {} $('mCode').classList.toggle('on', m === 'code'); $('mFunc').classList.toggle('on', m === 'func'); flipped = false; render(); }
+  $('mCode').onclick = function(){ setMode('code'); };
+  $('mFunc').onclick = function(){ setMode('func'); };
+  $('resetBtn').onclick = function(){
+    var l = filtered(), n = l.filter(function(c){ return st[c.id]; }).length; if (!n) return;
+    if (!window.confirm('Apagar a marcação de ' + n + ' cartões da seleção atual?')) return;
+    l.forEach(function(c){ delete st[c.id]; }); save(); render();
+  };
+
+  function setCur(id){ cur = id; try { localStorage.setItem(CURK, id); } catch (e) {} }
+  function neighbor(dir){
+    var l = filtered(); if (!l.length) return null;
+    var i = l.indexOf(CARDS[POS[cur]]);
+    if (i >= 0) { var j = i + dir; return (j >= 0 && j < l.length) ? l[j] : null; }
+    var p = POS[cur];
+    if (dir > 0) { for (var k = 0; k < l.length; k++) if (POS[l[k].id] > p) return l[k]; return null; }
+    for (var k2 = l.length - 1; k2 >= 0; k2--) if (POS[l[k2].id] < p) return l[k2];
+    return null;
+  }
+  function randomC(){
+    var l = filtered().filter(function(c){ return c.id !== cur; }); if (!l.length) return null;
+    var pref = l.filter(function(c){ return st[c.id] !== 'ok'; });   // prioriza os não vistos e os que você errou
+    var pool = pref.length ? pref : l;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+  function go(c){ if (!c) return; setCur(c.id); flipped = false; render(); }
+  function flip(){ flipped = !flipped; var cd = document.querySelector('.card'); if (cd) cd.classList.toggle('flip', flipped); drawRate(); }
+  function rateIt(v){ st[cur] = v; save(); var n = randomPref(); if (n) go(n); else render(); }
+  function randomPref(){ return neighbor(1) ? (document.body.dataset.order === 'rand' ? randomC() : neighbor(1)) : randomC(); }
+
+  function sec(parent, lbl, txt, cls){
+    if (!txt) return;
+    var d = el('div', 'b-sec' + (cls ? ' ' + cls : '')); d.appendChild(el('span', 'lbl', lbl)); d.appendChild(document.createTextNode(txt)); parent.appendChild(d);
+  }
+  function chips(c, parent){
+    var ch = el('div', 'chips');
+    ch.appendChild(el('span', 'chip et', 'Etapa ' + c.m + ' · ' + ET[c.m]));
+    ch.appendChild(el('span', 'chip bl', BL[c.b]));
+    var r = st[c.id]; if (r) ch.appendChild(el('span', 'chip ' + (r === 'ok' ? 'st-ok' : 'st-bad'), r === 'ok' ? '✓ sabia' : '✗ não sabia'));
+    parent.appendChild(ch);
+  }
+  function drawCard(c){
+    var stage = $('stage'); stage.innerHTML = '';
+    var sc = el('div', 'scene'), cd = el('div', 'card' + (flipped ? ' flip' : ''));
+    cd.setAttribute('role', 'button'); cd.setAttribute('tabindex', '0'); cd.setAttribute('aria-label', 'Virar o cartão');
+    var fr = el('div', 'face front'), bk = el('div', 'face back');
+    chips(c, fr);
+    if (mode === 'code') {
+      fr.appendChild(el('div', 'code' + (c.c.length > 9 ? ' long' : ''), c.c));
+      fr.appendChild(el('div', 'ask', c.b === 'F' ? 'O que este campo informa? Diga os códigos.' : (c.b === 'G' ? 'Explique como funciona.' : 'O que este registro faz? Diga o nome e a função.')));
+    } else {
+      var toks = (c.c.match(/[A-Z0-9_]{3,}/g) || []).filter(function(x){ return /\d|_/.test(x); });
+      var mask = function(x){ toks.forEach(function(tk){ x = x.split(tk).join('▢▢▢▢'); }); return x; };
+      fr.appendChild(el('div', 'f-one', mask(c.s)));
+      fr.appendChild(el('div', 'qtext', mask(c.f)));
+      fr.appendChild(el('div', 'ask', c.b === 'F' ? 'Qual é o campo?' : (c.b === 'G' ? 'De que parte da estrutura estamos falando?' : 'Qual é o registro?')));
+    }
+    fr.appendChild(el('div', 'hint', 'clique ou Espaço para virar'));
+    chips(c, bk);
+    bk.appendChild(el('div', 'b-code', c.c));
+    bk.appendChild(el('div', 'b-name', c.n));
+    if (mode === 'code') { bk.appendChild(el('div', 'b-one', c.s)); sec(bk, c.b === 'F' ? 'Códigos' : 'Como funciona', c.f); }
+    sec(bk, 'Exemplo', c.ex, 'b-ex');
+    sec(bk, 'Liga-se a', c.l, 'b-ln');
+    sec(bk, 'Na prova', c.d, 'b-dt');
+    if (c.p) { var pg = el('div', 'b-pg'); pg.appendChild(el('b', null, '⚠ Pegadinha: ')); pg.appendChild(document.createTextNode(c.p)); bk.appendChild(pg); }
+    cd.appendChild(fr); cd.appendChild(bk); sc.appendChild(cd); stage.appendChild(sc);
+    cd.onclick = flip;
+    // altura: a maior das faces
+    requestAnimationFrame(function(){ var h = Math.max(fr.scrollHeight, bk.scrollHeight, 300); cd.style.minHeight = (h + 8) + 'px'; });
+  }
+  function drawRate(){
+    var r = $('rate'); r.innerHTML = '';
+    if (!filtered().length) return;
+    if (!flipped) { var b = el('button', 'flipb', '↻ Virar o cartão'); b.type = 'button'; b.onclick = flip; r.appendChild(b); return; }
+    var no = el('button', 'no', '✗ Não sabia (1)'); no.type = 'button'; no.onclick = function(){ rateIt('bad'); };
+    var yes = el('button', 'yes', '✓ Sabia (2)'); yes.type = 'button'; yes.onclick = function(){ rateIt('ok'); };
+    r.appendChild(no); r.appendChild(yes);
+  }
+  function drawNav(){
+    var l = filtered(), i = l.indexOf(CARDS[POS[cur]]), n = $('navTop'); n.innerHTML = '';
+    var bp = el('button', null, '← Anterior'); bp.type = 'button'; bp.disabled = !neighbor(-1); bp.onclick = function(){ go(neighbor(-1)); };
+    var pos = el('span', 'pos'); pos.appendChild(document.createTextNode('Cartão ')); pos.appendChild(el('b', null, i >= 0 ? String(i + 1) : '—')); pos.appendChild(document.createTextNode(' de ')); pos.appendChild(el('b', null, String(l.length)));
+    var bn = el('button', null, 'Próximo →'); bn.type = 'button'; bn.disabled = !neighbor(1); bn.onclick = function(){ go(neighbor(1)); };
+    var br = el('button', 'rnd', '🎲 Aleatório'); br.type = 'button'; br.disabled = !randomC(); br.title = 'Sorteia outro cartão da seleção, priorizando os não vistos e os que você errou'; br.onclick = function(){ go(randomC()); };
+    var so = el('button', null, document.body.dataset.order === 'rand' ? '⇄ Após marcar: sortear' : '⇢ Após marcar: seguir'); so.type = 'button';
+    so.title = 'O que acontece depois de marcar Sabia/Não sabia'; so.onclick = function(){ document.body.dataset.order = document.body.dataset.order === 'rand' ? '' : 'rand'; try { localStorage.setItem('flash_efd_order', document.body.dataset.order); } catch (e) {} drawNav(); };
+    n.appendChild(bp); n.appendChild(pos); n.appendChild(bn); n.appendChild(el('span', 'sp')); n.appendChild(so); n.appendChild(br);
+  }
+  function drawGrid(){
+    var g = $('grid'); g.innerHTML = ''; var last = null;
+    filtered().forEach(function(c){
+      if (c.m !== last) { g.appendChild(el('div', 'ghead', 'Etapa ' + c.m + ' — ' + ET[c.m])); last = c.m; }
+      var b = el('button', null, c.c.length > 8 ? c.c.slice(0, 8) + '…' : c.c); b.type = 'button'; b.title = c.c + ' — ' + c.n;
+      if (st[c.id]) b.classList.add(st[c.id] === 'ok' ? 'g-ok' : 'g-bad');
+      if (c.id === cur) b.classList.add('g-cur');
+      b.onclick = function(){ go(c); };
+      g.appendChild(b);
+    });
+  }
+  function progress(){
+    var l = filtered(), ok = 0, bad = 0;
+    l.forEach(function(c){ if (st[c.id] === 'ok') ok++; else if (st[c.id] === 'bad') bad++; });
+    $('pSel').textContent = l.length; $('pOk').textContent = ok; $('pBad').textContent = bad; $('pNew').textContent = l.length - ok - bad;
+    $('barG').style.width = l.length ? (100 * ok / l.length) + '%' : '0';
+    $('barR').style.width = l.length ? (100 * bad / l.length) + '%' : '0';
+  }
+  function render(){
+    var l = filtered();
+    if (!l.length) { $('stage').innerHTML = ''; $('stage').appendChild(el('div', 'empty', 'Nenhum cartão com esses filtros.')); }
+    else {
+      var c = CARDS[POS[cur]];
+      if (l.indexOf(c) < 0 && !st[c.id]) { c = l[0]; setCur(c.id); }
+      drawCard(c);
+    }
+    drawRate(); drawNav(); drawGrid(); progress();
+  }
+  document.addEventListener('keydown', function(e){
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    var tg = (e.target && e.target.tagName) || ''; if (tg === 'SELECT' || tg === 'INPUT') return;
+    if (e.key === ' ' || e.key === 'Enter') { if (tg === 'BUTTON' && e.key === 'Enter') return; e.preventDefault(); flip(); }
+    else if (e.key === '1' && flipped) rateIt('bad');
+    else if (e.key === '2' && flipped) rateIt('ok');
+    else if (e.key === 'ArrowRight') go(neighbor(1));
+    else if (e.key === 'ArrowLeft') go(neighbor(-1));
+    else if (e.key === 'r' || e.key === 'R') go(randomC());
+  });
+  try { document.body.dataset.order = localStorage.getItem('flash_efd_order') || ''; } catch (e) {}
+  $('totalTxt').textContent = CARDS.length;
+  setMode(mode);
+})();
+</script>
+</body>
+</html>
