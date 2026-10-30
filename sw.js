@@ -4,7 +4,7 @@
    - mapas (.html): stale-while-revalidate — abre do cache na hora e atualiza em 2º plano
    - navegação offline: cai no índice                                              */
 
-const VERSAO = 'v1';
+const VERSAO = 'v2';
 const CACHE_SHELL = 'mapas-shell-' + VERSAO;
 const CACHE_MAPAS = 'mapas-conteudo-' + VERSAO;
 
@@ -48,11 +48,13 @@ self.addEventListener('fetch', e => {
 
   // mapas: responde do cache na hora, revalida em segundo plano
   if (ehMapa(url)) {
+    // chave sem query string: questoes.html?a=12 e questoes.html?mat=CD usam a mesma cópia em cache
+    const chave = new Request(url.origin + url.pathname);
     e.respondWith(
       caches.open(CACHE_MAPAS).then(cache =>
-        cache.match(req).then(hit => {
+        cache.match(chave).then(hit => {
           const rede = fetch(req).then(res => {
-            if (res && res.ok) cache.put(req, res.clone());
+            if (res && res.ok) cache.put(chave, res.clone());
             return res;
           }).catch(() => hit);
           return hit || rede;
