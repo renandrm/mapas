@@ -18,12 +18,12 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 header{text-align:center;padding:18px 16px 12px;background:linear-gradient(135deg,var(--panel) 0%,var(--bg) 100%);border-bottom:1px solid var(--line)}
 header h1{font-size:1.35rem;color:var(--head);letter-spacing:.5px}
 header p{font-size:.85rem;color:var(--muted);margin-top:4px}
-header .top-links{display:flex;justify-content:space-between;align-items:center;max-width:980px;margin:0 auto 6px;font-size:.8rem}
+header .top-links{display:flex;justify-content:space-between;align-items:center;max-width:1500px;margin:0 auto 6px;font-size:.8rem}
 header a{color:var(--head);text-decoration:none}
 header a:hover{text-decoration:underline}
 .theme-btn{background:var(--chip);border:1px solid var(--line);color:var(--text);border-radius:16px;padding:3px 12px;cursor:pointer;font-size:.8rem}
 .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px}
-.bar-inner{max-width:980px;margin:0 auto}
+.bar-inner{max-width:1500px;margin:0 auto}
 .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .filters select,.filters button{background:var(--panel);color:var(--text);border:1.5px solid var(--line);border-radius:18px;padding:6px 12px;font-size:.8rem;font-weight:600;cursor:pointer;max-width:100%}
 .filters button:hover,.filters select:hover{border-color:var(--head)}
@@ -33,7 +33,7 @@ header a:hover{text-decoration:underline}
 .pbar{flex:1;min-width:140px;height:8px;background:var(--panel);border-radius:6px;overflow:hidden;border:1px solid var(--line);display:flex}
 .pbar i{display:block;height:100%}
 .pbar .g{background:var(--ok)} .pbar .r{background:var(--bad)}
-main{max-width:980px;margin:0 auto;padding:16px 16px 60px}
+main{max-width:1500px;margin:0 auto;padding:16px 16px 60px}
 details.stats{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:16px}
 details.stats summary{cursor:pointer;padding:10px 14px;font-weight:700;color:var(--head);font-size:.9rem}
 .stats table{width:100%;border-collapse:collapse;font-size:.8rem}
@@ -162,7 +162,6 @@ details.qmap summary{cursor:pointer;padding:9px 14px;font-weight:700;color:var(-
 <main>
   <details class="stats" id="stats"><summary>Desempenho por tema</summary><table><thead><tr><th>Tema</th><th class="n">Respondidas</th><th class="n">Acertos</th></tr></thead><tbody id="statsBody"></tbody></table></details>
   <details class="qmap" id="qmap"><summary>Mapa das questões da seleção</summary><div class="grid" id="qgrid"></div><div class="legend">verde = acertou · vermelho = errou · contorno = questão atual</div></details>
-  <div class="nav" id="navTop"></div>
   <div id="list"></div>
   <div class="nav" id="navBot"></div>
   <p class="kbd">Atalhos do teclado: ← anterior · → próxima · R questão aleatória</p>
@@ -378,10 +377,10 @@ details.qmap summary{cursor:pointer;padding:9px 14px;font-weight:700;color:var(-
     var pool = pend.length ? pend : l;
     return pool[Math.floor(Math.random() * pool.length)];
   }
-  function go(q){ if (!q) return; setCur(q.id); render(); var top = $('navTop').getBoundingClientRect().top + window.scrollY - 70; window.scrollTo({top: Math.max(0, top), behavior: 'smooth'}); }
+  function go(q){ if (!q) return; setCur(q.id); render(); var top = $('list').getBoundingClientRect().top + window.scrollY - 70; window.scrollTo({top: Math.max(0, top), behavior: 'smooth'}); }
   function drawNav(){
     var l = filtered(), i = l.indexOf(Q[POS[cur]]);
-    ['navTop', 'navBot'].forEach(function(id){
+    ['navBot'].forEach(function(id){
       var n = $(id); n.innerHTML = '';
       var bp = el('button', null, '← Anterior'); bp.type = 'button'; bp.disabled = !neighbor(-1); bp.onclick = function(){ go(neighbor(-1)); };
       var pos = el('span', 'pos'); pos.innerHTML = '';
